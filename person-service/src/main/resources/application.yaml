@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: person-service
+  datasource:
+    username: postgres
+    password: admin
+    url: jdbc:postgresql://localhost:5432/condominio_personas
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true

@@ -1,0 +1,5 @@
+Crear un proyecto padre Condominio
+
+Luego modificar el pom para indicarle que no es proyecto, solo un agrupador con este comando <packaging>pom</packaging>
+
+Luego crear el primer módulo: new->module
