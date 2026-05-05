@@ -1,0 +1,46 @@
+services:
+  # 🐘 Base de datos PostgreSQL
+  postgres-person:
+    image: postgres:16
+    #container_name: postgres-person
+    environment:
+      POSTGRES_DB: condominio_personas
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+    ports:
+      - "5432:5432"
+    volumes:
+      - condominio_person_data:/var/lib/postgresql/data   # 💾 Persistencia
+    networks:
+      - ms-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # 🚀 microservicios
+  person-service:
+    build: ./person-service   # 📁 Ruta donde está el Dockerfile
+    container_name: person-service
+    ports:
+      - "8080:8080"           # 🌐 host:contenedor
+    depends_on:
+      postgres-person:
+        condition: service_healthy  # ⛓️ Espera a que postgres arranque
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-person:5432/condominio_personas
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: admin
+    networks:
+      - ms-network
+    #restart: always           # 🔄 Se reinicia si falla
+
+# 💾 Volumen para no perder datos
+volumes:
+  condominio_person_data:
+
+# Networks
+networks:
+  ms-network:
+    driver: bridge

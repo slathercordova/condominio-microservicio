@@ -2,4 +2,51 @@ Crear un proyecto padre Condominio
 
 Luego modificar el pom para indicarle que no es proyecto, solo un agrupador con este comando <packaging>pom</packaging>
 
-Luego crear el primer módulo: new->module
+Luego crear el primer módulo para el servicio person: new->module, configurar su propio pom y archivo dockerfile,
+crear un servicio random de hola mundo para verificar que la configuración este correcta y corran los servicios.
+
+Crear el dockercompose en la raíz de todo el proyecto principal que orgestará todo el proyecto de los N servicios.
+
+Ejecutar los siguientes comandos para levantar el docker
+
+🧠 REGLA DE ORO
+Cambiaste	                Qué haces
+Primera vez                 mvn clean package + docker-compose up --build
+Código Java	                mvn package + docker-compose up --build
+Solo config (yaml/env)	    docker-compose up --build
+Nada (solo levantar)	    docker-compose up
+
+Con este comando se borra todo porque dio error anteriormente
+docker compose down -v
+
+Este comando sirve para temporalmente poner la variable java home a temurin
+$env:JAVA_HOME="C:\Users\gctic.qv\.jdks\temurin-17.0.18"
+$env:Path="$env:JAVA_HOME\bin;$env:Path"
+mvn -v
+
+Luego modificar el dockercompose general con la configuración de la base de datos y probar (revisar (1)docker-compose.yml (c/u)dockerfile y (c/u)application.yaml)
+
+Estructura de person-service
+person-service/
+│
+├── src/main/java/com/condominio/personservice/
+│
+│   ├── PersonServiceApplication.java
+│
+│   ├── config/                # Configuraciones (Beans, Swagger, etc)
+│   ├── controller/            # Endpoints REST
+│   ├── dto/                   # Objetos de entrada/salida (request/response)
+│   ├── entity/                # Entidades JPA
+│   ├── repository/            # Interfaces JPA
+│   ├── service/               # Lógica de negocio
+│   │     ├── impl/
+│   │
+│   ├── mapper/                # MapStruct o mappers manuales
+│   ├── exception/             # Manejo global de errores
+│   ├── util/                  # Helpers
+│
+├── src/main/resources/
+│   ├── application.yml
+│
+├── Dockerfile
+├── pom.xml

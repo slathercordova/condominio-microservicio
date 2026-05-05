@@ -1,4 +1,4 @@
-package com.condominio;
+package com.condominio.persona;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
