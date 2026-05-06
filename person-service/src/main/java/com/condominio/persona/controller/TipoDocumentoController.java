@@ -7,13 +7,10 @@ import com.condominio.persona.service.TipoDocumentoService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/persona")
+@RequestMapping("/api/v1/person")
 public class TipoDocumentoController {
     private final TipoDocumentoService tipoDocumentoService;
 
@@ -26,5 +23,10 @@ public class TipoDocumentoController {
         TipoDocumentoResponse tipoDocumentoResponse = tipoDocumentoService.createTipoDocumento(tipoDocumentoRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ApiResponse<>(true,"Tipo documento creado",null,tipoDocumentoResponse));
+    }
+
+    @GetMapping("/testServicio")
+    public String test(){
+        return "Respuesta del servicio nuevo creado donde no funciona el post";
     }
 }

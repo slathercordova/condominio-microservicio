@@ -90,6 +90,12 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- 🧪 FlyWay -->
+        <!-- Creacion de tablas -->
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+        </dependency>
     </dependencies>
 
     <!-- ☁️ Spring Cloud -->
