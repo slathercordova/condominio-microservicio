@@ -1,10 +1,6 @@
 spring:
   application:
     name: person-service
-  datasource:
-    username: ${SPRING_DATASOURCE_USERNAME}
-    password: ${SPRING_DATASOURCE_PASSWORD}
-    url: ${SPRING_DATASOURCE_URL}
   jpa:
     hibernate:
       ddl-auto: validate
@@ -12,8 +8,25 @@ spring:
   flyway:
     enabled: true
     baseline-on-migrate: true
+  #activar colores para el log
+  output:
+    ansi:
+      enabled: ALWAYS
 
-  # con las 3 lineas de abajo le decimos que levante el proyecto sin la necesidad de la cfg de bd
+#config de log y crear archivo
+logging:
+  file:
+    name: logs/person-service.log
+  level:
+    root: INFO
+    com.condominio.persona: DEBUG
+
+
+# con las 3 lineas de abajo le decimos que levante el proyecto sin la necesidad de la cfg de bd
 #  autoconfigure:
 #    exclude:
 #      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+
+#OJO, hay 2 archivos extra de configuración, uno para dev y el otro para el docker, se configura de la siguiente forma:
+#Spring usa -> spring.profiles.active
+#En Run Configuration -> Environment variables -> SPRING_PROFILES_ACTIVE=dev

@@ -29,6 +29,7 @@ services:
       postgres-person:
         condition: service_healthy  # ⛓️ Espera a que postgres arranque
     environment:
+      SPRING_PROFILES_ACTIVE: docker  # Esto le dice que use el profile docker del yml
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-person:5432/condominio_personas
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: admin

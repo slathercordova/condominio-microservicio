@@ -11,13 +11,16 @@ Ejecutar los siguientes comandos para levantar el docker
 
 🧠 REGLA DE ORO
 Cambiaste	                Qué haces
-Primera vez                 mvn clean package + docker-compose up --build
-Código Java	                mvn package + docker-compose up --build
+Primera vez                 mvn clean install + mvn clean package + docker-compose up --build
+Código Java	                mvn clean package + docker-compose up --build
 Solo config (yaml/env)	    docker-compose up --build
 Nada (solo levantar)	    docker-compose up
 
 Con este comando se borra todo porque dio error anteriormente
 docker compose down -v
+
+Con este comando solo levantas BD
+docker-compose up postgres-person
 
 Este comando sirve para temporalmente poner la variable java home a temurin
 $env:JAVA_HOME="C:\Users\gctic.qv\.jdks\temurin-17.0.18"

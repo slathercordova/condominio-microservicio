@@ -1,18 +1,16 @@
 package com.condominio.persona.exception;
 
 import com.condominio.persona.enums.ErrorCode;
-import lombok.Getter;
 
-@Getter
-public class ExternalServiceException extends RuntimeException {
+public class BusinessException extends RuntimeException {
     private final ErrorCode errorCode;
 
-    public ExternalServiceException(String message){
+    public BusinessException(String message) {
         super(message);
-        this.errorCode = ErrorCode.EXTERNAL_RESOURCE_ERROR;
+        this.errorCode = ErrorCode.BUSINESS_ERROR;
     }
 
-    public ExternalServiceException(String message, ErrorCode errorCode) {
+    public BusinessException(String message, ErrorCode errorCode) {
         super(message);
         this.errorCode = errorCode;
     }

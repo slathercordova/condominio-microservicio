@@ -46,7 +46,7 @@ COMMENT ON TABLE persona IS 'Personas';
 ALTER TABLE persona ADD CONSTRAINT fk_persona_tipdoc FOREIGN KEY (tipo_documento) REFERENCES tipo_documento (id) DEFERRABLE INITIALLY IMMEDIATE;
 
 INSERT INTO tipo_documento (id, nombre, nombre_corto, estado, created_by)
-VALUES ('11111111-1111-1111-1111-111111111111', 'Documento Nacional de Identidad', 'DNI', true, '11111111-1111-1111-1111-111111111111');
+VALUES ('11111111-1111-1111-1111-111111111111', 'DOCUMENTO NACIONAL DE IDENTIDAD', 'DNI', true, '11111111-1111-1111-1111-111111111111');
 
 INSERT INTO persona (id, tipo_documento, numero_documento, nacimiento, celular, correo, nombres, apellido_paterno, apellido_materno, sexo, estado, created_by)
 VALUES ('11111111-1111-1111-1111-111111111111', '11111111-1111-1111-1111-111111111111', '00000000', '1900-01-01', '999999999', 'slathercordova@gmail.com', 'Admin', 'Sistema', 'Root',

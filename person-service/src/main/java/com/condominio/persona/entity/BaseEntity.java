@@ -1,5 +1,6 @@
 package com.condominio.persona.entity;
 
+import com.condominio.persona.util.DateUtils;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,11 +32,11 @@ public abstract class BaseEntity {
 
     @PrePersist
     public void prePersist() {
-        this.createdAt = OffsetDateTime.now();
+        this.createdAt = DateUtils.nowOffset();
     }
 
     @PreUpdate
     public void preUpdate() {
-        this.updatedAt = OffsetDateTime.now();
+        this.updatedAt = DateUtils.nowOffset();
     }
 }

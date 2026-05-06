@@ -1,13 +1,23 @@
 package com.condominio.persona.exception;
 
+import com.condominio.persona.enums.ErrorCode;
 import lombok.Getter;
 
 @Getter
 public class ResourceNotFoundException extends RuntimeException {
-    private final String code;
+    private final ErrorCode errorCode;
 
-    public ResourceNotFoundException(String code, String message) {
+    public ResourceNotFoundException(String message) {
         super(message);
-        this.code = code;
+        this.errorCode = ErrorCode.RESOURCE_NOT_FOUND_ERROR;
+    }
+
+    public ResourceNotFoundException(String message, ErrorCode errorCode) {
+        super(message);
+        this.errorCode = errorCode;
+    }
+
+    public ErrorCode getErrorCode() {
+        return errorCode;
     }
 }
