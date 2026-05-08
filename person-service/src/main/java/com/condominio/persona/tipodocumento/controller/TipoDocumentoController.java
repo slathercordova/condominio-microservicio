@@ -1,11 +1,14 @@
-package com.condominio.persona.controller;
+package com.condominio.persona.tipodocumento.controller;
 
-import com.condominio.persona.dto.request.TipoDocumentoRequest;
-import com.condominio.persona.dto.response.ApiResponse;
-import com.condominio.persona.dto.response.TipoDocumentoDetailResponse;
-import com.condominio.persona.dto.response.TipoDocumentoResponse;
-import com.condominio.persona.service.TipoDocumentoService;
+import com.condominio.persona.tipodocumento.dto.filter.TipoDocumentoFilter;
+import com.condominio.persona.tipodocumento.dto.request.TipoDocumentoRequest;
+import com.condominio.persona.tipodocumento.dto.response.ApiResponse;
+import com.condominio.persona.tipodocumento.dto.response.TipoDocumentoDetailResponse;
+import com.condominio.persona.tipodocumento.dto.response.TipoDocumentoResponse;
+import com.condominio.persona.tipodocumento.service.TipoDocumentoService;
+import com.condominio.persona.util.PaginatedResponse;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -42,5 +45,26 @@ public class TipoDocumentoController {
         TipoDocumentoDetailResponse tipoDocumentoDetailResponse = tipoDocumentoService.updateTipoDocumento(id, tipoDocumentoRequest);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ApiResponse<>(true,"Tipo documento actualizado",null, tipoDocumentoDetailResponse));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<TipoDocumentoDetailResponse>> findById(@PathVariable UUID id){
+        TipoDocumentoDetailResponse tipoDocumentoDetailResponse = tipoDocumentoService.getTipoDocumento(id);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new ApiResponse<>(true,"Tipo documento encontrado",null, tipoDocumentoDetailResponse));
+    }
+
+    @GetMapping
+    public ResponseEntity<ApiResponse<PaginatedResponse<TipoDocumentoDetailResponse>>> findAll(
+            TipoDocumentoFilter filter,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") @Max(100) int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction
+    ) {
+
+        PaginatedResponse<TipoDocumentoDetailResponse> result = tipoDocumentoService.findByFilters(filter, page, size, sortBy, direction);
+
+        return ResponseEntity.ok(new ApiResponse<>(true,"Lista encontrada",null,result));
     }
 }

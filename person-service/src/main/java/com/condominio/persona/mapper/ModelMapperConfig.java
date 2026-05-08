@@ -1,8 +1,8 @@
 package com.condominio.persona.mapper;
 
-import com.condominio.persona.dto.request.TipoDocumentoRequest;
-import com.condominio.persona.dto.response.TipoDocumentoResponse;
-import com.condominio.persona.entity.TipoDocumentoEntity;
+import com.condominio.persona.tipodocumento.dto.request.TipoDocumentoRequest;
+import com.condominio.persona.tipodocumento.dto.response.TipoDocumentoResponse;
+import com.condominio.persona.tipodocumento.entity.TipoDocumentoEntity;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.annotation.Bean;
@@ -16,10 +16,10 @@ public class ModelMapperConfig {
 
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
-        //  pasame de origen a destino por cada atributo
-        modelMapper.createTypeMap(TipoDocumentoRequest.class, TipoDocumentoEntity.class);
-        modelMapper.createTypeMap(TipoDocumentoEntity.class, TipoDocumentoResponse.class);
-
+        //  pasame de origen a destino por cada atributo, si los tipos y nombres
+        //  de los atributos de las clases son iguales, no hay necesidad de mapear
+        /*modelMapper.createTypeMap(TipoDocumentoRequest.class, TipoDocumentoEntity.class);
+        modelMapper.createTypeMap(TipoDocumentoEntity.class, TipoDocumentoResponse.class);*/
         return modelMapper;
     }
 }

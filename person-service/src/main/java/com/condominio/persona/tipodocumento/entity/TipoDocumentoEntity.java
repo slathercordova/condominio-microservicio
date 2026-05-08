@@ -1,18 +1,18 @@
-package com.condominio.persona.entity;
+package com.condominio.persona.tipodocumento.entity;
 
+import com.condominio.persona.common.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "tipo_documento")
 @Getter
 @Setter
 @NoArgsConstructor
-public class TipoDocumentoEntity extends BaseEntity{
+@ToString
+public class TipoDocumentoEntity extends BaseEntity {
     @Column(name = "nombre", nullable = false)
     private String nombre;
 
@@ -20,7 +20,7 @@ public class TipoDocumentoEntity extends BaseEntity{
     private String nombreCorto;
 
     @Column(name = "estado", nullable = false)
-    private boolean estado;
+    private Boolean estado;
 
     public TipoDocumentoEntity(String nombre, String nombreCorto, boolean estado) {
         this.nombre = nombre;

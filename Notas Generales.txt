@@ -28,28 +28,3 @@ $env:Path="$env:JAVA_HOME\bin;$env:Path"
 mvn -v
 
 Luego modificar el dockercompose general con la configuración de la base de datos y probar (revisar (1)docker-compose.yml (c/u)dockerfile y (c/u)application.yaml)
-
-Estructura de person-service
-person-service/
-│
-├── src/main/java/com/condominio/personservice/
-│
-│   ├── PersonServiceApplication.java
-│
-│   ├── config/                # Configuraciones (Beans, Swagger, etc)
-│   ├── controller/            # Endpoints REST
-│   ├── dto/                   # Objetos de entrada/salida (request/response)
-│   ├── entity/                # Entidades JPA
-│   ├── repository/            # Interfaces JPA
-│   ├── service/               # Lógica de negocio
-│   │     ├── impl/
-│   │
-│   ├── mapper/                # MapStruct o mappers manuales
-│   ├── exception/             # Manejo global de errores
-│   ├── util/                  # Helpers
-│
-├── src/main/resources/
-│   ├── application.yml
-│
-├── Dockerfile
-├── pom.xml

@@ -1,12 +1,13 @@
 package com.condominio.persona.exception;
 
-import com.condominio.persona.dto.response.ApiResponse;
+import com.condominio.persona.tipodocumento.dto.response.ApiResponse;
 import com.condominio.persona.enums.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.postgresql.util.PSQLException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -98,6 +99,21 @@ public class GlobalExceptionHandler {
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ApiResponse<>(false, message, ErrorCode.DATA_INTEGRITY_ERROR, null));
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ApiResponse<Void>> handleJsonParseError(HttpMessageNotReadableException ex) {
+        String message = "JSON inválido";
+        String error = ex.getMostSpecificCause().getMessage();
+        if (error.contains("LocalDate")) {
+            message = "Fecha inválida. Formato esperado: yyyy-MM-dd";
+        }
+        else if (error.contains("TipoSexo")) {
+            message = "Sexo inválido. Valores permitidos: MASCULINO, FEMENINO";
+        }
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ApiResponse<>(false,message, ErrorCode.INVALID_JSON, null));
     }
 
 }

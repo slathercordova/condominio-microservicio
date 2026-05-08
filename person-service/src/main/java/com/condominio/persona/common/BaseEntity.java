@@ -1,4 +1,4 @@
-package com.condominio.persona.entity;
+package com.condominio.persona.common;
 
 import com.condominio.persona.util.DateUtils;
 import jakarta.persistence.*;

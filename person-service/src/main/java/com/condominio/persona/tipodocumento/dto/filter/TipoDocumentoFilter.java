@@ -1,4 +1,4 @@
-package com.condominio.persona.dto.response;
+package com.condominio.persona.tipodocumento.dto.filter;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -9,9 +9,9 @@ import java.util.UUID;
 @Getter
 @Setter
 @ToString
-public class TipoDocumentoDetailResponse {
+public class TipoDocumentoFilter {
     private UUID id;
     private String nombre;
     private String nombreCorto;
-    private boolean estado;
+    private Boolean estado; //  Tiene que ser en maýuscula para determinar si filtrar o no en nulo
 }

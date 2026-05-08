@@ -1,4 +1,4 @@
-package com.condominio.persona.dto.response;
+package com.condominio.persona.tipodocumento.dto.response;
 
 import com.condominio.persona.enums.ErrorCode;
 import com.fasterxml.jackson.annotation.JsonInclude;
