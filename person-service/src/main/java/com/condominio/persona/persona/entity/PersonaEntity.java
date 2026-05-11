@@ -1,6 +1,6 @@
 package com.condominio.persona.persona.entity;
 
-import com.condominio.persona.enums.TipoSexo;
+import com.condominio.persona.common.enums.TipoSexo;
 import com.condominio.persona.common.BaseEntity;
 import com.condominio.persona.tipodocumento.entity.TipoDocumentoEntity;
 import jakarta.persistence.*;

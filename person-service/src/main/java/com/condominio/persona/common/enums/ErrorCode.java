@@ -1,4 +1,4 @@
-package com.condominio.persona.enums;
+package com.condominio.persona.common.enums;
 
 public enum ErrorCode {
     VALIDATION_ERROR,

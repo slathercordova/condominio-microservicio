@@ -1,6 +1,6 @@
-package com.condominio.persona.tipodocumento.dto.response;
+package com.condominio.persona.common.response;
 
-import com.condominio.persona.enums.ErrorCode;
+import com.condominio.persona.common.enums.ErrorCode;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,6 +1,6 @@
-package com.condominio.persona.exception;
+package com.condominio.persona.common.exception;
 
-import com.condominio.persona.enums.ErrorCode;
+import com.condominio.persona.common.enums.ErrorCode;
 import lombok.Getter;
 
 @Getter

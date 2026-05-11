@@ -1,4 +1,4 @@
-package com.condominio.persona.util;
+package com.condominio.persona.common.util;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

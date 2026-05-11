@@ -1,10 +1,7 @@
 package com.condominio.persona.persona.dto.request;
 
-import com.condominio.persona.enums.TipoSexo;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import com.condominio.persona.common.enums.TipoSexo;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -25,6 +22,7 @@ public class PersonaRequest {
     private String numeroDocumento;
 
     @NotNull(message = "Fecha de nacimiento es obligatorio")
+    @Past(message = "La fecha de nacimiento debe ser una fecha pasada")
     private LocalDate nacimiento;
 
     @Size(max = 20, message = "Celular máximo 20 caracteres")
@@ -42,6 +40,7 @@ public class PersonaRequest {
     private String celular2;
 
     @Size(max = 100, message = "Correo máximo 100 caracteres")
+    @Email
     @Pattern(
             regexp = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$",
             message = "El correo debe tener un dominio válido"
@@ -49,6 +48,7 @@ public class PersonaRequest {
     private String correo;
 
     @Size(max = 100, message = "Correo2 máximo 100 caracteres")
+    @Email
     @Pattern(
             regexp = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$",
             message = "El correo2 debe tener un dominio válido"

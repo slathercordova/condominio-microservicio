@@ -1,6 +1,6 @@
 package com.condominio.persona.common;
 
-import com.condominio.persona.util.DateUtils;
+import com.condominio.persona.common.util.DateUtils;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

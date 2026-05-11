@@ -1,6 +1,5 @@
 package com.condominio.persona.persona.dto.response;
 
-import com.condominio.persona.tipodocumento.entity.TipoDocumentoEntity;
 import lombok.*;
 
 import java.util.UUID;
@@ -12,6 +11,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class PersonaResponse {
     private UUID id;
-    private TipoDocumentoEntity tipoDocumento;
+    private UUID tipoDocumentoId;
+    private String tipoDocumentoNombre;
     private String numeroDocumento;
 }

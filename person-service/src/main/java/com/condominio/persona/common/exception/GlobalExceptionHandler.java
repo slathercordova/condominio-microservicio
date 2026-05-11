@@ -1,7 +1,7 @@
-package com.condominio.persona.exception;
+package com.condominio.persona.common.exception;
 
-import com.condominio.persona.tipodocumento.dto.response.ApiResponse;
-import com.condominio.persona.enums.ErrorCode;
+import com.condominio.persona.common.enums.ErrorCode;
+import com.condominio.persona.common.response.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.postgresql.util.PSQLException;
 import org.springframework.dao.DataIntegrityViolationException;
