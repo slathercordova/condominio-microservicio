@@ -55,15 +55,15 @@ public class PersonaRequest {
     )
     private String correo2;
 
-    @NotBlank(message = "Nombres obligatorio")
+    //@NotBlank(message = "Nombres obligatorio")
     @Size(max = 30, message = "Nombres máximo 30 caracteres")
     private String nombres;
 
-    @NotBlank(message = "Apellido paterno obligatorio")
+    //@NotBlank(message = "Apellido paterno obligatorio")
     @Size(max = 30, message = "Apellido paterno máximo 30 caracteres")
     private String apellidoPaterno;
 
-    @NotBlank(message = "Apellido materno obligatorio")
+    //@NotBlank(message = "Apellido materno obligatorio")
     @Size(max = 30, message = "Apellido materno máximo 30 caracteres")
     private String apellidoMaterno;
 

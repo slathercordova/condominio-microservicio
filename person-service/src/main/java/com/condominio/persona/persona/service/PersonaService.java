@@ -1,7 +1,12 @@
 package com.condominio.persona.persona.service;
 
+import com.condominio.persona.common.exception.ExternalServiceException;
 import com.condominio.persona.common.exception.ResourceNotFoundException;
+import com.condominio.persona.common.exception.ValidationException;
+import com.condominio.persona.common.util.DatosConstant;
 import com.condominio.persona.common.util.SecurityUtils;
+import com.condominio.persona.feignClient.ReniecClient;
+import com.condominio.persona.feignClient.ReniecResponseDto;
 import com.condominio.persona.persona.dto.request.PersonaRequest;
 import com.condominio.persona.persona.dto.response.PersonaDetailResponse;
 import com.condominio.persona.persona.dto.response.PersonaResponse;
@@ -11,6 +16,7 @@ import com.condominio.persona.tipodocumento.entity.TipoDocumentoEntity;
 import com.condominio.persona.tipodocumento.repository.TipoDocumentoRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,12 +29,16 @@ public class PersonaService {
     private final ModelMapper modelMapper;
     private final SecurityUtils securityUtils;
     private final TipoDocumentoRepository tipoDocumentoRepository;
+    private final ReniecClient reniecClient;
+    @Value("${api.token}")
+    private String apiToken;
 
-    public PersonaService(PersonaRepository personaRepository, ModelMapper modelMapper, SecurityUtils securityUtils, TipoDocumentoRepository tipoDocumentoRepository) {
+    public PersonaService(PersonaRepository personaRepository, ModelMapper modelMapper, SecurityUtils securityUtils, TipoDocumentoRepository tipoDocumentoRepository, ReniecClient reniecClient) {
         this.personaRepository = personaRepository;
         this.modelMapper = modelMapper;
         this.securityUtils = securityUtils;
         this.tipoDocumentoRepository = tipoDocumentoRepository;
+        this.reniecClient = reniecClient;
     }
 
     @Transactional
@@ -36,12 +46,39 @@ public class PersonaService {
         log.info("Iniciando persona request");
         log.debug("Request : {}", personaRequest);
 
+        if(personaRepository.existsByCorreo(personaRequest.getCorreo())){
+            throw new ValidationException("El correo ingresado ya existe");
+        }
+
         //  procesamos dni
         TipoDocumentoEntity  tipDocEnt = tipoDocumentoRepository.findById(personaRequest.getTipoDocumento())
                 .orElseThrow(()-> new ResourceNotFoundException("Tipo Documento no encontrado"));
 
+        ReniecResponseDto reniecResponseDto = null;
+        //  DNI
+
+        if (personaRequest.getTipoDocumento().equals(DatosConstant.DNI)){
+            log.debug("Llamando a ws reniec");
+            try {
+                reniecResponseDto = reniecClient.getReniec(personaRequest.getNumeroDocumento(),apiToken);
+            }catch (Exception e){
+                throw new ExternalServiceException(e.getMessage());
+            }
+        }
+
+        formatearDatosRequest(personaRequest);
         PersonaEntity personaEntity = modelMapper.map(personaRequest, PersonaEntity.class);
         personaEntity.setTipoDocumento(tipDocEnt);
+        if (reniecResponseDto != null){
+            personaEntity.setNombres(reniecResponseDto.getFirstname());
+            personaEntity.setApellidoPaterno(reniecResponseDto.getFirstLastName());
+            personaEntity.setApellidoMaterno(reniecResponseDto.getSecondLastName());
+        }else{
+            personaEntity.setNombres(personaRequest.getNombres());
+            personaEntity.setApellidoPaterno(personaRequest.getApellidoPaterno());
+            personaEntity.setApellidoMaterno(personaRequest.getApellidoMaterno());
+        }
+
         personaEntity.setCreatedBy(securityUtils.getCurrentUserId());
         PersonaEntity saved = personaRepository.save(personaEntity);
 
@@ -57,8 +94,13 @@ public class PersonaService {
         TipoDocumentoEntity  tipDocEnt = tipoDocumentoRepository.findById(personaRequest.getTipoDocumento())
                 .orElseThrow(()-> new ResourceNotFoundException("Tipo Documento no encontrado"));
 
+        if(personaRepository.existsByCorreoAndIdNot(personaRequest.getCorreo(), id)){
+            throw new ValidationException("El correo ingresado ya existe en otra persona");
+        }
+
         PersonaEntity personaFind = personaRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Persona a actualizar no encontrada"));
 
+        formatearDatosRequest(personaRequest);
         modelMapper.map(personaRequest, personaFind);
         personaFind.setTipoDocumento(tipDocEnt);
         personaFind.setUpdatedBy(securityUtils.getCurrentUserId());
@@ -82,5 +124,11 @@ public class PersonaService {
 
         PersonaEntity personaFind = personaRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Persona buscada no encontrada"));
         return modelMapper.map(personaFind, PersonaDetailResponse.class);
+    }
+
+    private void formatearDatosRequest(PersonaRequest personaRequest){
+        personaRequest.setNombres(personaRequest.getNombres().toUpperCase());
+        personaRequest.setApellidoPaterno(personaRequest.getApellidoPaterno().toUpperCase());
+        personaRequest.setApellidoMaterno(personaRequest.getApellidoMaterno().toUpperCase());
     }
 }

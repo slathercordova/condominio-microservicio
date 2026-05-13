@@ -23,6 +23,13 @@ logging:
     org.hibernate.SQL: DEBUG
     org.hibernate.orm.jdbc.bind: TRACE
 
+#url de reniec para ws
+reniec:
+  url: https://api.decolecta.com/v1/reniec/dni
+
+#token de url de reniec para ws
+api:
+  token: sk_15447.JV3izpDQeYgVpb3Gg3eCn1d0DAzkg8TQ
 
 # con las 3 lineas de abajo le decimos que levante el proyecto sin la necesidad de la cfg de bd
 #  autoconfigure:
