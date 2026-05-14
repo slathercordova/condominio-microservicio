@@ -1,5 +1,6 @@
 package com.condominio.persona.tipodocumento.service;
 
+import com.condominio.persona.common.exception.ResourceAlreadyExistsException;
 import com.condominio.persona.tipodocumento.dto.filter.TipoDocumentoFilter;
 import com.condominio.persona.tipodocumento.dto.request.TipoDocumentoRequest;
 import com.condominio.persona.tipodocumento.dto.response.TipoDocumentoDetailResponse;
@@ -38,6 +39,11 @@ public class TipoDocumentoService {
         log.debug("Request : {}", tipoDocumentoRequest);
 
         formatearDatos(tipoDocumentoRequest);
+
+        if(tipoDocumentoRepository.existsByNombre(tipoDocumentoRequest.getNombre())){
+            throw new ResourceAlreadyExistsException("Ya existe un tipo de documento con ese nombre");
+        }
+
         TipoDocumentoEntity tipDocEnt = new TipoDocumentoEntity();
         modelMapper.map(tipoDocumentoRequest, tipDocEnt);
         tipDocEnt.setCreatedBy(securityUtils.getCurrentUserId());//todo cambiar con auth
@@ -61,6 +67,10 @@ public class TipoDocumentoService {
         log.debug("Request: {}", tipoDocumentoRequest);
 
         formatearDatos(tipoDocumentoRequest);
+
+        if(tipoDocumentoRepository.existsByNombreAndIdNot(tipoDocumentoRequest.getNombre(),id)){
+            throw new ResourceAlreadyExistsException("Ya existe un tipo de documento con ese nombre");
+        }
 
         TipoDocumentoEntity entity = tipoDocumentoRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Id no encontrado"));
 

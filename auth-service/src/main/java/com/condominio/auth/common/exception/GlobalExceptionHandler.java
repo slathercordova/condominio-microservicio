@@ -1,7 +1,10 @@
-package com.condominio.persona.common.exception;
+package com.condominio.auth.common.exception;
 
-import com.condominio.persona.common.enums.ErrorCode;
-import com.condominio.persona.common.response.ApiResponse;
+import com.condominio.auth.common.enums.ErrorCode;
+import com.condominio.auth.common.exception.ExternalServiceException;
+import com.condominio.auth.common.exception.ResourceNotFoundException;
+import com.condominio.auth.common.exception.ValidationException;
+import com.condominio.auth.common.response.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.postgresql.util.PSQLException;
 import org.springframework.dao.DataIntegrityViolationException;

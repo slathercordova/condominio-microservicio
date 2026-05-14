@@ -1,0 +1,73 @@
+CREATE TYPE tipo_sexo AS ENUM (
+  'MASCULINO',
+  'FEMENINO'
+);
+
+CREATE TYPE estado_usuario AS ENUM (
+  'ACTIVO',
+  'INACTIVO',
+  'BLOQUEADO'
+);
+
+CREATE TYPE tipo_bloqueo AS ENUM (
+  'ADMINISTRADOR',
+  'INACTIVIDAD',
+  'OLVIDE_CONTRASEÑA',
+  'SIN_BLOQUEO'
+);
+
+CREATE TABLE usuario (
+  id uuid PRIMARY KEY,
+  id_persona uuid NOT NULL,
+  username varchar(30) NOT NULL,
+  password varchar(255) NOT NULL,
+  correo varchar(100),
+  correo_2 varchar(100),
+  ultimo_login timestamptz,
+  intento_erroneo smallint NOT NULL DEFAULT 0,
+  bloqueo_at timestamptz,
+  tipo_bloqueo tipo_bloqueo NOT NULL,
+  primera_vez boolean,
+  estado estado_usuario NOT NULL,
+  created_by uuid NOT NULL,
+  updated_by uuid,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz
+);
+
+CREATE TABLE rol (
+  id uuid PRIMARY KEY,
+  nombre varchar(30) NOT NULL,
+  estado boolean NOT NULL,
+  created_by uuid NOT NULL,
+  updated_by uuid,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz
+);
+
+CREATE UNIQUE INDEX uq_usuario_username ON usuario (username);
+
+CREATE UNIQUE INDEX uq_usuario_correo ON usuario (correo);
+
+CREATE UNIQUE INDEX uq_rol_nombre ON rol (nombre);
+
+COMMENT ON TABLE usuario IS 'Usuarios';
+
+COMMENT ON TABLE rol IS 'Roles';
+
+ALTER TABLE usuario ADD CONSTRAINT fk_usuario_usuario_ins FOREIGN KEY (created_by) REFERENCES usuario (id) DEFERRABLE INITIALLY IMMEDIATE;
+
+ALTER TABLE usuario ADD CONSTRAINT fk_usuario_usuario_upd FOREIGN KEY (updated_by) REFERENCES usuario (id) DEFERRABLE INITIALLY IMMEDIATE;
+
+ALTER TABLE rol ADD CONSTRAINT fk_rol_usuario_ins FOREIGN KEY (created_by) REFERENCES usuario (id) DEFERRABLE INITIALLY IMMEDIATE;
+
+ALTER TABLE rol ADD CONSTRAINT fk_rol_usuario_upd FOREIGN KEY (updated_by) REFERENCES usuario (id) DEFERRABLE INITIALLY IMMEDIATE;
+
+-- insert de la primera persona y usuario
+ALTER TABLE usuario DROP CONSTRAINT fk_usuario_usuario_ins;
+
+INSERT INTO usuario (id, id_persona, username, password, correo, tipo_bloqueo, primera_vez, estado, created_by)
+VALUES ('11111111-1111-1111-1111-111111111111', '11111111-1111-1111-1111-111111111111', 'admin', 'System123', 'slathercordova@gmail.com', 'SIN_BLOQUEO', true, 'ACTIVO',
+  '11111111-1111-1111-1111-111111111111');
+
+ALTER TABLE usuario ADD CONSTRAINT fk_usuario_usuario_ins FOREIGN KEY (created_by) REFERENCES usuario (id) DEFERRABLE INITIALLY IMMEDIATE;

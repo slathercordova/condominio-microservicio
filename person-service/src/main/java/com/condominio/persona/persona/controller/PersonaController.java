@@ -50,4 +50,22 @@ public class PersonaController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ApiResponse<>(true, "persona encontrada", null, personaDetailResponse));
     }
+
+    @GetMapping("/exists")
+    public ResponseEntity<ApiResponse<Boolean>> existsPersonaPorDocumento(
+            @RequestParam() UUID tipoDocumento,
+            @RequestParam() String numeroDocumento){
+        boolean existe = personaService.existsPersonaPorDocumento(tipoDocumento, numeroDocumento);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new ApiResponse<>(true,"Consulta exitosa",null,existe));
+    }
+
+    @GetMapping("/documento")
+    public ResponseEntity<ApiResponse<PersonaDetailResponse>> findPersonaPorDocumento(
+            @RequestParam() UUID tipoDocumento,
+            @RequestParam() String numeroDocumento){
+        PersonaDetailResponse personaDetailResponse = personaService.findPersonaPorDocumento(tipoDocumento, numeroDocumento);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new ApiResponse<>(true,"Consulta exitosa",null,personaDetailResponse));
+    }
 }

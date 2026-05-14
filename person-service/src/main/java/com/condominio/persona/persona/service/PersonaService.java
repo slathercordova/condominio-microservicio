@@ -1,6 +1,7 @@
 package com.condominio.persona.persona.service;
 
 import com.condominio.persona.common.exception.ExternalServiceException;
+import com.condominio.persona.common.exception.ResourceAlreadyExistsException;
 import com.condominio.persona.common.exception.ResourceNotFoundException;
 import com.condominio.persona.common.exception.ValidationException;
 import com.condominio.persona.common.util.DatosConstant;
@@ -47,12 +48,16 @@ public class PersonaService {
         log.debug("Request : {}", personaRequest);
 
         if(personaRepository.existsByCorreo(personaRequest.getCorreo())){
-            throw new ValidationException("El correo ingresado ya existe");
+            throw new ResourceAlreadyExistsException("El correo ingresado ya existe");
         }
 
         //  procesamos dni
         TipoDocumentoEntity  tipDocEnt = tipoDocumentoRepository.findById(personaRequest.getTipoDocumento())
                 .orElseThrow(()-> new ResourceNotFoundException("Tipo Documento no encontrado"));
+
+        if (personaRepository.existsByTipoDocumentoIdAndNumeroDocumento(personaRequest.getTipoDocumento(),personaRequest.getNumeroDocumento())){
+            throw new ResourceAlreadyExistsException("Ya existe una persona con ese tipo y número de documento");
+        }
 
         ReniecResponseDto reniecResponseDto = null;
         //  DNI
@@ -95,7 +100,14 @@ public class PersonaService {
                 .orElseThrow(()-> new ResourceNotFoundException("Tipo Documento no encontrado"));
 
         if(personaRepository.existsByCorreoAndIdNot(personaRequest.getCorreo(), id)){
-            throw new ValidationException("El correo ingresado ya existe en otra persona");
+            throw new ResourceAlreadyExistsException("El correo ingresado ya existe en otra persona");
+        }
+
+        if (personaRepository.existsByTipoDocumentoIdAndNumeroDocumentoAndIdNot(
+                personaRequest.getTipoDocumento(),
+                personaRequest.getNumeroDocumento(),
+                id)){
+            throw new ResourceAlreadyExistsException("Ya existe una persona con ese tipo y número de documento");
         }
 
         PersonaEntity personaFind = personaRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Persona a actualizar no encontrada"));
@@ -125,6 +137,17 @@ public class PersonaService {
         PersonaEntity personaFind = personaRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Persona buscada no encontrada"));
         return modelMapper.map(personaFind, PersonaDetailResponse.class);
     }
+
+    public boolean existsPersonaPorDocumento(UUID tipoDocumento, String numeroDocumento){
+        return personaRepository.existsByTipoDocumentoIdAndNumeroDocumento(tipoDocumento, numeroDocumento);
+    }
+
+    public PersonaDetailResponse findPersonaPorDocumento(UUID tipoDocumento, String numeroDocumento){
+        PersonaEntity personaEntity = personaRepository.findByTipoDocumentoIdAndNumeroDocumento(tipoDocumento,numeroDocumento)
+                .orElseThrow(()-> new ResourceNotFoundException("Persona no encontrada"));
+        return modelMapper.map(personaEntity,PersonaDetailResponse.class);
+    }
+
 
     private void formatearDatosRequest(PersonaRequest personaRequest){
         personaRequest.setNombres(personaRequest.getNombres().toUpperCase());

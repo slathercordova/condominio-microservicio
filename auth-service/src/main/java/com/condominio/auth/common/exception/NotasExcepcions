@@ -1,0 +1,13 @@
+commons-exceptions/
+ └── src/main/java/com/chappie/edificio/exceptions/
+       ├── AppException.java                  # Base de todas
+       ├── AuthException.java                 # Errores de autenticación
+       ├── CredencialesInvalidasException.java
+       ├── UsuarioBloqueadoException.java
+       ├── UsuarioInactivoException.java
+       ├── ValidationException.java           # Validaciones
+       ├── EntityNotFoundException.java       # Cuando no existe algo
+       ├── UnidadException.java               # Errores específicos de unidades
+       ├── ReciboException.java               # Errores de recibos
+       ├── PagoException.java                 # Errores de pagos
+       └── GastoException.java                # Errores de gastos

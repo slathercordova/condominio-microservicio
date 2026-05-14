@@ -20,6 +20,7 @@
 
     <modules>
         <module>person-service</module>
+        <module>auth-service</module>
     </modules>
 
     <properties>
