@@ -11,8 +11,9 @@ Ejecutar los siguientes comandos para levantar el docker
 
 🧠 REGLA DE ORO
 Cambiaste	                Qué haces
-Primera vez                 mvn clean install + mvn clean package + docker-compose up --build
-Código Java	                mvn clean package + docker-compose up --build
+Primera vez                 mvn clean install + docker-compose up --build
+Cambios regulares	        mvn clean package + docker-compose up --build
+Cambios pequeños            mvn package + docker-compose restart nombre-service
 Solo config (yaml/env)	    docker-compose up --build
 Nada (solo levantar)	    docker-compose up
 

@@ -3,3 +3,9 @@ spring:
     url: jdbc:postgresql://localhost:5433/condominio_auth
     username: postgres
     password: admin
+server:
+  port: 8081
+
+#url de person-service para ws
+person:
+  url: http://localhost:8080

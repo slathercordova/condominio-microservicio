@@ -3,7 +3,6 @@ package com.condominio.persona.persona.service;
 import com.condominio.persona.common.exception.ExternalServiceException;
 import com.condominio.persona.common.exception.ResourceAlreadyExistsException;
 import com.condominio.persona.common.exception.ResourceNotFoundException;
-import com.condominio.persona.common.exception.ValidationException;
 import com.condominio.persona.common.util.DatosConstant;
 import com.condominio.persona.common.util.SecurityUtils;
 import com.condominio.persona.feignClient.ReniecClient;

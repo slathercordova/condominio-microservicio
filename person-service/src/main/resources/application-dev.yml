@@ -3,3 +3,5 @@ spring:
     url: jdbc:postgresql://localhost:5432/condominio_personas
     username: postgres
     password: admin
+server:
+  port: 8080

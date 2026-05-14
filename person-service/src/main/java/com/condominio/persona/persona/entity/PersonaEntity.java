@@ -5,6 +5,8 @@ import com.condominio.persona.common.BaseEntity;
 import com.condominio.persona.tipodocumento.entity.TipoDocumentoEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnTransformer;
+
 import java.time.LocalDate;
 
 @Entity
@@ -49,6 +51,7 @@ public class PersonaEntity extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "sexo", nullable = false)
+    @ColumnTransformer(write = "?::tipo_sexo")
     private TipoSexo sexo;
 
     @Column(name = "estado", nullable = false)

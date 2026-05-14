@@ -1,6 +1,6 @@
-package com.condominio.persona.persona.dto.response;
+package com.condominio.auth.auth.dto.response;
 
-import com.condominio.persona.common.enums.TipoSexo;
+import com.condominio.auth.common.enums.TipoSexo;
 import lombok.*;
 
 import java.time.LocalDate;

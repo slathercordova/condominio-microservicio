@@ -1,8 +1,3 @@
-CREATE TYPE tipo_sexo AS ENUM (
-  'MASCULINO',
-  'FEMENINO'
-);
-
 CREATE TYPE estado_usuario AS ENUM (
   'ACTIVO',
   'INACTIVO',
@@ -27,7 +22,7 @@ CREATE TABLE usuario (
   intento_erroneo smallint NOT NULL DEFAULT 0,
   bloqueo_at timestamptz,
   tipo_bloqueo tipo_bloqueo NOT NULL,
-  primera_vez boolean,
+  primera_vez boolean NOT NULL DEFAULT true,
   estado estado_usuario NOT NULL,
   created_by uuid NOT NULL,
   updated_by uuid,
@@ -49,6 +44,8 @@ CREATE UNIQUE INDEX uq_usuario_username ON usuario (username);
 
 CREATE UNIQUE INDEX uq_usuario_correo ON usuario (correo);
 
+CREATE UNIQUE INDEX uq_usuario_persona ON usuario (id_persona);
+
 CREATE UNIQUE INDEX uq_rol_nombre ON rol (nombre);
 
 COMMENT ON TABLE usuario IS 'Usuarios';
@@ -67,7 +64,7 @@ ALTER TABLE rol ADD CONSTRAINT fk_rol_usuario_upd FOREIGN KEY (updated_by) REFER
 ALTER TABLE usuario DROP CONSTRAINT fk_usuario_usuario_ins;
 
 INSERT INTO usuario (id, id_persona, username, password, correo, tipo_bloqueo, primera_vez, estado, created_by)
-VALUES ('11111111-1111-1111-1111-111111111111', '11111111-1111-1111-1111-111111111111', 'admin', 'System123', 'slathercordova@gmail.com', 'SIN_BLOQUEO', true, 'ACTIVO',
-  '11111111-1111-1111-1111-111111111111');
+VALUES ('11111111-1111-1111-1111-111111111111', '00000000-0000-0000-0000-000000000000', 'admin', '$2a$10$cQL.hWmztP4t./i9yeRcP.lHhxJuzG7/0TbrApLmHkbPO2SMh1zLe',
+        'AdminSistemaRoot@xxx.xxx', 'SIN_BLOQUEO', true, 'ACTIVO','11111111-1111-1111-1111-111111111111');
 
 ALTER TABLE usuario ADD CONSTRAINT fk_usuario_usuario_ins FOREIGN KEY (created_by) REFERENCES usuario (id) DEFERRABLE INITIALLY IMMEDIATE;
