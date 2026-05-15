@@ -1,6 +1,8 @@
 package com.condominio.persona.persona.dto.request;
 
 import com.condominio.persona.common.enums.TipoSexo;
+import com.condominio.persona.common.validation.ValidCelular;
+import com.condominio.persona.common.validation.ValidCorreo;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
@@ -26,33 +28,19 @@ public class PersonaRequest {
     private LocalDate nacimiento;
 
     @Size(max = 20, message = "Celular máximo 20 caracteres")
-    @Pattern(
-            regexp = "^[0-9]{9}$",
-            message = "Celular inválido"
-    )
+    @ValidCelular
     private String celular;
 
     @Size(max = 20, message = "Celular2 máximo 20 caracteres")
-    @Pattern(
-            regexp = "^[0-9]{9}$",
-            message = "Celular 2 inválido"
-    )
+    @ValidCelular(message = "Celular 2 inválido")
     private String celular2;
 
     @Size(max = 100, message = "Correo máximo 100 caracteres")
-    @Email
-    @Pattern(
-            regexp = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$",
-            message = "El correo debe tener un dominio válido"
-    )
+    @ValidCorreo
     private String correo;
 
     @Size(max = 100, message = "Correo2 máximo 100 caracteres")
-    @Email
-    @Pattern(
-            regexp = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$",
-            message = "El correo2 debe tener un dominio válido"
-    )
+    @ValidCorreo(message = "Correo 2 inválido")
     private String correo2;
 
     //@NotBlank(message = "Nombres obligatorio")

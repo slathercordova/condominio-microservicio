@@ -3,8 +3,6 @@ package com.condominio.auth.auth.dto.request;
 import com.condominio.auth.common.enums.TipoSexo;
 import com.condominio.auth.common.validation.ValidCelular;
 import com.condominio.auth.common.validation.ValidCorreo;
-import com.condominio.auth.common.validation.ValidPassword;
-import com.condominio.auth.common.validation.ValidUsername;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
@@ -16,8 +14,7 @@ import java.util.UUID;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegisterRequest {
-    //  Datos necesarios para el registro de persona tras ws
+public class PersonaRequest {
     @NotNull(message = "Tipo documento obligatorio")
     private UUID tipoDocumento;
 
@@ -37,22 +34,21 @@ public class RegisterRequest {
     @ValidCorreo
     private String correo;
 
+    //@NotBlank(message = "Nombres obligatorio")
     @Size(max = 30, message = "Nombres máximo 30 caracteres")
     private String nombres;
 
+    //@NotBlank(message = "Apellido paterno obligatorio")
     @Size(max = 30, message = "Apellido paterno máximo 30 caracteres")
     private String apellidoPaterno;
 
+    //@NotBlank(message = "Apellido materno obligatorio")
     @Size(max = 30, message = "Apellido materno máximo 30 caracteres")
     private String apellidoMaterno;
 
     @NotNull(message = "Sexo es obligatorio")
     private TipoSexo sexo;
 
-    //  Datos necesario para el registro de usuario
-    @ValidUsername
-    private String username;
-
-    @ValidPassword
-    private String password;
+    @NotNull(message = "Estado es obligatorio")
+    private Boolean estado;
 }
