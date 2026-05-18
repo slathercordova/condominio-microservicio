@@ -1,9 +1,6 @@
 package com.condominio.auth.common.exception;
 
 import com.condominio.auth.common.enums.ErrorCode;
-import com.condominio.auth.common.exception.ExternalServiceException;
-import com.condominio.auth.common.exception.ResourceNotFoundException;
-import com.condominio.auth.common.exception.ValidationException;
 import com.condominio.auth.common.response.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.postgresql.util.PSQLException;
@@ -32,6 +29,13 @@ public class GlobalExceptionHandler {
         log.error("Error ValidationException: ", ex);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ApiResponse<>(false, ex.getMessage(), ErrorCode.VALIDATION_ERROR, null));
+    }
+
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<ApiResponse<Void>> handleBusinessException(BusinessException ex) {
+        log.error("Error BusinessException: ", ex);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ApiResponse<>(false, ex.getMessage(), ErrorCode.BUSINESS_ERROR, null));
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)

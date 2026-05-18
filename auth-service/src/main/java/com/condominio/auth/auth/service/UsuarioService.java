@@ -1,7 +1,9 @@
 package com.condominio.auth.auth.service;
 
+import com.condominio.auth.auth.dto.request.LoginRequest;
 import com.condominio.auth.auth.dto.request.PersonaRequest;
 import com.condominio.auth.auth.dto.request.RegisterRequest;
+import com.condominio.auth.auth.dto.response.LoginResponse;
 import com.condominio.auth.auth.dto.response.PersonaDetailResponse;
 import com.condominio.auth.auth.dto.response.PersonaResponse;
 import com.condominio.auth.auth.dto.response.RegisterResponse;
@@ -9,14 +11,16 @@ import com.condominio.auth.auth.entity.UsuarioEntity;
 import com.condominio.auth.auth.repository.UsuarioRepository;
 import com.condominio.auth.common.enums.EstadoUsuario;
 import com.condominio.auth.common.enums.TipoBloqueo;
+import com.condominio.auth.common.exception.BusinessException;
 import com.condominio.auth.common.exception.ResourceAlreadyExistsException;
+import com.condominio.auth.common.exception.ResourceNotFoundException;
 import com.condominio.auth.common.response.ApiResponse;
 import com.condominio.auth.common.util.SecurityUtils;
 import com.condominio.auth.feignclient.PersonaClient;
 import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,12 +33,14 @@ public class UsuarioService {
     private final ModelMapper modelMapper;
     private final SecurityUtils securityUtils;
     private final PersonaClient personaClient;
+    private final PasswordEncoder passwordEncoder;
 
-    public UsuarioService(UsuarioRepository usuarioRepository, ModelMapper modelMapper, SecurityUtils securityUtils, PersonaClient personaClient) {
+    public UsuarioService(UsuarioRepository usuarioRepository, ModelMapper modelMapper, SecurityUtils securityUtils, PersonaClient personaClient, PasswordEncoder passwordEncoder) {
         this.usuarioRepository = usuarioRepository;
         this.modelMapper = modelMapper;
         this.securityUtils = securityUtils;
         this.personaClient = personaClient;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional
@@ -76,7 +82,7 @@ public class UsuarioService {
         //  Si pasa todas las reglas llenar el usuario entity y mandar a crear
         UsuarioEntity userEntity = modelMapper.map(registerRequest, UsuarioEntity.class);
         userEntity.setIdPersona(idPersona);
-        userEntity.setPassword(new BCryptPasswordEncoder().encode(registerRequest.getPassword()));
+        userEntity.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
         userEntity.setIntentoErroneo((short) 0);
         userEntity.setTipoBloqueo(TipoBloqueo.SIN_BLOQUEO);
         userEntity.setPrimeraVez(true);
@@ -87,5 +93,24 @@ public class UsuarioService {
 
         //  Si las 2 condiciones anteriores estan ok devolver ok al controller
         return modelMapper.map(saved, RegisterResponse.class);
+    }
+
+    @Transactional
+    public LoginResponse loginUser(LoginRequest loginRequest) {
+        UsuarioEntity usuarioEntity = usuarioRepository.findByUsername(loginRequest.username())
+                .orElseThrow(()-> new ResourceNotFoundException("Usuario no existe"));
+
+        if (usuarioEntity.getEstado() == EstadoUsuario.ACTIVO) {
+            //  Verificar contraseña
+            if (passwordEncoder.matches(loginRequest.password(), usuarioEntity.getPassword())) {
+                //  Si el usuario se loguea exitosamente reset # intentos, actualizar fecha y hora de último login y devolver token
+            }else {
+                //  Si falla aumentar el número de intentos
+                //  Si se llega a 5 intentos bloquear a usuario
+            }
+        }else {
+            throw new BusinessException("Usuario no se encuentra ACTIVO");
+        }
+        return null;
     }
 }
