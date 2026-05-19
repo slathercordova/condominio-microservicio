@@ -4,5 +4,6 @@ public enum TipoBloqueo {
     ADMINISTRADOR,
     INACTIVIDAD,
     OLVIDE_CONTRASEÑA,
-    SIN_BLOQUEO
+    SIN_BLOQUEO,
+    INTENTOS_FALLIDOS
 }

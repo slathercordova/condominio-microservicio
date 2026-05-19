@@ -1,6 +1,8 @@
 package com.condominio.auth.auth.controller;
 
+import com.condominio.auth.auth.dto.request.LoginRequest;
 import com.condominio.auth.auth.dto.request.RegisterRequest;
+import com.condominio.auth.auth.dto.response.LoginResponse;
 import com.condominio.auth.auth.dto.response.RegisterResponse;
 import com.condominio.auth.auth.service.UsuarioService;
 import com.condominio.auth.common.response.ApiResponse;
@@ -28,5 +30,12 @@ public class UsuarioController {
         RegisterResponse registerResponse = usuarioService.registerUser(registerRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ApiResponse<>(true, "Usuario creado correctamente", null, registerResponse));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<ApiResponse<LoginResponse>> login(@Valid @RequestBody LoginRequest loginRequest){
+        LoginResponse loginResponse = usuarioService.loginUser(loginRequest);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new ApiResponse<>(true, "Login exitoso", null, loginResponse));
     }
 }

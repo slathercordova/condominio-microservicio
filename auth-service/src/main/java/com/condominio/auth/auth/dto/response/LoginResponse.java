@@ -4,6 +4,7 @@ import java.util.UUID;
 
 public record LoginResponse (
     String token,
-    UUID id
+    UUID id,
+    boolean primeraVez
 ){
 }

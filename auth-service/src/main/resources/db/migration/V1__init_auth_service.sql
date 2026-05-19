@@ -8,7 +8,8 @@ CREATE TYPE tipo_bloqueo AS ENUM (
   'ADMINISTRADOR',
   'INACTIVIDAD',
   'OLVIDE_CONTRASEÑA',
-  'SIN_BLOQUEO'
+  'SIN_BLOQUEO',
+  'INTENTOS_FALLIDOS'
 );
 
 CREATE TABLE usuario (
@@ -19,7 +20,7 @@ CREATE TABLE usuario (
   correo varchar(100),
   correo_2 varchar(100),
   ultimo_login timestamptz,
-  intento_erroneo smallint NOT NULL DEFAULT 0,
+  intento_erroneo int NOT NULL DEFAULT 0,
   bloqueo_at timestamptz,
   tipo_bloqueo tipo_bloqueo NOT NULL,
   primera_vez boolean NOT NULL DEFAULT true,

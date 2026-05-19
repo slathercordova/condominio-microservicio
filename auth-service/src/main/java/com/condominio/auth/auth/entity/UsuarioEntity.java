@@ -6,6 +6,7 @@ import com.condominio.auth.common.enums.TipoBloqueo;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnTransformer;
+import org.hibernate.annotations.DynamicUpdate;
 
 import java.time.OffsetDateTime;
 import java.util.UUID;
@@ -16,6 +17,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @ToString
 @Entity
+@DynamicUpdate
 @Table(name = "usuario")
 public class UsuarioEntity extends BaseEntity {
     @Column(name = "id_persona", nullable = false)
@@ -37,7 +39,7 @@ public class UsuarioEntity extends BaseEntity {
     private OffsetDateTime ultimoLogin;
 
     @Column(name = "intento_erroneo", nullable = false)
-    private short intentoErroneo;
+    private Integer intentoErroneo;
 
     @Column(name = "bloqueo_at")
     private OffsetDateTime bloqueoAt;
