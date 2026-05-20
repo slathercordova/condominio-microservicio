@@ -23,6 +23,12 @@ logging:
     org.hibernate.SQL: DEBUG
     org.hibernate.orm.jdbc.bind: TRACE
 
+#config de security
+jwt:
+  expiration: 10000
+  long-expiration: 604800000
+  secret: mi_clave_super_secreta_12345678901234567890
+
 
 # con las 3 lineas de abajo le decimos que levante el proyecto sin la necesidad de la cfg de bd
 #  autoconfigure:

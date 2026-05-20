@@ -1,7 +1,16 @@
 package com.condominio.auth.common.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum EstadoUsuario {
-    ACTIVO,
-    INACTIVO,
-    BLOQUEADO
+    ACTIVO("ACTIVO"),
+    INACTIVO("INACTIVO"),
+    BLOQUEADO("BLOQUEADO");
+
+    private final String mensaje;
+
+    EstadoUsuario(String mensaje) {
+        this.mensaje = mensaje;
+    }
 }

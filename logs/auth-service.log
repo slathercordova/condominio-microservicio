@@ -1337,3 +1337,47 @@ com.condominio.auth.common.exception.BusinessException: Contraseña incorrecta, 
 2026-05-19T16:53:59.039-05:00  INFO 13172 --- [auth-service] [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
 2026-05-19T16:53:59.046-05:00  INFO 13172 --- [auth-service] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
 2026-05-19T16:53:59.052-05:00  INFO 13172 --- [auth-service] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2026-05-19T16:55:10.074-05:00  INFO 38148 --- [auth-service] [main] c.c.auth.AuthServiceApplication          : Starting AuthServiceApplication using Java 17.0.18 with PID 38148 (C:\Users\gctic.qv\IdeaProjects\Condominio\auth-service\target\classes started by gctic.qv in C:\Users\gctic.qv\IdeaProjects\Condominio)
+2026-05-19T16:55:10.077-05:00 DEBUG 38148 --- [auth-service] [main] c.c.auth.AuthServiceApplication          : Running with Spring Boot v3.2.5, Spring v6.1.6
+2026-05-19T16:55:10.078-05:00  INFO 38148 --- [auth-service] [main] c.c.auth.AuthServiceApplication          : The following 1 profile is active: "dev"
+2026-05-19T16:55:11.753-05:00  INFO 38148 --- [auth-service] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-19T16:55:11.845-05:00  INFO 38148 --- [auth-service] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 81 ms. Found 1 JPA repository interface.
+2026-05-19T16:55:12.184-05:00  INFO 38148 --- [auth-service] [main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=8f7fd14c-a2a9-3e96-8897-a696f1a6cc25
+2026-05-19T16:55:13.117-05:00  INFO 38148 --- [auth-service] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8081 (http)
+2026-05-19T16:55:13.142-05:00  INFO 38148 --- [auth-service] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-05-19T16:55:13.144-05:00  INFO 38148 --- [auth-service] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-05-19T16:55:13.298-05:00  INFO 38148 --- [auth-service] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-05-19T16:55:13.298-05:00  INFO 38148 --- [auth-service] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 3130 ms
+2026-05-19T16:55:13.566-05:00  INFO 38148 --- [auth-service] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-05-19T16:55:13.982-05:00  INFO 38148 --- [auth-service] [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@281b2dfd
+2026-05-19T16:55:13.985-05:00  INFO 38148 --- [auth-service] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-05-19T16:55:14.146-05:00  INFO 38148 --- [auth-service] [main] o.f.c.internal.license.VersionPrinter    : Flyway Community Edition 9.22.3 by Redgate
+2026-05-19T16:55:14.146-05:00  INFO 38148 --- [auth-service] [main] o.f.c.internal.license.VersionPrinter    : See release notes here: https://rd.gt/416ObMi
+2026-05-19T16:55:14.146-05:00  INFO 38148 --- [auth-service] [main] o.f.c.internal.license.VersionPrinter    : 
+2026-05-19T16:55:14.205-05:00  INFO 38148 --- [auth-service] [main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://localhost:5433/condominio_auth (PostgreSQL 16.13)
+2026-05-19T16:55:14.224-05:00  WARN 38148 --- [auth-service] [main] o.f.c.internal.database.base.Database    : Flyway upgrade recommended: PostgreSQL 16.13 is newer than this version of Flyway and support has not been tested. The latest supported version of PostgreSQL is 15.
+2026-05-19T16:55:14.288-05:00  INFO 38148 --- [auth-service] [main] o.f.core.internal.command.DbValidate     : Successfully validated 1 migration (execution time 00:00.043s)
+2026-05-19T16:55:14.309-05:00  INFO 38148 --- [auth-service] [main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": 1
+2026-05-19T16:55:14.314-05:00  INFO 38148 --- [auth-service] [main] o.f.core.internal.command.DbMigrate      : Schema "public" is up to date. No migration necessary.
+2026-05-19T16:55:14.461-05:00  INFO 38148 --- [auth-service] [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-05-19T16:55:14.637-05:00  INFO 38148 --- [auth-service] [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.4.4.Final
+2026-05-19T16:55:14.744-05:00  INFO 38148 --- [auth-service] [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-05-19T16:55:15.232-05:00  INFO 38148 --- [auth-service] [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-19T16:55:16.276-05:00  INFO 38148 --- [auth-service] [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-19T16:55:16.318-05:00  INFO 38148 --- [auth-service] [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-19T16:55:17.130-05:00  WARN 38148 --- [auth-service] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-05-19T16:55:18.123-05:00  INFO 38148 --- [auth-service] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8081 (http) with context path ''
+2026-05-19T16:55:18.252-05:00  INFO 38148 --- [auth-service] [main] c.c.auth.AuthServiceApplication          : Started AuthServiceApplication in 8.941 seconds (process running for 9.444)
+2026-05-19T16:55:22.530-05:00  INFO 38148 --- [auth-service] [http-nio-8081-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-19T16:55:22.530-05:00  INFO 38148 --- [auth-service] [http-nio-8081-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-05-19T16:55:22.532-05:00  INFO 38148 --- [auth-service] [http-nio-8081-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+2026-05-19T16:55:22.940-05:00 DEBUG 38148 --- [auth-service] [http-nio-8081-exec-2] org.hibernate.SQL                        : select ue1_0.id,ue1_0.bloqueo_at,ue1_0.correo,ue1_0.correo_2,ue1_0.created_at,ue1_0.created_by,ue1_0.estado,ue1_0.id_persona,ue1_0.intento_erroneo,ue1_0.password,ue1_0.primera_vez,ue1_0.tipo_bloqueo,ue1_0.ultimo_login,ue1_0.updated_at,ue1_0.updated_by,ue1_0.username from usuario ue1_0 where ue1_0.username=?
+2026-05-19T16:55:22.941-05:00 TRACE 38148 --- [auth-service] [http-nio-8081-exec-2] org.hibernate.orm.jdbc.bind              : binding parameter (1:VARCHAR) <- [LCORDOVA]
+2026-05-19T16:55:23.047-05:00 DEBUG 38148 --- [auth-service] [http-nio-8081-exec-2] org.hibernate.SQL                        : update usuario set intento_erroneo=?,ultimo_login=?,updated_at=? where id=?
+2026-05-19T16:55:23.048-05:00 TRACE 38148 --- [auth-service] [http-nio-8081-exec-2] org.hibernate.orm.jdbc.bind              : binding parameter (1:INTEGER) <- [0]
+2026-05-19T16:55:23.048-05:00 TRACE 38148 --- [auth-service] [http-nio-8081-exec-2] org.hibernate.orm.jdbc.bind              : binding parameter (2:TIMESTAMP_UTC) <- [2026-05-19T16:55:23.028174700-05:00]
+2026-05-19T16:55:23.049-05:00 TRACE 38148 --- [auth-service] [http-nio-8081-exec-2] org.hibernate.orm.jdbc.bind              : binding parameter (3:TIMESTAMP_UTC) <- [2026-05-19T16:55:23.033721300-05:00]
+2026-05-19T16:55:23.049-05:00 TRACE 38148 --- [auth-service] [http-nio-8081-exec-2] org.hibernate.orm.jdbc.bind              : binding parameter (4:UUID) <- [a821074f-d460-48db-9c2f-5b2b4eb31326]
+2026-05-19T17:07:22.022-05:00  INFO 38148 --- [auth-service] [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-05-19T17:07:22.025-05:00  INFO 38148 --- [auth-service] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-05-19T17:07:22.029-05:00  INFO 38148 --- [auth-service] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.

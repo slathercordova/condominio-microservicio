@@ -1,3 +1,66 @@
+//  Extensiones necesarias para intellij
+Lombok
+    Settings
+    → Build, Execution, Deployment
+    → Compiler
+    → Annotation Processors
+    → Enable annotation processing
+
+Settings (activar todos los hints para java)
+    → Editor
+    → Inlay Hints
+    → Java
+
+String Manipulation
+Rainbow Brackets
+Key Promoter X
+Docker
+Sonarqube for ide
+Database Navigator
+Spring Boot Helper
+Spring boot assistant
+
+//  Atajos intellij
+Shift + Shift
+buscar cualquier cosa
+
+Ctrl + N
+buscar clases
+
+Ctrl + Shift + N
+buscar archivos
+
+Ctrl + Alt + L
+formatear código
+
+Ctrl + Alt + O
+eliminar imports no usados
+
+Alt + Enter
+corregir sugerencias
+
+Shift + F6
+rename inteligente
+
+Ctrl + Alt + V
+extraer variable
+
+Ctrl + Alt + M
+extraer método
+
+Alt + Insert
+constructor/getter/setter
+
+Ctrl + B
+ir a implementación
+
+Ctrl + Alt + B
+ir a implementación concreta
+
+Ctrl + Shift + T
+ir entre test y clase
+
+//  Como se creo este proyecto de microservicios
 Crear un proyecto padre Condominio
 
 Luego modificar el pom para indicarle que no es proyecto, solo un agrupador con este comando <packaging>pom</packaging>
@@ -16,6 +79,7 @@ Cambios regulares	        mvn clean package + docker-compose up --build
 Cambios pequeños            mvn package + docker-compose restart nombre-service
 Solo config (yaml/env)	    docker-compose up --build
 Nada (solo levantar)	    docker-compose up
+Recompilar 1 módulo         compose up -d --build person-service
 
 Con este comando se borra todo porque dio error anteriormente
 docker compose down -v

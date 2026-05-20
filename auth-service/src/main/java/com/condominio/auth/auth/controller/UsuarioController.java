@@ -1,8 +1,10 @@
 package com.condominio.auth.auth.controller;
 
 import com.condominio.auth.auth.dto.request.LoginRequest;
+import com.condominio.auth.auth.dto.request.RefreshRequest;
 import com.condominio.auth.auth.dto.request.RegisterRequest;
 import com.condominio.auth.auth.dto.response.LoginResponse;
+import com.condominio.auth.auth.dto.response.RefreshResponse;
 import com.condominio.auth.auth.dto.response.RegisterResponse;
 import com.condominio.auth.auth.service.UsuarioService;
 import com.condominio.auth.common.response.ApiResponse;
@@ -37,5 +39,12 @@ public class UsuarioController {
         LoginResponse loginResponse = usuarioService.loginUser(loginRequest);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ApiResponse<>(true, "Login exitoso", null, loginResponse));
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<ApiResponse<RefreshResponse>> refresh(@Valid @RequestBody RefreshRequest refreshRequest){
+        RefreshResponse refreshResponse = usuarioService.refreshToken(refreshRequest.refreshToken());
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new ApiResponse<>(true, "Refresh exitoso", null, refreshResponse));
     }
 }

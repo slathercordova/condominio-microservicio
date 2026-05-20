@@ -3,10 +3,7 @@ package com.condominio.auth.auth.service;
 import com.condominio.auth.auth.dto.request.LoginRequest;
 import com.condominio.auth.auth.dto.request.PersonaRequest;
 import com.condominio.auth.auth.dto.request.RegisterRequest;
-import com.condominio.auth.auth.dto.response.LoginResponse;
-import com.condominio.auth.auth.dto.response.PersonaDetailResponse;
-import com.condominio.auth.auth.dto.response.PersonaResponse;
-import com.condominio.auth.auth.dto.response.RegisterResponse;
+import com.condominio.auth.auth.dto.response.*;
 import com.condominio.auth.auth.entity.UsuarioEntity;
 import com.condominio.auth.auth.repository.UsuarioRepository;
 import com.condominio.auth.common.enums.EstadoUsuario;
@@ -14,11 +11,11 @@ import com.condominio.auth.common.enums.TipoBloqueo;
 import com.condominio.auth.common.exception.BusinessException;
 import com.condominio.auth.common.exception.ExternalServiceException;
 import com.condominio.auth.common.exception.ResourceAlreadyExistsException;
-import com.condominio.auth.common.exception.ResourceNotFoundException;
 import com.condominio.auth.common.response.ApiResponse;
 import com.condominio.auth.common.util.DateUtils;
 import com.condominio.auth.common.util.SecurityUtils;
 import com.condominio.auth.feignclient.PersonaClient;
+import com.condominio.auth.security.JwtService;
 import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -26,6 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @Service
@@ -36,14 +34,16 @@ public class UsuarioService {
     private final SecurityUtils securityUtils;
     private final PersonaClient personaClient;
     private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
     private static final int MAX_INTENTOS = 5;
 
-    public UsuarioService(UsuarioRepository usuarioRepository, ModelMapper modelMapper, SecurityUtils securityUtils, PersonaClient personaClient, PasswordEncoder passwordEncoder) {
+    public UsuarioService(UsuarioRepository usuarioRepository, ModelMapper modelMapper, SecurityUtils securityUtils, PersonaClient personaClient, PasswordEncoder passwordEncoder, JwtService jwtService) {
         this.usuarioRepository = usuarioRepository;
         this.modelMapper = modelMapper;
         this.securityUtils = securityUtils;
         this.personaClient = personaClient;
         this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
     }
 
     @Transactional
@@ -79,7 +79,7 @@ public class UsuarioService {
             //  Si ya existe persona ya no hay necesidad de llamar al servicio que crea persona
         } catch (FeignException e) {
             log.error("Error consumiendo person-service: status={} body={}", e.status(), e.contentUTF8());
-            throw new ExternalServiceException("Error consumiendo el servicio de personas "+e.getMessage());
+            throw new ExternalServiceException("Error consumiendo el servicio de personas " + e.getMessage());
         }
 
         //  Si pasa todas las reglas llenar el usuario entity y mandar a crear
@@ -100,38 +100,62 @@ public class UsuarioService {
 
     @Transactional(noRollbackFor = BusinessException.class)
     public LoginResponse loginUser(LoginRequest loginRequest) {
-        UsuarioEntity usuarioEntity = usuarioRepository.findByUsername(loginRequest.username())
-                .orElseThrow(() -> new ResourceNotFoundException("Usuario no existe"));
+        OffsetDateTime now = DateUtils.nowOffset();
 
-        if (usuarioEntity.getEstado() == EstadoUsuario.ACTIVO) {
-            //  Verificar contraseña
-            if (passwordEncoder.matches(loginRequest.password(), usuarioEntity.getPassword())) {
-                //  Si el usuario se loguea exitosamente reset # intentos, actualizar fecha y hora de último login y devolver token
-                usuarioEntity.setIntentoErroneo(0);
-                usuarioEntity.setUltimoLogin(DateUtils.nowOffset());
-                usuarioEntity.setEstado(EstadoUsuario.ACTIVO);
-                usuarioEntity.setTipoBloqueo(TipoBloqueo.SIN_BLOQUEO);
-                usuarioEntity.setUpdatedAt(DateUtils.nowOffset());
-                usuarioEntity.setCreatedBy(securityUtils.getCurrentUserId());
-            } else {
-                //  Si falla aumentar el número de intentos
-                usuarioEntity.setIntentoErroneo(usuarioEntity.getIntentoErroneo() + 1);
-                //  Si se llega a 5 intentos bloquear a usuario
-                if (usuarioEntity.getIntentoErroneo() >= MAX_INTENTOS) {
-                    usuarioEntity.setEstado(EstadoUsuario.BLOQUEADO);
-                    usuarioEntity.setTipoBloqueo(TipoBloqueo.INTENTOS_FALLIDOS);
-                    usuarioEntity.setBloqueoAt(DateUtils.nowOffset());
-                    usuarioEntity.setUpdatedAt(DateUtils.nowOffset());
-                    usuarioEntity.setCreatedBy(securityUtils.getCurrentUserId());
-                    throw new BusinessException("Contraseña incorrecta, usuario bloqueado");
-                }
-                //  Mandar error de contraseña inválida
-                throw new BusinessException("Credenciales incorrectas");
+        UsuarioEntity usuarioEntity = usuarioRepository.findByUsername(loginRequest.username())
+                .orElseThrow(() -> new BusinessException("Credenciales incorrectas"));
+
+        if (usuarioEntity.getEstado() != EstadoUsuario.ACTIVO) {
+            String mensaje = "Usuario se encuentra " + usuarioEntity.getEstado().getMensaje();
+            if (usuarioEntity.getTipoBloqueo() != TipoBloqueo.SIN_BLOQUEO) {
+                mensaje += " - " + usuarioEntity.getTipoBloqueo().getMensaje();
             }
-        } else {
-            throw new BusinessException("Usuario no se encuentra ACTIVO");
+            throw new BusinessException(mensaje);
         }
 
-        return new LoginResponse("token pendiente", usuarioEntity.getId(), usuarioEntity.isPrimeraVez());
+        //  Verificar contraseña
+        if (!passwordEncoder.matches(loginRequest.password(), usuarioEntity.getPassword())) {
+            //  Si falla aumentar el número de intentos
+            usuarioEntity.setIntentoErroneo(usuarioEntity.getIntentoErroneo() + 1);
+            log.warn("Login fallido usuario={} intentos={} ", usuarioEntity.getUsername(), usuarioEntity.getIntentoErroneo());
+            //  Si se llega a 5 intentos bloquear a usuario
+            if (usuarioEntity.getIntentoErroneo() >= MAX_INTENTOS) {
+                usuarioEntity.setEstado(EstadoUsuario.BLOQUEADO);
+                usuarioEntity.setTipoBloqueo(TipoBloqueo.INTENTOS_FALLIDOS);
+                usuarioEntity.setBloqueoAt(now);
+                usuarioEntity.setUpdatedAt(now);
+                usuarioEntity.setUpdatedBy(securityUtils.getCurrentUserId());
+                log.warn("Usuario={} bloqueado por intentos", usuarioEntity.getUsername());
+                throw new BusinessException("Contraseña incorrecta, usuario bloqueado");
+            }
+            //  Mandar error de contraseña inválida
+            throw new BusinessException("Credenciales incorrectas");
+        }
+
+        //  Si el usuario se loguea exitosamente reset # intentos, actualizar fecha y hora de último login y devolver token
+        usuarioEntity.setIntentoErroneo(0);
+        usuarioEntity.setUltimoLogin(now);
+        usuarioEntity.setUpdatedAt(now);
+        usuarioEntity.setUpdatedBy(securityUtils.getCurrentUserId());
+
+        String accessToken = jwtService.generateToken(usuarioEntity.getUsername());
+        String refreshToken = jwtService.generateRefreshToken(usuarioEntity.getUsername());
+
+        return new LoginResponse(accessToken,refreshToken,usuarioEntity.getId(),usuarioEntity.isPrimeraVez());
+    }
+
+    public RefreshResponse refreshToken(String refreshToken) {
+        try{
+            String username = jwtService.extractUsername(refreshToken);
+            if(jwtService.isTokenExpired(refreshToken)){
+                throw new BusinessException("Refresh expirado");
+            }
+
+            String newAccessToken = jwtService.generateToken(username);
+
+            return new RefreshResponse(newAccessToken);
+        }catch(Exception e){
+            throw new BusinessException("Refresh inválido");
+        }
     }
 }
