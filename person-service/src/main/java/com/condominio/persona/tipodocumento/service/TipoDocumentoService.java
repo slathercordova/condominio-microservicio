@@ -46,7 +46,6 @@ public class TipoDocumentoService {
 
         TipoDocumentoEntity tipDocEnt = new TipoDocumentoEntity();
         modelMapper.map(tipoDocumentoRequest, tipDocEnt);
-        tipDocEnt.setCreatedBy(securityUtils.getCurrentUserId());//todo cambiar con auth
 
         TipoDocumentoEntity saved = tipoDocumentoRepository.save(tipDocEnt);
 
@@ -75,7 +74,6 @@ public class TipoDocumentoService {
         TipoDocumentoEntity entity = tipoDocumentoRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Id no encontrado"));
 
         modelMapper.map(tipoDocumentoRequest, entity);  //  actualiza al existente
-        entity.setUpdatedBy(securityUtils.getCurrentUserId());//todo cambiar con auth
         TipoDocumentoEntity saved = tipoDocumentoRepository.save(entity);
 
         return toResponse(saved);

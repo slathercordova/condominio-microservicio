@@ -83,7 +83,6 @@ public class PersonaService {
             personaEntity.setApellidoMaterno(personaRequest.getApellidoMaterno());
         }
 
-        personaEntity.setCreatedBy(securityUtils.getCurrentUserId());
         PersonaEntity saved = personaRepository.save(personaEntity);
 
         return modelMapper.map(saved, PersonaResponse.class);
@@ -114,7 +113,6 @@ public class PersonaService {
         formatearDatosRequest(personaRequest);
         modelMapper.map(personaRequest, personaFind);
         personaFind.setTipoDocumento(tipDocEnt);
-        personaFind.setUpdatedBy(securityUtils.getCurrentUserId());
         PersonaEntity saved = personaRepository.save(personaFind);
         return modelMapper.map(saved, PersonaDetailResponse.class);
     }

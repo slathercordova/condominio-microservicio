@@ -13,7 +13,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.UUID;
 
-@FeignClient(name = "person-client", url = "${person.url}")
+@FeignClient(
+        name = "person-client",
+        url = "${person.url}",
+        configuration = FeignConfig.class)
+
 public interface PersonaClient {
     @GetMapping("/api/v1/persona/documento")
     ApiResponse<PersonaDetailResponse> findPersonaPorDocumento(

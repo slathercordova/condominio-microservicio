@@ -1,5 +1,6 @@
 package com.condominio.auth.security;
 
+import com.condominio.auth.auth.entity.UsuarioEntity;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -9,7 +10,9 @@ import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
 import java.util.Date;
+import java.util.UUID;
 
 @Service
 public class JwtService {
@@ -26,18 +29,22 @@ public class JwtService {
         return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String generateToken(String username) {
+    public String generateToken(UsuarioEntity usuario) {
         return Jwts.builder()
-                .subject(username)
+                .subject(usuario.getUsername())
+                .claim("userId", usuario.getId().toString())
+                .claim("type","access")
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis()+expiration))
                 .signWith(getSignKey())
                 .compact();
     }
 
-    public String generateRefreshToken(String username) {
+    public String generateRefreshToken(UsuarioEntity usuario) {
         return Jwts.builder()
-                .subject(username)
+                .subject(usuario.getUsername())
+                .claim("userId", usuario.getId().toString())
+                .claim("type","refresh")
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis()+ longExpiration))
                 .signWith(getSignKey())
@@ -56,6 +63,21 @@ public class JwtService {
     public String extractUsername(String token) {
         Claims claims = extractClaims(token);
         return claims.getSubject();
+    }
+
+    public UUID extractUserId(String token){
+        Claims claims = extractClaims(token);
+
+        return UUID.fromString(claims.get("userId", String.class));
+    }
+
+    public Instant extractExpiration(String token) {
+        Claims claims = extractClaims(token);
+        return claims.getExpiration().toInstant();
+    }
+
+    public String extractType(String token){
+        return extractClaims(token).get("type", String.class);
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {

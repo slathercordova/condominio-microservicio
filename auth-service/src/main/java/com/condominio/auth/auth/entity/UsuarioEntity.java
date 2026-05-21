@@ -8,7 +8,7 @@ import lombok.*;
 import org.hibernate.annotations.ColumnTransformer;
 import org.hibernate.annotations.DynamicUpdate;
 
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 @Getter
@@ -36,13 +36,13 @@ public class UsuarioEntity extends BaseEntity {
     private String correo2;
 
     @Column(name = "ultimo_login")
-    private OffsetDateTime ultimoLogin;
+    private Instant ultimoLogin;
 
     @Column(name = "intento_erroneo", nullable = false)
     private Integer intentoErroneo;
 
     @Column(name = "bloqueo_at")
-    private OffsetDateTime bloqueoAt;
+    private Instant bloqueoAt;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo_bloqueo", nullable = false)

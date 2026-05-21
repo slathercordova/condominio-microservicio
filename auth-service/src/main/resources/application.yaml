@@ -25,7 +25,7 @@ logging:
 
 #config de security
 jwt:
-  expiration: 20000
+  expiration: 900000
   long-expiration: 604800000
   secret: mi_clave_super_secreta_12345678901234567890
 

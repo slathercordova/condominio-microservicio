@@ -41,6 +41,21 @@ CREATE TABLE rol (
   updated_at timestamptz
 );
 
+CREATE TABLE refresh_token(
+    id uuid PRIMARY KEY,
+    usuario_id uuid NOT NULL,
+    token_hash varchar(255) NOT NULL,
+    expiracion_at timestamptz NOT NULL,
+    usado boolean NOT NULL DEFAULT FALSE,
+    revocado boolean NOT NULL DEFAULT FALSE,
+    dispositivo varchar(100),
+    ip varchar(15),
+    created_by uuid NOT NULL,
+    updated_by uuid,
+    created_at timestamptz NOT NULL,
+    updated_at timestamptz
+);
+
 CREATE UNIQUE INDEX uq_usuario_username ON usuario (username);
 
 CREATE UNIQUE INDEX uq_usuario_correo ON usuario (correo);
@@ -48,6 +63,10 @@ CREATE UNIQUE INDEX uq_usuario_correo ON usuario (correo);
 CREATE UNIQUE INDEX uq_usuario_persona ON usuario (id_persona);
 
 CREATE UNIQUE INDEX uq_rol_nombre ON rol (nombre);
+
+CREATE INDEX idx_refresh_usuario ON refresh_token(usuario_id);
+
+CREATE INDEX idx_refresh_hash ON refresh_token(token_hash);
 
 COMMENT ON TABLE usuario IS 'Usuarios';
 

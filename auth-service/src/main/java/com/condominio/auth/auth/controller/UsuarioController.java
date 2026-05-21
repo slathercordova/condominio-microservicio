@@ -8,6 +8,7 @@ import com.condominio.auth.auth.dto.response.RefreshResponse;
 import com.condominio.auth.auth.dto.response.RegisterResponse;
 import com.condominio.auth.auth.service.UsuarioService;
 import com.condominio.auth.common.response.ApiResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,8 +36,8 @@ public class UsuarioController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<LoginResponse>> login(@Valid @RequestBody LoginRequest loginRequest){
-        LoginResponse loginResponse = usuarioService.loginUser(loginRequest);
+    public ResponseEntity<ApiResponse<LoginResponse>> login(@Valid @RequestBody LoginRequest loginRequest, HttpServletRequest httpRequest){
+        LoginResponse loginResponse = usuarioService.loginUser(loginRequest, httpRequest);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ApiResponse<>(true, "Login exitoso", null, loginResponse));
     }
