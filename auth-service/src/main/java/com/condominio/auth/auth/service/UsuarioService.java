@@ -153,6 +153,8 @@ public class UsuarioService {
         rte.setDispositivo(userAgent);
         rte.setIp(requestUtils.getClientIp(httpRequest));
 
+        System.out.println("RTE: " + rte);
+
         return new LoginResponse(accessToken,refreshToken,usuarioEntity.getId(),usuarioEntity.isPrimeraVez());
     }
 
