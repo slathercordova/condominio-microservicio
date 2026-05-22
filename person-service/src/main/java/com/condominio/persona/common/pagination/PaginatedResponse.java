@@ -1,4 +1,4 @@
-package com.condominio.persona.common.util;
+package com.condominio.persona.common.pagination;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

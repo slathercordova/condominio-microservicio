@@ -18,7 +18,7 @@ import java.util.UUID;
         url = "${person.url}",
         configuration = FeignConfig.class)
 
-public interface PersonaClient {
+public interface PersonaClientWs {
     @GetMapping("/api/v1/persona/documento")
     ApiResponse<PersonaDetailResponse> findPersonaPorDocumento(
             @RequestParam UUID tipoDocumento,

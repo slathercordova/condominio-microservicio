@@ -1,6 +1,6 @@
 package com.condominio.auth.auth.dto.response;
 
-import com.condominio.auth.common.enums.EstadoUsuario;
+import com.condominio.auth.auth.enums.EstadoUsuario;
 import lombok.*;
 
 import java.util.UUID;

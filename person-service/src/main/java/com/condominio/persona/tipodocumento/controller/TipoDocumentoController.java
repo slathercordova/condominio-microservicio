@@ -6,7 +6,7 @@ import com.condominio.persona.tipodocumento.dto.request.TipoDocumentoRequest;
 import com.condominio.persona.tipodocumento.dto.response.TipoDocumentoDetailResponse;
 import com.condominio.persona.tipodocumento.dto.response.TipoDocumentoResponse;
 import com.condominio.persona.tipodocumento.service.TipoDocumentoService;
-import com.condominio.persona.common.util.PaginatedResponse;
+import com.condominio.persona.common.pagination.PaginatedResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import org.springframework.http.HttpStatus;

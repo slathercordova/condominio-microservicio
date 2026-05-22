@@ -12,6 +12,18 @@ spring:
   output:
     ansi:
       enabled: ALWAYS
+  #Config de envío de correos
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: essi.lcordova@gmail.com
+    password: hagp yxmg aecy qdpp
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 #config de log y crear archivo
 logging:
@@ -28,6 +40,7 @@ jwt:
   expiration: 900000
   long-expiration: 604800000
   secret: mi_clave_super_secreta_12345678901234567890
+
 
 
 # con las 3 lineas de abajo le decimos que levante el proyecto sin la necesidad de la cfg de bd

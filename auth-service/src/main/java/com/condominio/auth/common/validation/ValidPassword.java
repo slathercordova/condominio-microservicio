@@ -19,7 +19,7 @@ import java.lang.annotation.*;
 )
 @Pattern(
         regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^A-Za-z0-9])\\S{8,100}$",
-        message = "Formato inválido: debe contener, - una minúscula - una mayúscula - un número - un carácter especial - entre 8 y 100 caracteres - sin espacios"
+        message = "Password Formato inválido: debe contener, - una minúscula - una mayúscula - un número - un carácter especial - entre 8 y 100 caracteres - sin espacios"
 )
 public @interface ValidPassword {
 

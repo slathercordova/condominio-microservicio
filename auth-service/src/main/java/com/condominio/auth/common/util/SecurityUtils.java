@@ -19,8 +19,8 @@ public class SecurityUtils {
 
         if (auth == null
                 || !auth.isAuthenticated()
-                ||  auth.getPrincipal().equals("anonymousUser")) {
-            return UUID.fromString("11111111-1111-1111-1111-111111111111");
+                ||  "anonymousUser".equals(auth.getPrincipal())) {
+            return DatosConstant.MASTER;
         }
 
         Object principal = auth.getPrincipal();

@@ -1,16 +1,18 @@
 package com.condominio.persona.tipodocumento.entity;
 
-import com.condominio.persona.common.BaseEntity;
+import com.condominio.persona.common.audit.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.*;
+import org.hibernate.annotations.DynamicUpdate;
 
 @Entity
 @Table(name = "tipo_documento")
 @Getter
 @Setter
 @NoArgsConstructor
+@DynamicUpdate
 @ToString
 public class TipoDocumentoEntity extends BaseEntity {
     @Column(name = "nombre", nullable = false)

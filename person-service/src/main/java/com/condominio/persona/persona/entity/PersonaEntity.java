@@ -1,11 +1,12 @@
 package com.condominio.persona.persona.entity;
 
 import com.condominio.persona.common.enums.TipoSexo;
-import com.condominio.persona.common.BaseEntity;
+import com.condominio.persona.common.audit.BaseEntity;
 import com.condominio.persona.tipodocumento.entity.TipoDocumentoEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnTransformer;
+import org.hibernate.annotations.DynamicUpdate;
 
 import java.time.LocalDate;
 
@@ -16,6 +17,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@DynamicUpdate
 public class PersonaEntity extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)

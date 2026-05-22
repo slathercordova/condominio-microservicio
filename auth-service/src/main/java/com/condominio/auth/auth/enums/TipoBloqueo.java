@@ -1,4 +1,4 @@
-package com.condominio.auth.common.enums;
+package com.condominio.auth.auth.enums;
 
 import lombok.Getter;
 

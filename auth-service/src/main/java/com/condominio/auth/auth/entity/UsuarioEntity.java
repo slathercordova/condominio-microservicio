@@ -1,8 +1,8 @@
 package com.condominio.auth.auth.entity;
 
-import com.condominio.auth.common.BaseEntity;
-import com.condominio.auth.common.enums.EstadoUsuario;
-import com.condominio.auth.common.enums.TipoBloqueo;
+import com.condominio.auth.common.audit.BaseEntity;
+import com.condominio.auth.auth.enums.EstadoUsuario;
+import com.condominio.auth.auth.enums.TipoBloqueo;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnTransformer;

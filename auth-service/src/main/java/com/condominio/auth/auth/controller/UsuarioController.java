@@ -1,5 +1,6 @@
 package com.condominio.auth.auth.controller;
 
+import com.condominio.auth.auth.dto.request.ChangePasswordRequest;
 import com.condominio.auth.auth.dto.request.LoginRequest;
 import com.condominio.auth.auth.dto.request.RefreshRequest;
 import com.condominio.auth.auth.dto.request.RegisterRequest;
@@ -43,9 +44,30 @@ public class UsuarioController {
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<ApiResponse<RefreshResponse>> refresh(@Valid @RequestBody RefreshRequest refreshRequest){
-        RefreshResponse refreshResponse = usuarioService.refreshToken(refreshRequest.refreshToken());
+    public ResponseEntity<ApiResponse<RefreshResponse>> refresh(@Valid @RequestBody RefreshRequest refreshRequest, HttpServletRequest httpRequest){
+        RefreshResponse refreshResponse = usuarioService.refreshToken(refreshRequest.refreshToken(), httpRequest);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ApiResponse<>(true, "Refresh exitoso", null, refreshResponse));
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<ApiResponse<Void>> logout(@Valid @RequestBody RefreshRequest refreshRequest){
+        usuarioService.logout(refreshRequest.refreshToken());
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new ApiResponse<>(true, "Logout exitoso", null, null));
+    }
+
+    @PostMapping("/logout-all")
+    public ResponseEntity<ApiResponse<Void>> logoutAll(){
+        usuarioService.logoutAll();
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new ApiResponse<>(true, "Se cerraron todas las sesiones", null, null));
+    }
+
+    @PutMapping("/change-password")
+    public ResponseEntity<ApiResponse<Void>> changePassword(@Valid @RequestBody ChangePasswordRequest cpRequest){
+        usuarioService.changePassword(cpRequest);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new ApiResponse<>(true,"Se cambió la contraseña correctamente", null, null));
     }
 }

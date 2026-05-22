@@ -1,4 +1,4 @@
-package com.condominio.auth.security;
+package com.condominio.auth.common.audit;
 
 import com.condominio.auth.common.util.SecurityUtils;
 import org.springframework.data.domain.AuditorAware;

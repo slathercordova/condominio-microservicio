@@ -1,4 +1,4 @@
-package com.condominio.persona.common;
+package com.condominio.auth.common.audit;
 
 import jakarta.persistence.*;
 import lombok.Getter;

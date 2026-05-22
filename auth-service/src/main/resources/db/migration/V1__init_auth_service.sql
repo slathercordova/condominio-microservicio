@@ -80,6 +80,10 @@ ALTER TABLE rol ADD CONSTRAINT fk_rol_usuario_ins FOREIGN KEY (created_by) REFER
 
 ALTER TABLE rol ADD CONSTRAINT fk_rol_usuario_upd FOREIGN KEY (updated_by) REFERENCES usuario (id) DEFERRABLE INITIALLY IMMEDIATE;
 
+ALTER TABLE refresh_token ADD CONSTRAINT fk_refresh_token_usuario_ins FOREIGN KEY (created_by) REFERENCES usuario (id) DEFERRABLE INITIALLY IMMEDIATE;
+
+ALTER TABLE refresh_token ADD CONSTRAINT fk_refresh_token_usuario_upd FOREIGN KEY (updated_by) REFERENCES usuario (id) DEFERRABLE INITIALLY IMMEDIATE;
+
 -- insert de la primera persona y usuario
 ALTER TABLE usuario DROP CONSTRAINT fk_usuario_usuario_ins;
 

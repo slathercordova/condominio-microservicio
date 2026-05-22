@@ -9,6 +9,7 @@ public class RequestUtils {
 
         String[] headers = {
                 "X-Forwarded-For",
+                "X-Real-IP",
                 "Proxy-Client-IP",
                 "WL-Proxy-Client-IP",
                 "HTTP_X_FORWARDED_FOR",
@@ -25,5 +26,9 @@ public class RequestUtils {
             }
         }
         return request.getRemoteAddr();
+    }
+
+    public String getUserAgent(HttpServletRequest request){
+        return request.getHeader("User-Agent");
     }
 }

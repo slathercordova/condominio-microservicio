@@ -1,14 +1,16 @@
 package com.condominio.auth.auth.service;
 
+import com.condominio.auth.auth.dto.request.ChangePasswordRequest;
 import com.condominio.auth.auth.dto.request.LoginRequest;
 import com.condominio.auth.auth.dto.request.PersonaRequest;
 import com.condominio.auth.auth.dto.request.RegisterRequest;
 import com.condominio.auth.auth.dto.response.*;
 import com.condominio.auth.auth.entity.RefreshTokenEntity;
 import com.condominio.auth.auth.entity.UsuarioEntity;
+import com.condominio.auth.auth.enums.EstadoUsuario;
+import com.condominio.auth.auth.enums.TipoBloqueo;
+import com.condominio.auth.auth.repository.RefreshTokenRepository;
 import com.condominio.auth.auth.repository.UsuarioRepository;
-import com.condominio.auth.common.enums.EstadoUsuario;
-import com.condominio.auth.common.enums.TipoBloqueo;
 import com.condominio.auth.common.exception.BusinessException;
 import com.condominio.auth.common.exception.ExternalServiceException;
 import com.condominio.auth.common.exception.ResourceAlreadyExistsException;
@@ -18,7 +20,8 @@ import com.condominio.auth.common.util.DateUtils;
 import com.condominio.auth.common.util.HashUtils;
 import com.condominio.auth.common.util.RequestUtils;
 import com.condominio.auth.common.util.SecurityUtils;
-import com.condominio.auth.feignclient.PersonaClient;
+import com.condominio.auth.email.EmailService;
+import com.condominio.auth.feignclient.PersonaClientWs;
 import com.condominio.auth.security.JwtService;
 import feign.FeignException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -37,20 +40,24 @@ public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
     private final ModelMapper modelMapper;
     private final SecurityUtils securityUtils;
-    private final PersonaClient personaClient;
+    private final PersonaClientWs personaClientWs;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
-    private static final int MAX_INTENTOS = 5;
     private final RequestUtils requestUtils;
+    private final RefreshTokenRepository refreshTokenRepository;
+    private final EmailService emailService;
+    private static final int MAX_INTENTOS = 5;
 
-    public UsuarioService(UsuarioRepository usuarioRepository, ModelMapper modelMapper, SecurityUtils securityUtils, PersonaClient personaClient, PasswordEncoder passwordEncoder, JwtService jwtService, RequestUtils requestUtils) {
+    public UsuarioService(UsuarioRepository usuarioRepository, ModelMapper modelMapper, SecurityUtils securityUtils, PersonaClientWs personaClientWs, PasswordEncoder passwordEncoder, JwtService jwtService, RequestUtils requestUtils, RefreshTokenRepository refreshTokenRepository, EmailService emailService) {
         this.usuarioRepository = usuarioRepository;
         this.modelMapper = modelMapper;
         this.securityUtils = securityUtils;
-        this.personaClient = personaClient;
+        this.personaClientWs = personaClientWs;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.requestUtils = requestUtils;
+        this.refreshTokenRepository = refreshTokenRepository;
+        this.emailService = emailService;
     }
 
     @Transactional
@@ -68,7 +75,7 @@ public class UsuarioService {
         ApiResponse<PersonaDetailResponse> personaDetailResponse = null;
         UUID idPersona = null;
         try {
-            personaDetailResponse = personaClient.findPersonaPorDocumento(registerRequest.getTipoDocumento(), registerRequest.getNumeroDocumento());
+            personaDetailResponse = personaClientWs.findPersonaPorDocumento(registerRequest.getTipoDocumento(), registerRequest.getNumeroDocumento());
             log.debug("Respuesta ws persona : {}", personaDetailResponse);
             //  Validar que no exista el id persona con otro usuario ya creado
             idPersona = personaDetailResponse.getData().getId();
@@ -81,7 +88,7 @@ public class UsuarioService {
             PersonaRequest personaRequest = modelMapper.map(registerRequest, PersonaRequest.class);
             personaRequest.setEstado(true);
             log.debug("Llamando a servicio de persona para crearla : {}", personaRequest);
-            ApiResponse<PersonaResponse> personaCreateResponse = personaClient.createPersona(personaRequest);
+            ApiResponse<PersonaResponse> personaCreateResponse = personaClientWs.createPersona(personaRequest);
             idPersona = personaCreateResponse.getData().getId();
             //  Si ya existe persona ya no hay necesidad de llamar al servicio que crea persona
         } catch (FeignException e) {
@@ -149,44 +156,124 @@ public class UsuarioService {
         rte.setExpiracionAt(jwtService.extractExpiration(refreshToken));
         rte.setUsado(false);
         rte.setRevocado(false);
-        String userAgent = httpRequest.getHeader("User-Agent");
-        rte.setDispositivo(userAgent);
+        rte.setDispositivo(requestUtils.getUserAgent(httpRequest));
         rte.setIp(requestUtils.getClientIp(httpRequest));
 
-        System.out.println("RTE: " + rte);
-
-        return new LoginResponse(accessToken,refreshToken,usuarioEntity.getId(),usuarioEntity.isPrimeraVez());
+        RefreshTokenEntity rteSaved = refreshTokenRepository.save(rte);
+        if (rteSaved.getId() == null) {
+            throw new BusinessException("No se pudo registrar el refresh token");
+        }
+        emailService.sendRecoveryCode("slathercordova@gmail.com","Recuperación de contraseña","aeaman12345");
+        return new LoginResponse(accessToken, refreshToken, usuarioEntity.getId(), usuarioEntity.isPrimeraVez());
     }
 
-    public RefreshResponse refreshToken(String refreshToken) {
-        try{
-            if(jwtService.isTokenExpired(refreshToken)){
-                throw new BusinessException("Refresh expirado");
-            }
-
-            String type = jwtService.extractType(refreshToken);
-
-            if(!type.equals("refresh")){
-                throw new BusinessException("Tipo de token inválido");
-            }
-
-            String username = jwtService.extractUsername(refreshToken);
-
-            if (username == null) {
-                throw new BusinessException("username de token inválido");
-            }
-
-            UsuarioEntity usuarioEntity = null;
-
-            usuarioEntity = usuarioRepository.findByUsername(username)
-                    .orElseThrow(()->new ResourceNotFoundException("Usuario no encontrado"));
-
-            String newAccessToken = jwtService.generateToken(usuarioEntity);
-
-            return new RefreshResponse(newAccessToken);
-
-        }catch(Exception e){
-            throw new BusinessException("Refresh inválido");
+    @Transactional
+    public RefreshResponse refreshToken(String oldRefreshToken, HttpServletRequest httpRequest) {
+        if (jwtService.isTokenExpired(oldRefreshToken)) {
+            throw new BusinessException("Refresh token expirado");
         }
+
+        String type = jwtService.extractType(oldRefreshToken);
+
+        if (!"refresh".equals(type)) {
+            throw new BusinessException("Tipo de token inválido");
+        }
+
+        String username = jwtService.extractUsername(oldRefreshToken);
+
+        if (username == null) {
+            throw new BusinessException("Username del token inválido");
+        }
+
+        UsuarioEntity usuarioEntity = usuarioRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario del token no encontrado"));
+
+        //  Buscar el token en BD
+        RefreshTokenEntity oldRTE = refreshTokenRepository.findByTokenHash(HashUtils.hashSha256(oldRefreshToken))
+                .orElseThrow(() -> new ResourceNotFoundException("Refresh token no encontrado"));
+
+        if (oldRTE.getExpiracionAt().isBefore(DateUtils.nowInstant())) {
+            throw new BusinessException("Refresh token bd expirado");
+        }
+
+        if (oldRTE.getRevocado()) {
+            throw new BusinessException("Refresh token está revocado");
+        }
+
+        if (oldRTE.getUsado()) {
+            throw new BusinessException("Refresh token se encuentra usado");
+        }
+
+        oldRTE.setUsado(true);
+        refreshTokenRepository.save(oldRTE);
+
+        String newAccessToken = jwtService.generateToken(usuarioEntity);
+        String newRefreshToken = jwtService.generateRefreshToken(usuarioEntity);
+
+        RefreshTokenEntity newRTE = new RefreshTokenEntity();
+        newRTE.setUsuarioId(usuarioEntity.getId());
+        newRTE.setTokenHash(HashUtils.hashSha256(newRefreshToken));
+        newRTE.setExpiracionAt(jwtService.extractExpiration(newRefreshToken));
+        newRTE.setUsado(false);
+        newRTE.setRevocado(false);
+        newRTE.setDispositivo(requestUtils.getUserAgent(httpRequest));
+        newRTE.setIp(requestUtils.getClientIp(httpRequest));
+
+        RefreshTokenEntity rteSaved = refreshTokenRepository.save(newRTE);
+
+        if (rteSaved.getId() == null) {
+            throw new BusinessException("No se pudo registrar el new refresh token");
+        }
+
+        return new RefreshResponse(newAccessToken, newRefreshToken, usuarioEntity.getId());
+    }
+
+    @Transactional
+    public void logout(String oldRefreshToken) {
+        String type = jwtService.extractType(oldRefreshToken);
+        if (!"refresh".equals(type)) {
+            throw new BusinessException("Tipo token inválido");
+        }
+
+        RefreshTokenEntity rte = refreshTokenRepository.findByTokenHash(HashUtils.hashSha256(oldRefreshToken))
+                .orElseThrow(() -> new ResourceNotFoundException("Refresh token no encontrado"));
+
+        if (rte.getRevocado()) {
+            throw new BusinessException("Refresh token ya revocado");
+        }
+
+        if (rte.getUsado()) {
+            throw new BusinessException("Refresh token ya utilizado");
+        }
+
+        rte.setRevocado(true);
+        refreshTokenRepository.save(rte);
+    }
+
+    @Transactional
+    public void logoutAll() {
+        UsuarioEntity ue = usuarioRepository.findById(securityUtils.getCurrentUserId())
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
+
+        int registros = refreshTokenRepository.revokeAllByUsuarioId(ue.getId(), securityUtils.getCurrentUserId());
+        log.info("Sesiones cerradas de {}, total = {}", ue.getId(), registros);
+    }
+
+    @Transactional
+    public void changePassword(ChangePasswordRequest cpRequest) {
+        UsuarioEntity ue = usuarioRepository.findById(securityUtils.getCurrentUserId())
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
+
+        if (!passwordEncoder.matches(cpRequest.oldPassword(), ue.getPassword())) {
+            throw new BusinessException("La contraseña actual es incorrecta");
+        }
+
+        if (passwordEncoder.matches(cpRequest.newPassword(), ue.getPassword())) {
+            throw new BusinessException("La nueva contraseña debe ser distinta");
+        }
+
+        ue.setPassword(passwordEncoder.encode(cpRequest.newPassword()));
+        usuarioRepository.save(ue);
+        logoutAll();
     }
 }

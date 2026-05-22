@@ -1,6 +1,6 @@
 package com.condominio.auth.auth.entity;
 
-import com.condominio.auth.common.BaseEntity;
+import com.condominio.auth.common.audit.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
