@@ -95,19 +95,9 @@ mvn -v
 Luego modificar el dockercompose general con la configuración de la base de datos y probar (revisar (1)docker-compose.yml (c/u)dockerfile y (c/u)application.yaml)
 
 //  Pendientes
-1. Cambiar contraseña
+1. Cambiar contraseña*
 
-2. Recuperar contraseña
-
-POST /forgot-password
-POST /reset-password
-
-flujo:
-
-usuario pone correo
-generas token temporal
-envías correo
-valida expiración
+2. Recuperar contraseña*
 
 3. Primera vez
 

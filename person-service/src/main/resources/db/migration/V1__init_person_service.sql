@@ -41,6 +41,8 @@ CREATE UNIQUE INDEX uq_tipdoc_nombre ON tipo_documento (nombre);
 
 CREATE UNIQUE INDEX uq_persona_docum ON persona (tipo_documento, numero_documento);
 
+CREATE UNIQUE INDEX uq_persona_correo ON persona (correo);
+
 COMMENT ON TABLE tipo_documento IS 'Tipos Documentos';
 
 COMMENT ON TABLE persona IS 'Personas';
@@ -58,11 +60,17 @@ VALUES ('22222222-2222-2222-2222-222222222222', 'CARNET DE EXTRANJERÍA', 'CEXT'
 INSERT INTO persona (id, tipo_documento, numero_documento, nacimiento, celular, correo, nombres, apellido_paterno,
                      apellido_materno, sexo, estado, created_by)
 VALUES ('00000000-0000-0000-0000-000000000000', '11111111-1111-1111-1111-111111111111', '00000000', '1900-01-01',
-        '999999999', 'AdminSistemaRoot@xxx.xxx', 'Admin', 'Sistema', 'Root',
-        'MASCULINO', true, '11111111-1111-1111-1111-111111111111');
+        '999999999', '00000@xxx.xxx', 'ADMIN', 'ADMIN', 'ADMIN',
+        'MASCULINO', true, '00000000-0000-0000-0000-000000000000');
 
-/*INSERT INTO persona (id, tipo_documento, numero_documento, nacimiento, celular, correo, nombres, apellido_paterno,
+INSERT INTO persona (id, tipo_documento, numero_documento, nacimiento, celular, correo, nombres, apellido_paterno,
                      apellido_materno, sexo, estado, created_by)
-VALUES ('11111111-1111-1111-1111-111111111111', '11111111-1111-1111-1111-111111111111', '72188386', '1993-09-23',
+VALUES ('11111111-1111-1111-1111-111111111111', '11111111-1111-1111-1111-111111111111', '11111111', '1900-01-01',
+        '999999999', '11111@xxx.xxx', 'PASSWORD', 'RECOVERY', 'JOB',
+        'MASCULINO', true, '00000000-0000-0000-0000-000000000000');
+
+INSERT INTO persona (id, tipo_documento, numero_documento, nacimiento, celular, correo, nombres, apellido_paterno,
+                     apellido_materno, sexo, estado, created_by)
+VALUES ('22222222-2222-2222-2222-222222222222', '11111111-1111-1111-1111-111111111111', '72188386', '1993-09-23',
         '928883429', 'slathercordova@gmail.com', 'LUDWING SLATHER', 'CÓRDOVA', 'AMEZ',
-        'MASCULINO', true, '11111111-1111-1111-1111-111111111111');*/
+        'MASCULINO', true, '00000000-0000-0000-0000-000000000000');

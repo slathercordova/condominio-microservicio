@@ -51,6 +51,17 @@ public class JwtService {
                 .compact();
     }
 
+    public String generatePasswordResetToken(UsuarioEntity usuario) {
+        return Jwts.builder()
+                .subject(usuario.getUsername())
+                .claim("userId",usuario.getId().toString())
+                .claim("type","password_reset")
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis()+ 1000 * 60 * 5)) //5 min
+                .signWith(getSignKey())
+                .compact();
+    }
+
     private Claims extractClaims(String token) {
         return Jwts.parser().verifyWith(getSignKey()).build().parseSignedClaims(token).getPayload();
     }

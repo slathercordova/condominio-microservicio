@@ -12,10 +12,12 @@ public class SecurityUtils {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         System.out.println(">>>>>>>>>>>>>>>> auth"+auth);
-        System.out.println(auth.getPrincipal());
-        System.out.println(auth.getCredentials());
-        System.out.println(auth.getDetails());
-        System.out.println(auth.getAuthorities());
+        if(auth != null){
+            System.out.println(auth.getPrincipal());
+            System.out.println(auth.getCredentials());
+            System.out.println(auth.getDetails());
+            System.out.println(auth.getAuthorities());
+        }
 
         if (auth == null
                 || !auth.isAuthenticated()
@@ -28,5 +30,23 @@ public class SecurityUtils {
             return uuid;
         }
         return null;
+    }
+
+    public UUID getCurrentUserId(UUID fallbackUser) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if (auth == null
+                || !auth.isAuthenticated()
+                || "anonymousUser".equals(auth.getPrincipal())) {
+
+            return fallbackUser;
+        }
+
+        Object principal = auth.getPrincipal();
+        if (principal instanceof UUID uuid) {
+            return uuid;
+        }
+        return fallbackUser;
     }
 }

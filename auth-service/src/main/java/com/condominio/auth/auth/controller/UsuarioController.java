@@ -1,9 +1,6 @@
 package com.condominio.auth.auth.controller;
 
-import com.condominio.auth.auth.dto.request.ChangePasswordRequest;
-import com.condominio.auth.auth.dto.request.LoginRequest;
-import com.condominio.auth.auth.dto.request.RefreshRequest;
-import com.condominio.auth.auth.dto.request.RegisterRequest;
+import com.condominio.auth.auth.dto.request.*;
 import com.condominio.auth.auth.dto.response.LoginResponse;
 import com.condominio.auth.auth.dto.response.RefreshResponse;
 import com.condominio.auth.auth.dto.response.RegisterResponse;
@@ -69,5 +66,19 @@ public class UsuarioController {
         usuarioService.changePassword(cpRequest);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ApiResponse<>(true,"Se cambió la contraseña correctamente", null, null));
+    }
+
+    @PutMapping("/forgot-password")
+    public ResponseEntity<ApiResponse<Void>> forgotPassword(@Valid @RequestBody ForgotPasswordRequest fpRequest){
+        usuarioService.forgotPassword(fpRequest);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new ApiResponse<>(true,"Si el correo existe, se enviaron instrucciones", null, null));
+    }
+
+    @PutMapping("/reset-password")
+    public ResponseEntity<ApiResponse<Void>> resetPassword(@Valid @RequestBody ResetPasswordRequest rpRequest){
+        usuarioService.resetPassword(rpRequest);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new ApiResponse<>(true,"Contraseña cambiada correctamente, vuelva a ingresar", null, null));
     }
 }

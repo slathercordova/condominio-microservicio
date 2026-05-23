@@ -1,9 +1,6 @@
 package com.condominio.auth.auth.service;
 
-import com.condominio.auth.auth.dto.request.ChangePasswordRequest;
-import com.condominio.auth.auth.dto.request.LoginRequest;
-import com.condominio.auth.auth.dto.request.PersonaRequest;
-import com.condominio.auth.auth.dto.request.RegisterRequest;
+import com.condominio.auth.auth.dto.request.*;
 import com.condominio.auth.auth.dto.response.*;
 import com.condominio.auth.auth.entity.RefreshTokenEntity;
 import com.condominio.auth.auth.entity.UsuarioEntity;
@@ -16,10 +13,7 @@ import com.condominio.auth.common.exception.ExternalServiceException;
 import com.condominio.auth.common.exception.ResourceAlreadyExistsException;
 import com.condominio.auth.common.exception.ResourceNotFoundException;
 import com.condominio.auth.common.response.ApiResponse;
-import com.condominio.auth.common.util.DateUtils;
-import com.condominio.auth.common.util.HashUtils;
-import com.condominio.auth.common.util.RequestUtils;
-import com.condominio.auth.common.util.SecurityUtils;
+import com.condominio.auth.common.util.*;
 import com.condominio.auth.email.EmailService;
 import com.condominio.auth.feignclient.PersonaClientWs;
 import com.condominio.auth.security.JwtService;
@@ -144,6 +138,7 @@ public class UsuarioService {
         }
 
         //  Si el usuario se loguea exitosamente reset # intentos, actualizar fecha y hora de último login y devolver token
+        usuarioEntity.setTipoBloqueo(TipoBloqueo.SIN_BLOQUEO);
         usuarioEntity.setIntentoErroneo(0);
         usuarioEntity.setUltimoLogin(now);
 
@@ -163,7 +158,7 @@ public class UsuarioService {
         if (rteSaved.getId() == null) {
             throw new BusinessException("No se pudo registrar el refresh token");
         }
-        emailService.sendRecoveryCode("slathercordova@gmail.com","Recuperación de contraseña","aeaman12345");
+
         return new LoginResponse(accessToken, refreshToken, usuarioEntity.getId(), usuarioEntity.isPrimeraVez());
     }
 
@@ -272,8 +267,74 @@ public class UsuarioService {
             throw new BusinessException("La nueva contraseña debe ser distinta");
         }
 
+        ue.setPrimeraVez(false);
         ue.setPassword(passwordEncoder.encode(cpRequest.newPassword()));
         usuarioRepository.save(ue);
         logoutAll();
+    }
+
+    @Transactional
+    public void forgotPassword(ForgotPasswordRequest fpRequest){
+        UsuarioEntity ue = usuarioRepository.findByCorreo(fpRequest.correo())
+                .orElse(null);
+
+        if(ue == null){
+            log.info("Forgot password solicitado para correo inexistente {}",fpRequest.correo());
+            return;
+        }
+
+        //  Actualizamos los campos del usuario
+        ue.setIntentoErroneo(0);
+        ue.setTipoBloqueo(TipoBloqueo.OLVIDE_CONTRASEÑA);
+        ue.setEstado(EstadoUsuario.ACTIVO);
+        ue.setUpdatedBy(securityUtils.getCurrentUserId(DatosConstant.PASSWORD_RECOVERY_JOB));
+
+        usuarioRepository.save(ue);
+
+        String tmpAccessToken = jwtService.generatePasswordResetToken(ue);
+
+        emailService.sendRecoveryCode(ue.getCorreo(),tmpAccessToken);
+
+        logoutAllUserId(ue.getId(),DatosConstant.PASSWORD_RECOVERY_JOB);
+    }
+
+    @Transactional
+    private void logoutAllUserId(UUID userId, UUID updateBy) {
+        int registros = refreshTokenRepository.revokeAllByUsuarioId(userId, securityUtils.getCurrentUserId(updateBy));
+        log.info("Sesiones cerradas de {}, total = {}", userId, registros);
+    }
+
+    @Transactional
+    public void resetPassword(ResetPasswordRequest rpRequest) {
+
+        if (jwtService.isTokenExpired(rpRequest.token())){
+            throw new BusinessException("Token de recuperación expirado");
+        }
+
+        String type = jwtService.extractType(rpRequest.token());
+        if (!"password_reset".equals(type)) {
+            throw new BusinessException("Tipo token inválido para reset");
+        }
+
+        UUID userId = jwtService.extractUserId(rpRequest.token());
+        if (userId == null){
+            throw new BusinessException("User ID token inválido para reset");
+        }
+
+        UsuarioEntity ue = usuarioRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
+
+        if (passwordEncoder.matches(rpRequest.password(), ue.getPassword())) {
+            throw new BusinessException("La nueva contraseña debe ser distinta a la actual");
+        }
+
+        ue.setPassword(passwordEncoder.encode(rpRequest.password()));
+        ue.setIntentoErroneo(0);
+        ue.setTipoBloqueo(TipoBloqueo.SIN_BLOQUEO);
+        ue.setPrimeraVez(false);
+        ue.setEstado(EstadoUsuario.ACTIVO);
+
+        usuarioRepository.save(ue);
+        logoutAllUserId(ue.getId(),DatosConstant.PASSWORD_RECOVERY_JOB);
     }
 }
