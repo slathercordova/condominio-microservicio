@@ -1,0 +1,19 @@
+* [33md9c4a1f[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m)[m se agrega envío de correos, cambio de contraseña y más cosas
+* [33md3164b1[m se agrega envío de correos, cambio de contraseña y más cosas
+* [33mf523ee1[m se agrega funcionalidad login persistido, ips, agente, etc
+* [33m7f2ff3c[m se agrega funcionalidad login persistido, ips, agente, etc
+* [33mf0cccb2[m 20/05/2026 modificaciones varias
+* [33m680a591[m se agrega funcionalidad de refresh token y varias modificaciones
+* [33m02fa5d5[m 19/05/2026 tarde, se agrega funcionalidad de login
+* [33md035e8a[m 18/05/2026 tarde, se inicia el desarrollo del login
+* [33m4124964[m 15/05/2026 tarde, se agrega funcionalidad de registro de usuario y extiende a persona
+* [33m4c9eb48[m 14/05/2026 tarde, se agrega funcionalidad del servicio de auth con persona
+* [33m94b7e0a[m 13/05/2026 noche creación de auth service
+* [33maa108a8[m 13/05/2026 tarde
+* [33m6f9a2f7[m 11/05/2026 tarde
+* [33m4ece158[m 08/05/2026 tarde
+* [33m4a6835c[m 08/05/2026 tarde
+* [33mb8aa215[m 06/05/2026 tarde
+* [33m861bae2[m 05/05/2026 noche
+* [33m589152c[m 05/05/2026 tarde
+* [33m0d6edb0[m Initial commit

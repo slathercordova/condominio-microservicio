@@ -64,8 +64,8 @@ delete from usuario a where a.id &lt;&gt; '11111111-1111-1111-1111-111111111111'
     <retain-sticky-names value="false" />
   </component>
   <component name="DBNavigator.Project.FileConnectionMappingManager">
-    <mapping file-url="file://$PROJECT_DIR$/scripts/Auth 5433.sql" connection-id="4c5f8c30-d818-41ab-b56a-870b8cf0be9c" session-id="MAIN" current-schema="public" />
     <mapping file-url="file://$PROJECT_DIR$/scripts/Persona 5432.sql" connection-id="0b0026d1-79fc-4e07-bb93-018ea57331f1" session-id="MAIN" current-schema="public" />
+    <mapping file-url="file://$PROJECT_DIR$/scripts/Auth 5433.sql" connection-id="4c5f8c30-d818-41ab-b56a-870b8cf0be9c" session-id="MAIN" current-schema="public" />
   </component>
   <component name="DBNavigator.Project.ObjectQuickFilterManager">
     <last-used-operator value="EQUAL" />
@@ -82,7 +82,7 @@ delete from usuario a where a.id &lt;&gt; '11111111-1111-1111-1111-111111111111'
           <description value="Conexión a puerto 5432" />
           <database-type value="POSTGRES" />
           <config-type value="BASIC" />
-          <database-version value="16.13" />
+          <database-version value="16.14" />
           <driver-source value="BUNDLED" />
           <driver-library value="" />
           <driver value="" />
@@ -203,7 +203,7 @@ delete from usuario a where a.id &lt;&gt; '11111111-1111-1111-1111-111111111111'
           <description value="Conexión auth 5433" />
           <database-type value="POSTGRES" />
           <config-type value="BASIC" />
-          <database-version value="16.13" />
+          <database-version value="16.14" />
           <driver-source value="BUNDLED" />
           <driver-library value="" />
           <driver value="" />
@@ -465,6 +465,7 @@ delete from usuario a where a.id &lt;&gt; '11111111-1111-1111-1111-111111111111'
           <content-type name="Java" enabled="true" />
           <content-type name="SQL" enabled="true" />
           <content-type name="PL/SQL" enabled="true" />
+          <content-type name="JPA QL" enabled="true" />
           <content-type name="JSON" enabled="true" />
           <content-type name="JSON5" enabled="true" />
           <content-type name="Groovy" enabled="true" />
