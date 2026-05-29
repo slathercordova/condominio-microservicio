@@ -21,6 +21,7 @@
     <modules>
         <module>person-service</module>
         <module>auth-service</module>
+        <module>edificio-service</module>
     </modules>
 
     <properties>

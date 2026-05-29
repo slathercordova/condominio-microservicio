@@ -1,0 +1,11 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5434/condominio_edificio
+    username: postgres
+    password: admin
+server:
+  port: 8082
+
+#url de person-service para ws
+person:
+  url: http://localhost:8080

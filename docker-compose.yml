@@ -38,6 +38,25 @@ services:
       timeout: 5s
       retries: 10
 
+  postgres-edificio:
+    image: postgres:16
+    #container_name: postgres-edificio
+    environment:
+      POSTGRES_DB: condominio_edificio
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+    ports:
+      - "5434:5432"
+    volumes:
+      - condominio_edificio_data:/var/lib/postgresql/data   # 💾 Persistencia
+    networks:
+      - ms-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
   # 🚀 microservicios
   person-service:
     build: ./person-service   # 📁 Ruta donde está el Dockerfile
@@ -72,10 +91,27 @@ services:
     networks:
       - ms-network
 
+  edificio-service:
+    build: ./edificio-service   # 📁 Ruta donde está el Dockerfile
+    container_name: edificio-service
+    ports:
+      - "8082:8080"           # 🌐 host:contenedor
+    depends_on:
+      postgres-edificio:
+        condition: service_healthy  # ⛓️ Espera a que postgres arranque
+    environment:
+      SPRING_PROFILES_ACTIVE: docker  # Esto le dice que use el profile docker del yml
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-edificio:5432/condominio_edificio
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: admin
+    networks:
+      - ms-network
+
 # 💾 Volumen para no perder datos
 volumes:
   condominio_person_data:
   condominio_auth_data:
+  condominio_edificio_data:
 
 # Networks
 networks:

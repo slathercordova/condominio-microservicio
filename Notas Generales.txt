@@ -149,12 +149,10 @@ git fetch
 
 
 //  Pendientes
-1. Cambiar contraseña*
-
-2. Recuperar contraseña*
-
-3. Primera vez
-
-5. Endpoint me
-
-
+- Agregar los enums de edificio
+- Primera vez
+- Endpoint me
+- Invalidar password reset token después de usarlo (tabla aparte o reutilizar refresh_token)
+- blacklist logout opcional
+- roles avanzados
+- manejo avanzado de auditoría
