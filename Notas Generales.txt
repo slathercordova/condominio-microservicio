@@ -149,6 +149,7 @@ git fetch
 
 
 //  Pendientes
+- Revisar porque no creo la base de datos de edificio
 - Agregar los enums de edificio
 - Primera vez
 - Endpoint me

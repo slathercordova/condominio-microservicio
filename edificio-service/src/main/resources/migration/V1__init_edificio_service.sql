@@ -558,3 +558,5 @@ ALTER TABLE ledger_recibo ADD CONSTRAINT fk_ledger_recibo FOREIGN KEY (id_recibo
 ALTER TABLE ledger_recibo ADD CONSTRAINT fk_ledger_unidad FOREIGN KEY (id_unidad) REFERENCES unidad (id) DEFERRABLE INITIALLY IMMEDIATE;
 
 ALTER TABLE ledger_recibo ADD CONSTRAINT fk_ledger_periodo FOREIGN KEY (id_periodo) REFERENCES periodo (id) DEFERRABLE INITIALLY IMMEDIATE;
+
+insert into
