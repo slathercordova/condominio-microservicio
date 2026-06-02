@@ -1,4 +1,4 @@
-package com.condominio.edificio.common.enums;
+package com.condominio.edificio.edificio.enums;
 
 import lombok.Getter;
 
