@@ -1,1 +1,1 @@
-select * from unidad_cargo_extra;
+select * from flyway_schema_history;

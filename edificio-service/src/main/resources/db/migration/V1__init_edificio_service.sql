@@ -97,7 +97,7 @@ CREATE TYPE tipo_evento_ledger AS ENUM (
 );
 
 CREATE TABLE rol (
-  id uuid PRIMARY KEY DEFAULT,
+  id uuid PRIMARY KEY,
   nombre varchar(30) NOT NULL,
   estado boolean NOT NULL,
   created_by uuid NOT NULL,
@@ -107,7 +107,7 @@ CREATE TABLE rol (
 );
 
 CREATE TABLE empresa (
-  id uuid PRIMARY KEY DEFAULT,
+  id uuid PRIMARY KEY,
   razon_Social varchar(100) NOT NULL,
   direccion varchar(250) NOT NULL,
   ruc varchar(11) NOT NULL,
@@ -124,8 +124,8 @@ CREATE TABLE empresa (
 );
 
 CREATE TABLE edificio (
-  id uuid PRIMARY KEY DEFAULT,
-  id_empresa uuid NOT NULL,
+  id uuid PRIMARY KEY,
+  id_empresa uuid,
   nombre varchar(100) NOT NULL,
   logo_url varchar(300),
   direccion varchar(250) NOT NULL,
@@ -146,7 +146,7 @@ CREATE TABLE edificio (
 );
 
 CREATE TABLE usuario_edificio (
-  id uuid PRIMARY KEY DEFAULT,
+  id uuid PRIMARY KEY,
   id_usuario uuid NOT NULL,
   id_edificio uuid NOT NULL,
   estado boolean NOT NULL,
@@ -157,7 +157,7 @@ CREATE TABLE usuario_edificio (
 );
 
 CREATE TABLE usuario_edificio_rol (
-  id uuid PRIMARY KEY DEFAULT,
+  id uuid PRIMARY KEY,
   id_usuario uuid NOT NULL,
   id_edificio uuid NOT NULL,
   id_rol uuid NOT NULL,
@@ -169,7 +169,7 @@ CREATE TABLE usuario_edificio_rol (
 );
 
 CREATE TABLE unidad (
-  id uuid PRIMARY KEY DEFAULT,
+  id uuid PRIMARY KEY,
   id_edificio uuid NOT NULL,
   codigo varchar(10) NOT NULL,
   logo_url varchar(300),
@@ -187,7 +187,7 @@ CREATE TABLE unidad (
 );
 
 CREATE TABLE persona_unidad (
-  id uuid PRIMARY KEY DEFAULT,
+  id uuid PRIMARY KEY,
   id_unidad uuid NOT NULL,
   id_persona uuid NOT NULL,
   es_responsable boolean NOT NULL,
@@ -202,7 +202,7 @@ CREATE TABLE persona_unidad (
 );
 
 CREATE TABLE concepto_base (
-  id uuid PRIMARY KEY DEFAULT,
+  id uuid PRIMARY KEY,
   nombre varchar(100) NOT NULL,
   tipo tipo_concepto NOT NULL,
   estado boolean NOT NULL,
@@ -213,7 +213,7 @@ CREATE TABLE concepto_base (
 );
 
 CREATE TABLE concepto_edificio (
-  id uuid PRIMARY KEY DEFAULT,
+  id uuid PRIMARY KEY,
   id_concepto_base uuid,
   id_edificio uuid NOT NULL,
   tipo tipo_concepto NOT NULL,
@@ -228,7 +228,7 @@ CREATE TABLE concepto_edificio (
 );
 
 CREATE TABLE periodo (
-  id uuid PRIMARY KEY DEFAULT,
+  id uuid PRIMARY KEY,
   ano smallint NOT NULL,
   mes smallint NOT NULL,
   id_edificio uuid NOT NULL,
@@ -251,7 +251,7 @@ CREATE TABLE periodo (
 );
 
 CREATE TABLE unidad_medidor_agua (
-  id uuid PRIMARY KEY DEFAULT,
+  id uuid PRIMARY KEY,
   id_unidad uuid NOT NULL,
   id_periodo uuid NOT NULL,
   lectura_anterior numeric(10,3) NOT NULL,
@@ -267,7 +267,7 @@ CREATE TABLE unidad_medidor_agua (
 );
 
 CREATE TABLE gasto_periodo (
-  id uuid PRIMARY KEY DEFAULT,
+  id uuid PRIMARY KEY,
   id_periodo uuid NOT NULL,
   id_concepto_edificio uuid,
   orden smallint NOT NULL,
@@ -284,7 +284,7 @@ CREATE TABLE gasto_periodo (
 );
 
 CREATE TABLE gasto_periodo_unidad (
-  id uuid PRIMARY KEY DEFAULT,
+  id uuid PRIMARY KEY,
   id_gasto_periodo uuid NOT NULL,
   id_unidad uuid NOT NULL,
   ss_tipo tipo_concepto NOT NULL,
@@ -302,7 +302,7 @@ CREATE TABLE gasto_periodo_unidad (
 );
 
 CREATE TABLE unidad_cargo_extra (
-  id uuid PRIMARY KEY DEFAULT,
+  id uuid PRIMARY KEY,
   id_unidad uuid NOT NULL,
   id_periodo uuid NOT NULL,
   tipo tipo_concepto_recibo NOT NULL,
@@ -319,7 +319,7 @@ CREATE TABLE unidad_cargo_extra (
 );
 
 CREATE TABLE recibo (
-  id uuid PRIMARY KEY DEFAULT,
+  id uuid PRIMARY KEY,
   id_unidad uuid NOT NULL,
   id_periodo uuid NOT NULL,
   id_persona_responsable uuid NOT NULL,
@@ -338,7 +338,7 @@ CREATE TABLE recibo (
 );
 
 CREATE TABLE recibo_detalle (
-  id uuid PRIMARY KEY DEFAULT,
+  id uuid PRIMARY KEY,
   id_recibo uuid NOT NULL,
   orden smallint NOT NULL,
   descripcion varchar(100) NOT NULL,
@@ -353,7 +353,7 @@ CREATE TABLE recibo_detalle (
 );
 
 CREATE TABLE pago (
-  id uuid PRIMARY KEY DEFAULT,
+  id uuid PRIMARY KEY,
   id_recibo uuid NOT NULL,
   fecha_pago date NOT NULL,
   monto numeric(12,2) NOT NULL,
@@ -367,7 +367,7 @@ CREATE TABLE pago (
 );
 
 CREATE TABLE ledger_recibo (
-  id uuid PRIMARY KEY DEFAULT,
+  id uuid PRIMARY KEY,
   id_recibo uuid NOT NULL,
   id_unidad uuid NOT NULL,
   id_periodo uuid NOT NULL,
@@ -559,4 +559,8 @@ ALTER TABLE ledger_recibo ADD CONSTRAINT fk_ledger_unidad FOREIGN KEY (id_unidad
 
 ALTER TABLE ledger_recibo ADD CONSTRAINT fk_ledger_periodo FOREIGN KEY (id_periodo) REFERENCES periodo (id) DEFERRABLE INITIALLY IMMEDIATE;
 
-insert into
+insert into empresa (id,razon_Social,direccion,ruc,telefono,celular,correo,id_representante,logo_url,estado,created_by)
+values('00000000-0000-0000-0000-000000000000','EMPRESA DE PRUEBA','Av. Cuba 123','11111111111',null,null,null,'22222222-2222-2222-2222-222222222222',null,true,'00000000-0000-0000-0000-000000000000');
+
+insert into edificio (id,id_empresa,nombre,logo_url,direccion,ruc,contingencia,tipo_cobro,aplica_mora,monto_mora,periodo_mora,dia_generacion,dia_vencimiento,dia_gracia,estado,created_by)
+values('00000000-0000-0000-0000-000000000000',null,'EDIFICIO TALARA',null,'Av. Talara 765',null,6,'PORCENTAJE',true,1,'DIARIO',25,5,0,true,'00000000-0000-0000-0000-000000000000');

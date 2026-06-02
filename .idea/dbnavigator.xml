@@ -78,8 +78,8 @@ delete from usuario a where a.id &lt;&gt; '11111111-1111-1111-1111-111111111111'
     <connections>
       <connection source-id="" id="0b0026d1-79fc-4e07-bb93-018ea57331f1" active="true" signed="true">
         <database>
-          <name value="Persona 5432" />
-          <description value="Conexión a puerto 5432" />
+          <name value="Edificio 5434" />
+          <description value="Conexión a puerto 5434" />
           <database-type value="POSTGRES" />
           <config-type value="BASIC" />
           <database-version value="16.14" />
@@ -88,8 +88,8 @@ delete from usuario a where a.id &lt;&gt; '11111111-1111-1111-1111-111111111111'
           <driver value="" />
           <url-type value="DATABASE" />
           <host value="localhost" />
-          <port value="5432" />
-          <database value="condominio_personas" />
+          <port value="5434" />
+          <database value="condominio_edificio" />
           <tns-folder value="" />
           <tns-profile value="" />
           <server-type value="" />
@@ -510,7 +510,7 @@ delete from usuario a where a.id &lt;&gt; '11111111-1111-1111-1111-111111111111'
             <filter-element type="OBJECT" id="index" selected="true" />
             <filter-element type="OBJECT" id="constraint" selected="true" />
             <filter-element type="OBJECT" id="trigger" selected="true" />
-            <filter-element type="OBJECT" id="synonym" selected="false" />
+            <filter-element type="OBJECT" id="synonym" selected="true" />
             <filter-element type="OBJECT" id="sequence" selected="true" />
             <filter-element type="OBJECT" id="procedure" selected="true" />
             <filter-element type="OBJECT" id="function" selected="true" />
@@ -521,22 +521,22 @@ delete from usuario a where a.id &lt;&gt; '11111111-1111-1111-1111-111111111111'
             <filter-element type="OBJECT" id="dblink" selected="true" />
           </user-schema>
           <public-schema>
-            <filter-element type="OBJECT" id="table" selected="false" />
-            <filter-element type="OBJECT" id="view" selected="false" />
-            <filter-element type="OBJECT" id="json view" selected="false" />
-            <filter-element type="OBJECT" id="materialized view" selected="false" />
-            <filter-element type="OBJECT" id="index" selected="false" />
-            <filter-element type="OBJECT" id="constraint" selected="false" />
-            <filter-element type="OBJECT" id="trigger" selected="false" />
-            <filter-element type="OBJECT" id="synonym" selected="false" />
-            <filter-element type="OBJECT" id="sequence" selected="false" />
-            <filter-element type="OBJECT" id="procedure" selected="false" />
-            <filter-element type="OBJECT" id="function" selected="false" />
-            <filter-element type="OBJECT" id="package" selected="false" />
-            <filter-element type="OBJECT" id="type" selected="false" />
-            <filter-element type="OBJECT" id="dimension" selected="false" />
-            <filter-element type="OBJECT" id="cluster" selected="false" />
-            <filter-element type="OBJECT" id="dblink" selected="false" />
+            <filter-element type="OBJECT" id="table" selected="true" />
+            <filter-element type="OBJECT" id="view" selected="true" />
+            <filter-element type="OBJECT" id="json view" selected="true" />
+            <filter-element type="OBJECT" id="materialized view" selected="true" />
+            <filter-element type="OBJECT" id="index" selected="true" />
+            <filter-element type="OBJECT" id="constraint" selected="true" />
+            <filter-element type="OBJECT" id="trigger" selected="true" />
+            <filter-element type="OBJECT" id="synonym" selected="true" />
+            <filter-element type="OBJECT" id="sequence" selected="true" />
+            <filter-element type="OBJECT" id="procedure" selected="true" />
+            <filter-element type="OBJECT" id="function" selected="true" />
+            <filter-element type="OBJECT" id="package" selected="true" />
+            <filter-element type="OBJECT" id="type" selected="true" />
+            <filter-element type="OBJECT" id="dimension" selected="true" />
+            <filter-element type="OBJECT" id="cluster" selected="true" />
+            <filter-element type="OBJECT" id="dblink" selected="true" />
           </public-schema>
           <any-schema>
             <filter-element type="OBJECT" id="table" selected="true" />
