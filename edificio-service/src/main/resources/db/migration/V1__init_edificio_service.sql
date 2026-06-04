@@ -564,3 +564,9 @@ values('00000000-0000-0000-0000-000000000000','EMPRESA DE PRUEBA','Av. Cuba 123'
 
 insert into edificio (id,id_empresa,nombre,logo_url,direccion,ruc,contingencia,tipo_cobro,aplica_mora,monto_mora,periodo_mora,dia_generacion,dia_vencimiento,dia_gracia,estado,created_by)
 values('00000000-0000-0000-0000-000000000000',null,'EDIFICIO TALARA',null,'Av. Talara 765',null,6,'PORCENTAJE',true,1,'DIARIO',25,5,0,true,'00000000-0000-0000-0000-000000000000');
+
+insert into usuario_edificio (id,id_usuario,id_edificio,estado,created_by)
+values('00000000-0000-0000-0000-000000000000','00000000-0000-0000-0000-000000000000','00000000-0000-0000-0000-000000000000',true,'00000000-0000-0000-0000-000000000000');
+
+insert into usuario_edificio (id,id_usuario,id_edificio,estado,created_by)
+values('11111111-1111-1111-1111-111111111111','22222222-2222-2222-2222-222222222222','00000000-0000-0000-0000-000000000000',true,'00000000-0000-0000-0000-000000000000');

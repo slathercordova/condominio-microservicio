@@ -1,1 +1,3 @@
-select * from flyway_schema_history;
+select * from empresa;
+select * from edificio;
+select * from usuario_edificio;

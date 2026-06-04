@@ -95,4 +95,8 @@ INSERT INTO usuario (id, id_persona, username, password, correo, tipo_bloqueo, p
 VALUES ('11111111-1111-1111-1111-111111111111', '11111111-1111-1111-1111-111111111111', 'PASSWORD_RECOVERY_JOB', '$2a$10$cQL.hWmztP4t./i9yeRcP.lHhxJuzG7/0TbrApLmHkbPO2SMh1zLe',
         '11111@xxx.xxx', 'SIN_BLOQUEO', false, 'ACTIVO','00000000-0000-0000-0000-000000000000');
 
+INSERT INTO usuario (id, id_persona, username, password, correo, tipo_bloqueo, primera_vez, estado, created_by)
+VALUES ('22222222-2222-2222-2222-222222222222', '22222222-2222-2222-2222-222222222222', 'LCORDOVA', '$2a$10$cQL.hWmztP4t./i9yeRcP.lHhxJuzG7/0TbrApLmHkbPO2SMh1zLe',
+        'slathercordova@gmail.com', 'SIN_BLOQUEO', false, 'ACTIVO','00000000-0000-0000-0000-000000000000');
+
 ALTER TABLE usuario ADD CONSTRAINT fk_usuario_usuario_ins FOREIGN KEY (created_by) REFERENCES usuario (id) DEFERRABLE INITIALLY IMMEDIATE;

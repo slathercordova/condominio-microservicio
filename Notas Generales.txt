@@ -149,8 +149,11 @@ git fetch
 
 
 //  Pendientes
-- Revisar porque no creo la base de datos de edificio
-- Agregar los enums de edificio
+- Crear servicio de rol
+- Crear servicio de usuario_edificio_rol
+- Modificar el jwtfilter para asignar permisos de acuerdo al rol de usuario_edificio_rol
+- Crear servicio de unidad
+- Crear servicio de persona_unidad
 - Primera vez
 - Endpoint me
 - Invalidar password reset token después de usarlo (tabla aparte o reutilizar refresh_token)
