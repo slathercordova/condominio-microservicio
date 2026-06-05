@@ -33,6 +33,11 @@ public class JwtFilter extends OncePerRequestFilter {
         String token = authHeader.substring(7);
 
         try {
+            if (!jwtService.isAccessToken(token)){
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                return;
+            }
+
             String username = jwtService.extractUsername(token);
             UUID userId = jwtService.extractUserId(token);
             if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null){

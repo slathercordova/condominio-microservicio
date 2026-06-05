@@ -7,5 +7,5 @@ server:
   port: 8082
 
 #url de person-service para ws
-person:
-  url: http://localhost:8080
+auth:
+  url: http://localhost:8081

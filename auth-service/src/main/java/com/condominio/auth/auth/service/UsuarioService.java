@@ -337,4 +337,13 @@ public class UsuarioService {
         usuarioRepository.save(ue);
         logoutAllUserId(ue.getId(),DatosConstant.PASSWORD_RECOVERY_JOB);
     }
+
+    @Transactional(readOnly = true)
+    public RegisterResponse findById(UUID id) {
+        UsuarioEntity ue = usuarioRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
+
+        RegisterResponse registerResponse = modelMapper.map(ue, RegisterResponse.class);
+        return registerResponse;
+    }
 }

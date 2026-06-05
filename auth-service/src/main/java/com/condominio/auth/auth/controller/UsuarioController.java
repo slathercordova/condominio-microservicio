@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/v1/auth")
 public class UsuarioController {
@@ -80,5 +82,12 @@ public class UsuarioController {
         usuarioService.resetPassword(rpRequest);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ApiResponse<>(true,"Contraseña cambiada correctamente, vuelva a ingresar", null, null));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<RegisterResponse>> findById(@PathVariable UUID id){
+        RegisterResponse respuesta = usuarioService.findById(id);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new ApiResponse<>(true,"Registro encontrado", null, respuesta));
     }
 }

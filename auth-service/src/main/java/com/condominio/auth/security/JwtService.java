@@ -99,4 +99,8 @@ public class JwtService {
             return false;
         }
     }
+
+    public boolean isAccessToken(String token){
+        return "access".equals(extractType(token));
+    }
 }

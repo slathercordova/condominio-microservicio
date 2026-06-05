@@ -75,11 +75,11 @@ Ejecutar los siguientes comandos para levantar el docker
 🧠 REGLA DE ORO
 Cambiaste	                Qué haces
 Primera vez                 mvn clean install + docker-compose up --build
-Cambios regulares	        mvn clean package + docker-compose up --build
+Cambios regulares	        mvn clean package -DskipTests + docker-compose up --build
 Cambios pequeños            mvn package + docker-compose restart nombre-service
 Solo config (yaml/env)	    docker-compose up --build
 Nada (solo levantar)	    docker-compose up
-Recompilar 1 módulo         compose up -d --build person-service
+Recompilar 1 módulo         mvn clean package -DskipTests + docker-compose up -d --build edificio-service
 
 Con este comando se borra todo porque dio error anteriormente
 docker compose down -v
@@ -91,6 +91,9 @@ Este comando sirve para temporalmente poner la variable java home a temurin
 $env:JAVA_HOME="C:\Users\gctic.qv\.jdks\temurin-17.0.18"
 $env:Path="$env:JAVA_HOME\bin;$env:Path"
 mvn -v
+
+Con este comando revisas el log del servicio
+docker logs edificio-service --tail 200
 
 Luego modificar el dockercompose general con la configuración de la base de datos y probar (revisar (1)docker-compose.yml (c/u)dockerfile y (c/u)application.yaml)
 
@@ -149,8 +152,6 @@ git fetch
 
 
 //  Pendientes
-- Crear servicio de rol
-- Crear servicio de usuario_edificio_rol
 - Modificar el jwtfilter para asignar permisos de acuerdo al rol de usuario_edificio_rol
 - Crear servicio de unidad
 - Crear servicio de persona_unidad

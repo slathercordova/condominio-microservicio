@@ -40,6 +40,10 @@ public class JwtService {
         return UUID.fromString(claims.get("userId", String.class));
     }
 
+    public String extractType(String token){
+        return extractClaims(token).get("type", String.class);
+    }
+
     public boolean isTokenValid(String token) {
         try {
             String username = extractUsername(token);
@@ -47,5 +51,9 @@ public class JwtService {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public boolean isAccessToken(String token){
+        return "access".equals(extractType(token));
     }
 }
