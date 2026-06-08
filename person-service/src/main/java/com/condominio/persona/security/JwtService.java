@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -55,5 +56,21 @@ public class JwtService {
 
     public boolean isAccessToken(String token){
         return "access".equals(extractType(token));
+    }
+
+    public UUID extractEdificioId(String token) {
+        String idEdificio = extractClaims(token).get("idEdificio", String.class);
+        return idEdificio == null ? null : UUID.fromString(idEdificio);
+    }
+
+    public List<String> extractRoles(String token) {
+        Claims claims = extractClaims(token);
+
+        Object roles = claims.get("roles");
+        if (roles instanceof List<?> list) {
+            return list.stream().map(String::valueOf).toList();
+        }
+
+        return List.of();
     }
 }

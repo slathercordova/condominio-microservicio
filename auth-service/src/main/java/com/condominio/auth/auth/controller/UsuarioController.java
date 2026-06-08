@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -29,6 +30,7 @@ public class UsuarioController {
     }
 
     @PostMapping("/register")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','ADMINISTRACION')")
     public ResponseEntity<ApiResponse<RegisterResponse>> registrarUsuario(@Valid @RequestBody RegisterRequest registerRequest){
         RegisterResponse registerResponse = usuarioService.registerUser(registerRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -89,5 +91,12 @@ public class UsuarioController {
         RegisterResponse respuesta = usuarioService.findById(id);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ApiResponse<>(true,"Registro encontrado", null, respuesta));
+    }
+
+    @PostMapping("/login/edificio/{idEdificio}")
+    public ResponseEntity<ApiResponse<LoginResponse>> loginEdificio(@PathVariable UUID idEdificio, HttpServletRequest httpRequest){
+        LoginResponse respuesta = usuarioService.loginUsuEdiRol(idEdificio,httpRequest);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new ApiResponse<>(true,"Login edificio", null, respuesta));
     }
 }

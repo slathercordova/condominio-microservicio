@@ -8,6 +8,7 @@ import com.condominio.persona.persona.service.PersonaService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -22,6 +23,7 @@ public class PersonaController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','ADMINISTRACION')")
     public ResponseEntity<ApiResponse<PersonaResponse>> addPersona(@Valid @RequestBody PersonaRequest personaRequest){
         PersonaResponse res = personaService.createPersona(personaRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -29,6 +31,7 @@ public class PersonaController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','ADMINISTRACION')")
     public ResponseEntity<ApiResponse<PersonaResponse>> deletePersona(@PathVariable UUID id){
         personaService.deletePersona(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
@@ -36,6 +39,7 @@ public class PersonaController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','ADMINISTRACION')")
     public ResponseEntity<ApiResponse<PersonaDetailResponse>> updatePersona(
             @PathVariable UUID id,
             @Valid @RequestBody PersonaRequest personaRequest){

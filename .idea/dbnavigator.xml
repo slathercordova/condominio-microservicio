@@ -89,7 +89,7 @@ delete from persona a where a.id <> '00000000-0000-0000-0000-000000000000';]]></
   </component>
   <component name="DBNavigator.Project.FileConnectionMappingManager">
     <mapping file-url="file://$PROJECT_DIR$/scripts/Edificio 5434.sql" connection-id="0b0026d1-79fc-4e07-bb93-018ea57331f1" session-id="MAIN" current-schema="public" />
-    <mapping file-url="file://$PROJECT_DIR$/scripts/Persona 5432.sql" connection-id="0b0026d1-79fc-4e07-bb93-018ea57331f1" session-id="MAIN" current-schema="public" />
+    <mapping file-url="file://$PROJECT_DIR$/scripts/Persona 5432.sql" connection-id="07a63abe-0db3-4543-93af-b47cf5e0f1c6" session-id="MAIN" current-schema="condominio_personas" />
     <mapping file-url="file://$PROJECT_DIR$/scripts/Auth 5433.sql" connection-id="4c5f8c30-d818-41ab-b56a-870b8cf0be9c" session-id="MAIN" current-schema="public" />
   </component>
   <component name="DBNavigator.Project.MethodExecutionManager">

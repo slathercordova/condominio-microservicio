@@ -9,3 +9,7 @@ server:
 #url de person-service para ws
 person:
   url: http://localhost:8080
+
+#url de person-service para ws
+edificio:
+  url: http://localhost:8082

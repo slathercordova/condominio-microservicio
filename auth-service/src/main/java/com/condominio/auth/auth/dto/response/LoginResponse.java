@@ -6,6 +6,7 @@ public record LoginResponse (
     String accessToken,
     String refreshToken,
     UUID id,
-    boolean primeraVez
+    boolean primeraVez,
+    boolean edificioSeleccionado
 ){
 }

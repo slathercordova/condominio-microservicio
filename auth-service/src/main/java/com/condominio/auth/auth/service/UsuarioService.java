@@ -15,6 +15,7 @@ import com.condominio.auth.common.exception.ResourceNotFoundException;
 import com.condominio.auth.common.response.ApiResponse;
 import com.condominio.auth.common.util.*;
 import com.condominio.auth.email.EmailService;
+import com.condominio.auth.feignclient.EdificioClientWs;
 import com.condominio.auth.feignclient.PersonaClientWs;
 import com.condominio.auth.security.JwtService;
 import feign.FeignException;
@@ -26,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -35,6 +37,7 @@ public class UsuarioService {
     private final ModelMapper modelMapper;
     private final SecurityUtils securityUtils;
     private final PersonaClientWs personaClientWs;
+    private final EdificioClientWs edificioClientWs;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final RequestUtils requestUtils;
@@ -42,11 +45,12 @@ public class UsuarioService {
     private final EmailService emailService;
     private static final int MAX_INTENTOS = 5;
 
-    public UsuarioService(UsuarioRepository usuarioRepository, ModelMapper modelMapper, SecurityUtils securityUtils, PersonaClientWs personaClientWs, PasswordEncoder passwordEncoder, JwtService jwtService, RequestUtils requestUtils, RefreshTokenRepository refreshTokenRepository, EmailService emailService) {
+    public UsuarioService(UsuarioRepository usuarioRepository, ModelMapper modelMapper, SecurityUtils securityUtils, PersonaClientWs personaClientWs, EdificioClientWs edificioClientWs, PasswordEncoder passwordEncoder, JwtService jwtService, RequestUtils requestUtils, RefreshTokenRepository refreshTokenRepository, EmailService emailService) {
         this.usuarioRepository = usuarioRepository;
         this.modelMapper = modelMapper;
         this.securityUtils = securityUtils;
         this.personaClientWs = personaClientWs;
+        this.edificioClientWs = edificioClientWs;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.requestUtils = requestUtils;
@@ -159,11 +163,12 @@ public class UsuarioService {
             throw new BusinessException("No se pudo registrar el refresh token");
         }
 
-        return new LoginResponse(accessToken, refreshToken, usuarioEntity.getId(), usuarioEntity.isPrimeraVez());
+        return new LoginResponse(accessToken, refreshToken, usuarioEntity.getId(), usuarioEntity.isPrimeraVez(),false);
     }
 
     @Transactional
     public RefreshResponse refreshToken(String oldRefreshToken, HttpServletRequest httpRequest) {
+        log.info(">>>>>INICIO REFRESH");
         if (jwtService.isTokenExpired(oldRefreshToken)) {
             throw new BusinessException("Refresh token expirado");
         }
@@ -202,8 +207,31 @@ public class UsuarioService {
         oldRTE.setUsado(true);
         refreshTokenRepository.save(oldRTE);
 
-        String newAccessToken = jwtService.generateToken(usuarioEntity);
-        String newRefreshToken = jwtService.generateRefreshToken(usuarioEntity);
+        UUID idEdificio = jwtService.extractEdificioId(oldRefreshToken);
+        log.info("Edificio={}", idEdificio);
+        String newAccessToken;
+        String newRefreshToken;
+        if (idEdificio != null) {
+            log.info("Consultando roles x edif ws usuario={} edificio={}",usuarioEntity.getId(),idEdificio);
+            try {
+                //todo validar que exista edificio por ws en todo este servicio
+                List<RolResponse> listaRoles = edificioClientWs.findRolesByUsuarioAndEdificio(usuarioEntity.getId(),idEdificio).getData();
+                log.info("Roles encontrados={}", listaRoles.size());
+
+                List<String> rolesStr = listaRoles.stream().map(RolResponse::getNombre).toList();
+
+                newAccessToken = jwtService.generateToken(usuarioEntity,idEdificio,rolesStr);
+                newRefreshToken = jwtService.generateRefreshToken(usuarioEntity,idEdificio);
+            } catch (Exception e) {
+                log.error("ERROR FEIGN", e);
+                throw e;
+            }
+        }else {
+            newAccessToken = jwtService.generateToken(usuarioEntity);
+            newRefreshToken = jwtService.generateRefreshToken(usuarioEntity);
+        }
+
+
 
         RefreshTokenEntity newRTE = new RefreshTokenEntity();
         newRTE.setUsuarioId(usuarioEntity.getId());
@@ -345,5 +373,50 @@ public class UsuarioService {
 
         RegisterResponse registerResponse = modelMapper.map(ue, RegisterResponse.class);
         return registerResponse;
+    }
+
+    // todo devolver lista de edificios del usuario
+
+
+    //todo revisar si es necesario que el login te envíe el anterior refresh token para invalidar
+    @Transactional
+    public LoginResponse loginUsuEdiRol(UUID idEdificio, HttpServletRequest httpRequest) {
+        UUID idUsuario = securityUtils.getCurrentUserId();
+        ApiResponse<List<RolResponse>> listaRoles;
+        try {
+            listaRoles = edificioClientWs.findRolesByUsuarioAndEdificio(idUsuario,idEdificio);
+        }catch (FeignException.NotFound e) {
+            log.error("No se encontraron roles para este usuario en el edificio seleccionado");
+            throw new ResourceNotFoundException("No se encontraron roles para este usuario en el edificio seleccionado");
+        } catch (FeignException e) {
+            log.error("Error consumiendo edificio-service: status={} body={}", e.status(), e.contentUTF8());
+            throw new ExternalServiceException("Error consumiendo edificio-service"+e);
+        }
+
+        UsuarioEntity usuarioEntity = usuarioRepository.findById(idUsuario)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
+
+        int registros = refreshTokenRepository.revokeAllByUsuarioId(usuarioEntity.getId(), securityUtils.getCurrentUserId());
+        log.info("Sesiones cerradas por login con edificio {}, total = {}", usuarioEntity.getId(), registros);
+
+        List<String> listaRolesStr = listaRoles.getData().stream().map(rolResponse -> rolResponse.getNombre()).toList();
+
+        String accessToken = jwtService.generateToken(usuarioEntity,idEdificio,listaRolesStr);
+        String refreshToken = jwtService.generateRefreshToken(usuarioEntity,idEdificio);
+
+        RefreshTokenEntity rte = new RefreshTokenEntity();
+        rte.setUsuarioId(usuarioEntity.getId());
+        rte.setTokenHash(HashUtils.hashSha256(refreshToken));
+        rte.setExpiracionAt(jwtService.extractExpiration(refreshToken));
+        rte.setUsado(false);
+        rte.setRevocado(false);
+        rte.setDispositivo(requestUtils.getUserAgent(httpRequest));
+        rte.setIp(requestUtils.getClientIp(httpRequest));
+
+        RefreshTokenEntity rteSaved = refreshTokenRepository.save(rte);
+        if (rteSaved.getId() == null) {
+            throw new BusinessException("No se pudo registrar el refresh token");
+        }
+        return new LoginResponse(accessToken, refreshToken, usuarioEntity.getId(), usuarioEntity.isPrimeraVez(),true);
     }
 }

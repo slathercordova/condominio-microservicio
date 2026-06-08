@@ -84,6 +84,9 @@ Recompilar 1 módulo         mvn clean package -DskipTests + docker-compose up -
 Con este comando se borra todo porque dio error anteriormente
 docker compose down -v
 
+si dicker falla por colgaduras
+docker builder prune -a
+
 Con este comando solo levantas BD
 docker-compose up postgres-person
 
@@ -152,6 +155,7 @@ git fetch
 
 
 //  Pendientes
+- crear servicio para mostrar los edificios del usuario que tiene asignados
 - Modificar el jwtfilter para asignar permisos de acuerdo al rol de usuario_edificio_rol
 - Crear servicio de unidad
 - Crear servicio de persona_unidad

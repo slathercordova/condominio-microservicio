@@ -6,3 +6,7 @@ spring:
 
 person:
   url: http://person-service:8080
+
+#url de person-service para ws
+edificio:
+  url: http://edificio-service:8080

@@ -2,12 +2,14 @@ package com.condominio.auth.common.exception;
 
 import com.condominio.auth.common.enums.ErrorCode;
 import com.condominio.auth.common.response.ApiResponse;
+import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.postgresql.util.PSQLException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -130,4 +132,16 @@ public class GlobalExceptionHandler {
                 .body(new ApiResponse<>(false,message, ErrorCode.INVALID_JSON, null));
     }
 
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ApiResponse<Void>> handleAccessDeniedException(AccessDeniedException ex) {
+        log.error("Error AccessDeniedException: ", ex);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(new ApiResponse<>(false,"No tiene permisos para acceder a este recurso",ErrorCode.ACCESS_DENIED,null));
+    }
+
+    @ExceptionHandler(FeignException.Forbidden.class)
+    public ResponseEntity<ApiResponse<Void>> handleForbidden(FeignException.Forbidden ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(new ApiResponse<>(false,"Acceso denegado",ErrorCode.FORBIDDEN,null));
+    }
 }

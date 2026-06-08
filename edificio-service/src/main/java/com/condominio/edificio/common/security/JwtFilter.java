@@ -5,6 +5,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -34,7 +36,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
         try {
             if (!jwtService.isAccessToken(token)){
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Se requiere access token");
                 return;
             }
 
@@ -42,8 +44,11 @@ public class JwtFilter extends OncePerRequestFilter {
             UUID userId = jwtService.extractUserId(token);
             if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null){
                 if (jwtService.isTokenValid(token)){
+                    List<String> roles = jwtService.extractRoles(token);
+                    List<GrantedAuthority> authorities = roles.stream()
+                            .map(rol -> (GrantedAuthority) new SimpleGrantedAuthority("ROLE_"+rol)).toList();
                     UsernamePasswordAuthenticationToken auth
-                            = new UsernamePasswordAuthenticationToken(userId, null, List.of());
+                            = new UsernamePasswordAuthenticationToken(userId,null,authorities);
 
                     SecurityContext securityContext = SecurityContextHolder.getContext();
                     securityContext.setAuthentication(auth);

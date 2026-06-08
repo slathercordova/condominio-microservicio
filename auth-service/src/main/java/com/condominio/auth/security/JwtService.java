@@ -12,6 +12,7 @@ import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -40,10 +41,35 @@ public class JwtService {
                 .compact();
     }
 
+    public String generateToken(UsuarioEntity usuario, UUID idEdificio, List<String> roles) {
+        return Jwts.builder()
+                .subject(usuario.getUsername())
+                .claim("userId", usuario.getId().toString())
+                .claim("idEdificio", idEdificio.toString())
+                .claim("roles", roles)
+                .claim("type","access")
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis()+expiration))
+                .signWith(getSignKey())
+                .compact();
+    }
+
     public String generateRefreshToken(UsuarioEntity usuario) {
         return Jwts.builder()
                 .subject(usuario.getUsername())
                 .claim("userId", usuario.getId().toString())
+                .claim("type","refresh")
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis()+ longExpiration))
+                .signWith(getSignKey())
+                .compact();
+    }
+
+    public String generateRefreshToken(UsuarioEntity usuario, UUID idEdificio) {
+        return Jwts.builder()
+                .subject(usuario.getUsername())
+                .claim("userId", usuario.getId().toString())
+                .claim("idEdificio", idEdificio.toString())
                 .claim("type","refresh")
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis()+ longExpiration))
@@ -102,5 +128,21 @@ public class JwtService {
 
     public boolean isAccessToken(String token){
         return "access".equals(extractType(token));
+    }
+
+    public UUID extractEdificioId(String token) {
+        String idEdificio = extractClaims(token).get("idEdificio", String.class);
+        return idEdificio == null ? null : UUID.fromString(idEdificio);
+    }
+
+    public List<String> extractRoles(String token) {
+        Claims claims = extractClaims(token);
+
+        Object roles = claims.get("roles");
+        if (roles instanceof List<?> list) {
+            return list.stream().map(String::valueOf).toList();
+        }
+
+        return List.of();
     }
 }

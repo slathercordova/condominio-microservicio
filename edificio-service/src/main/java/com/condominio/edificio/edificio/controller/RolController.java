@@ -7,6 +7,7 @@ import com.condominio.edificio.edificio.service.RolService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class RolController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','ADMINISTRACION')")
     public ResponseEntity<ApiResponse<RolResponse>> registrarRol(@Valid @RequestBody RolRequest rolRequest){
         RolResponse rolResponse = rolService.createRol(rolRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -29,6 +31,7 @@ public class RolController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','ADMINISTRACION')")
     public ResponseEntity<ApiResponse<RolResponse>> editRol(
             @PathVariable UUID id,
             @Valid @RequestBody RolRequest rolRequest){
@@ -38,6 +41,7 @@ public class RolController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','ADMINISTRACION')")
     public ResponseEntity<ApiResponse<Void>> eliminarRol(@PathVariable UUID id){
         rolService.deleteRol(id);
         return  ResponseEntity.status(HttpStatus.NO_CONTENT)
