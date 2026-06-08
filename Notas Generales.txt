@@ -165,3 +165,84 @@ git fetch
 - blacklist logout opcional
 - roles avanzados
 - manejo avanzado de auditoría
+
+//  PENDIENTES CRÍTICOS
+
+1. Seguridad interna entre microservicios
+- Actualmente:
+  /api/v1/usuedirol/usuario/{idUsuario}/edificio/{idEdificio}
+  está permitAll().
+- Debe reemplazarse por autenticación entre servicios:
+  - JWT service-to-service
+  - API Key interna
+  - OAuth2 Client Credentials
+  - o mTLS
+
+2. Logout
+- Implementar revocación de refresh token.
+- Opcional: blacklist temporal de access tokens.
+
+3. Recuperación de contraseña
+- Solicitud de recuperación.
+- Token temporal.
+- Cambio de contraseña.
+
+4. Cambio de contraseña autenticado.
+
+5. Manejo de primera vez
+- Forzar cambio de contraseña inicial.
+
+6. Modelo Rol
+Actualmente:
+- id
+- nombre
+
+Futuro:
+- id
+- codigo
+- nombre
+
+JWT debe almacenar:
+- codigo
+
+No nombre.
+
+7. common-core
+Extraer:
+- ApiResponse
+- ApiError
+- ErrorCode
+- GlobalExceptionHandler
+- excepciones comunes
+
+cuando existan 2 o 3 microservicios maduros.
+
+8. API Gateway
+- Validación JWT.
+- Routing.
+- Filtros globales.
+
+9. Config Server
+
+10. Vault
+
+11. Circuit Breaker
+
+Estado actual de madurez:
+
+✅ Login
+✅ JWT
+✅ Refresh Token rotativo
+✅ Roles por edificio
+✅ Roles actualizados automáticamente en refresh
+✅ Seguridad por @PreAuthorize
+✅ Eureka
+✅ API Gateway creado
+
+🚧 Logout
+🚧 Recuperación de contraseña
+🚧 Seguridad interna entre microservicios
+🚧 common-core
+🚧 Config Server
+🚧 Vault
+🚧 Circuit Breaker
