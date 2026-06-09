@@ -90,6 +90,9 @@ docker builder prune -a
 Con este comando solo levantas BD
 docker-compose up postgres-person
 
+Con este comando ignoro el archivo local para hacer pull
+git restore .idea/dbnavigator.xml
+
 Este comando sirve para temporalmente poner la variable java home a temurin
 $env:JAVA_HOME="C:\Users\gctic.qv\.jdks\temurin-17.0.18"
 $env:Path="$env:JAVA_HOME\bin;$env:Path"

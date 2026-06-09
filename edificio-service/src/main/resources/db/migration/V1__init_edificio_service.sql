@@ -135,9 +135,9 @@ CREATE TABLE edificio (
   aplica_mora boolean NOT NULL,
   monto_mora numeric(10,2),
   periodo_mora periodo_mora NOT NULL,
-  dia_generacion smallint NOT NULL,
-  dia_vencimiento smallint NOT NULL,
-  dia_gracia smallint NOT NULL,
+  dia_generacion int NOT NULL,
+  dia_vencimiento int NOT NULL,
+  dia_gracia int NOT NULL,
   estado boolean NOT NULL,
   created_by uuid NOT NULL,
   updated_by uuid,
@@ -229,17 +229,17 @@ CREATE TABLE concepto_edificio (
 
 CREATE TABLE periodo (
   id uuid PRIMARY KEY,
-  ano smallint NOT NULL,
-  mes smallint NOT NULL,
+  ano int NOT NULL,
+  mes int NOT NULL,
   id_edificio uuid NOT NULL,
   ss_contingencia numeric(5,2),
   ss_tipo_cobro tipo_cobro NOT NULL,
   ss_aplica_mora boolean NOT NULL,
   ss_monto_mora numeric(10,2),
   ss_periodo_mora periodo_mora NOT NULL,
-  ss_dia_generacion smallint NOT NULL,
-  ss_dia_vencimiento smallint NOT NULL,
-  ss_dia_gracia smallint NOT NULL,
+  ss_dia_generacion int NOT NULL,
+  ss_dia_vencimiento int NOT NULL,
+  ss_dia_gracia int NOT NULL,
   fecha_generacion date NOT NULL,
   fecha_vencimiento date NOT NULL,
   estado_periodo estado_periodo NOT NULL,
@@ -270,7 +270,7 @@ CREATE TABLE gasto_periodo (
   id uuid PRIMARY KEY,
   id_periodo uuid NOT NULL,
   id_concepto_edificio uuid,
-  orden smallint NOT NULL,
+  orden int NOT NULL,
   ss_tipo tipo_concepto NOT NULL,
   ss_es_recurrente boolean NOT NULL,
   ss_descripcion varchar(100) NOT NULL,
@@ -310,7 +310,7 @@ CREATE TABLE unidad_cargo_extra (
   fecha_origen date NOT NULL,
   monto numeric(12,2) NOT NULL,
   id_recibo_origen uuid,
-  dias_atraso smallint,
+  dias_atraso int,
   estado boolean NOT NULL,
   created_by uuid NOT NULL,
   updated_by uuid,
@@ -340,7 +340,7 @@ CREATE TABLE recibo (
 CREATE TABLE recibo_detalle (
   id uuid PRIMARY KEY,
   id_recibo uuid NOT NULL,
-  orden smallint NOT NULL,
+  orden int NOT NULL,
   descripcion varchar(100) NOT NULL,
   categoria tipo_concepto_recibo NOT NULL,
   monto numeric(12,2) NOT NULL,
@@ -571,13 +571,14 @@ values
 insert into usuario_edificio (id,id_usuario,id_edificio,estado,created_by)
 values
 ('00000000-0000-0000-0000-000000000000','00000000-0000-0000-0000-000000000000','00000000-0000-0000-0000-000000000000',true,'00000000-0000-0000-0000-000000000000'),
-('11111111-1111-1111-1111-111111111111','11111111-1111-1111-1111-111111111111','00000000-0000-0000-0000-000000000000',true,'00000000-0000-0000-0000-000000000000'),
-('22222222-2222-2222-2222-222222222222','22222222-2222-2222-2222-222222222222','00000000-0000-0000-0000-000000000000',true,'00000000-0000-0000-0000-000000000000');
+('11111111-1111-1111-1111-111111111111','00000000-0000-0000-0000-000000000000','11111111-1111-1111-1111-111111111111',true,'00000000-0000-0000-0000-000000000000'),
+('22222222-2222-2222-2222-222222222222','00000000-0000-0000-0000-000000000000','22222222-2222-2222-2222-222222222222',true,'00000000-0000-0000-0000-000000000000'),
+('33333333-3333-3333-3333-333333333333','22222222-2222-2222-2222-222222222222','00000000-0000-0000-0000-000000000000',true,'00000000-0000-0000-0000-000000000000');
 
 insert into rol(id, nombre, estado, created_by)
 values
 ('00000000-0000-0000-0000-000000000000','ADMINISTRADOR',true,'00000000-0000-0000-0000-000000000000'),
-('11111111-1111-1111-1111-111111111111','ADMINISTRACION',true,'00000000-0000-0000-0000-000000000000')
+('11111111-1111-1111-1111-111111111111','ADMINISTRACION',true,'00000000-0000-0000-0000-000000000000'),
 ('22222222-2222-2222-2222-222222222222','PROPIETARIO',true,'00000000-0000-0000-0000-000000000000');
 
 insert into usuario_edificio_rol(id,id_usuario,id_edificio,id_rol,estado,created_by)

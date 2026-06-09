@@ -13,10 +13,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/edificio")
-public class EdificioController {
+public class UsuarioEdificioController {
     private final UsuarioEdificioService usuarioEdificioService;
 
-    public EdificioController(UsuarioEdificioService usuarioEdificioService) {
+    public UsuarioEdificioController(UsuarioEdificioService usuarioEdificioService) {
         this.usuarioEdificioService = usuarioEdificioService;
     }
 
