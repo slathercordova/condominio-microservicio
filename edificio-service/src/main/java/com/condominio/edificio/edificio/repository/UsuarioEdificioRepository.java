@@ -20,4 +20,6 @@ public interface UsuarioEdificioRepository extends JpaRepository<UsuarioEdificio
                               and edi.estado = true
             """)
     List<ListaEdificiosXUsuarioResponse> listaEdificiosPorUsuario(@Param("idUsuario") UUID idUsuario);
+
+    boolean existsByIdUsuarioAndIdEdificioAndEstadoTrue(UUID idUsuario, UUID idEdificio);
 }

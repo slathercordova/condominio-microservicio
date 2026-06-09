@@ -53,9 +53,8 @@ public class UsuarioEdificioRolController {
                 .body(new  ApiResponse<>(true,"Eliminado",null,null));
     }
 
-    @GetMapping("/usuario/{idUsuario}/edificio/{idEdificio}")
-    public ResponseEntity<ApiResponse<List<RolResponse>>> findRolesByUsuarioAndEdificio(
-            @PathVariable UUID idUsuario,@PathVariable UUID idEdificio){
+    @GetMapping("/usuario/{idUsuario}/edificio/{idEdificio}/roles")
+    public ResponseEntity<ApiResponse<List<RolResponse>>> findRolesByUsuarioAndEdificio(@PathVariable UUID idUsuario, @PathVariable UUID idEdificio){
         List<RolResponse> listaRoles = usuarioEdificioRolService.findRolesByUsuarioAndEdificio(idUsuario,idEdificio);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new  ApiResponse<>(true,"Lista de Roles",null,listaRoles));

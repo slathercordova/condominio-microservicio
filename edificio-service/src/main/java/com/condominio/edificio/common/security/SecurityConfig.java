@@ -29,7 +29,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET,"/api/v1/edificio/test").permitAll()
                         // TODO: proteger endpoint para consumo interno entre microservicios
-                        .requestMatchers(HttpMethod.GET,"/api/v1/usuedirol/usuario/*/edificio/*").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/api/v1/usuedirol/usuario/*/edificio/*/roles").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

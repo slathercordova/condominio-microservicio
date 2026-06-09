@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -27,5 +28,11 @@ public class UsuarioEdificioService {
     public List<ListaEdificiosXUsuarioResponse> listaEdificiosDeUsuario() {
         List<ListaEdificiosXUsuarioResponse> listaEdificios = usuarioEdificioRepository.listaEdificiosPorUsuario(securityUtils.getCurrentUserId());
         return listaEdificios;
+    }
+
+    @Transactional(readOnly = true)
+    public Boolean existsUsuarioEdificio(UUID idEdificio) {
+        Boolean existe = usuarioEdificioRepository.existsByIdUsuarioAndIdEdificioAndEstadoTrue(securityUtils.getCurrentUserId(),idEdificio);
+        return existe;
     }
 }

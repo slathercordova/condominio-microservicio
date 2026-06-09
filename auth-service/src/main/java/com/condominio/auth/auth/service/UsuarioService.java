@@ -382,6 +382,13 @@ public class UsuarioService {
     @Transactional
     public LoginResponse loginUsuEdiRol(UUID idEdificio, HttpServletRequest httpRequest) {
         UUID idUsuario = securityUtils.getCurrentUserId();
+
+        //  Verificar la relación de usuario con edificio
+        if(!edificioClientWs.existsUsuarioEdificio(idEdificio).getBody().getData()){
+            throw new BusinessException("El usuario no pertenece a este edificio");
+        }
+
+
         ApiResponse<List<RolResponse>> listaRoles;
         try {
             listaRoles = edificioClientWs.findRolesByUsuarioAndEdificio(idUsuario,idEdificio);
@@ -400,6 +407,10 @@ public class UsuarioService {
         log.info("Sesiones cerradas por login con edificio {}, total = {}", usuarioEntity.getId(), registros);
 
         List<String> listaRolesStr = listaRoles.getData().stream().map(rolResponse -> rolResponse.getNombre()).toList();
+
+        if (listaRoles == null || listaRoles.getData() == null || listaRoles.getData().isEmpty()) {
+            throw new BusinessException("El usuario no tiene roles en este edificio");
+        }
 
         String accessToken = jwtService.generateToken(usuarioEntity,idEdificio,listaRolesStr);
         String refreshToken = jwtService.generateRefreshToken(usuarioEntity,idEdificio);

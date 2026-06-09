@@ -158,8 +158,6 @@ git fetch
 
 
 //  Pendientes
-- crear servicio para mostrar los edificios del usuario que tiene asignados
-- Modificar el jwtfilter para asignar permisos de acuerdo al rol de usuario_edificio_rol
 - Crear servicio de unidad
 - Crear servicio de persona_unidad
 - Primera vez

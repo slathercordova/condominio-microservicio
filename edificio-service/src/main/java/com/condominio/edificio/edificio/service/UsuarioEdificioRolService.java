@@ -4,6 +4,7 @@ import com.condominio.edificio.common.exception.ExternalServiceException;
 import com.condominio.edificio.common.exception.ResourceAlreadyExistsException;
 import com.condominio.edificio.common.exception.ResourceNotFoundException;
 import com.condominio.edificio.common.response.ApiResponse;
+import com.condominio.edificio.common.util.SecurityUtils;
 import com.condominio.edificio.edificio.dto.request.UsuarioEdificioRolRequest;
 import com.condominio.edificio.edificio.dto.response.RegisterResponse;
 import com.condominio.edificio.edificio.dto.response.RolResponse;
@@ -30,13 +31,15 @@ public class UsuarioEdificioRolService {
     private final EdificioRepository edificioRepository;
     private final AuthClientWs  authClientWs;
     private final ModelMapper modelMapper;
+    private final SecurityUtils securityUtils;
 
-    public UsuarioEdificioRolService(UsuarioEdificioRolRepository usuarioEdificioRolRepository, RolRepository rolRepository, EdificioRepository edificioRepository, AuthClientWs authClientWs, ModelMapper modelMapper) {
+    public UsuarioEdificioRolService(UsuarioEdificioRolRepository usuarioEdificioRolRepository, RolRepository rolRepository, EdificioRepository edificioRepository, AuthClientWs authClientWs, ModelMapper modelMapper, SecurityUtils securityUtils) {
         this.usuarioEdificioRolRepository = usuarioEdificioRolRepository;
         this.rolRepository = rolRepository;
         this.edificioRepository = edificioRepository;
         this.authClientWs = authClientWs;
         this.modelMapper = modelMapper;
+        this.securityUtils = securityUtils;
     }
 
     @Transactional
