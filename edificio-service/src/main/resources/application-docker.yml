@@ -6,3 +6,6 @@ spring:
 
 auth:
   url: http://auth-service:8080
+
+person:
+  url: http://person-service:8080

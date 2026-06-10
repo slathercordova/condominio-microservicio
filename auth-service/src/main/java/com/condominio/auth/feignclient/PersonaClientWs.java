@@ -16,7 +16,7 @@ import java.util.UUID;
 @FeignClient(
         name = "person-client",
         url = "${person.url}",
-        configuration = FeignConfig.class)
+        configuration = FeignSecurityConfig.class)
 
 public interface PersonaClientWs {
     @GetMapping("/api/v1/persona/documento")

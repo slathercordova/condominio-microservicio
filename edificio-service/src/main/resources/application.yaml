@@ -34,12 +34,24 @@ logging:
     com.condominio.auth: DEBUG
     org.hibernate.SQL: DEBUG
     org.hibernate.orm.jdbc.bind: TRACE
+    feign: DEBUG
+    org.springframework.cloud.openfeign: DEBUG
+    com.condominio.edificio.feignclient: DEBUG
+    com.condominio.edificio.feignclient.SunatClientWs: DEBUG
 
 #config de security
 jwt:
   expiration: 900000
   long-expiration: 604800000
   secret: mi_clave_super_secreta_12345678901234567890
+
+#url de reniec para ws
+sunat:
+  url: https://api.decolecta.com/v1/sunat/ruc/full
+
+#token de url de reniec para ws
+api:
+  token: sk_15447.JV3izpDQeYgVpb3Gg3eCn1d0DAzkg8TQ
 
 
 

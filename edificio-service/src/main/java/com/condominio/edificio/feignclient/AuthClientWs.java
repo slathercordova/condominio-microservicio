@@ -11,7 +11,7 @@ import java.util.UUID;
 @FeignClient(
         name = "auth-client",
         url = "${auth.url}",
-        configuration = FeignConfig.class)
+        configuration = FeignSecurityConfig.class)
 
 public interface AuthClientWs {
     @GetMapping("/api/v1/auth/{id}")

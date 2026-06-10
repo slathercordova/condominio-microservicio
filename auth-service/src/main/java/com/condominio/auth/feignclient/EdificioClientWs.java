@@ -13,7 +13,7 @@ import java.util.UUID;
 @FeignClient(
         name = "edificio-client",
         url = "${edificio.url}",
-        configuration = FeignConfig.class)
+        configuration = FeignSecurityConfig.class)
 
 public interface EdificioClientWs {
     @GetMapping("/api/v1/usuedirol/usuario/{idUsuario}/edificio/{idEdificio}/roles")

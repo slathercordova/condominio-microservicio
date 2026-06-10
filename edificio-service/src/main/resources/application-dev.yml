@@ -9,3 +9,7 @@ server:
 #url de person-service para ws
 auth:
   url: http://localhost:8081
+
+#url de person-service para ws
+person:
+  url: http://localhost:8080
