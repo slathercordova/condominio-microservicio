@@ -2,6 +2,8 @@ package com.condominio.edificio.common.exception;
 
 import com.condominio.edificio.common.enums.ErrorCode;
 import com.condominio.edificio.common.response.ApiResponse;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.postgresql.util.PSQLException;
@@ -15,10 +17,9 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDate;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestControllerAdvice
@@ -120,14 +121,25 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ApiResponse<Void>> handleJsonParseError(HttpMessageNotReadableException ex) {
         String message = "JSON inválido";
-        String error = ex.getMostSpecificCause().getMessage();
-        if (error.contains("LocalDate")) {
-            message = "Fecha inválida. Formato esperado: yyyy-MM-dd";
-        }
-        else if (error.contains("TipoSexo")) {
-            message = "Sexo inválido. Valores permitidos: MASCULINO, FEMENINO";
-        }
+        Throwable cause = ex.getMostSpecificCause();
 
+        if (cause instanceof InvalidFormatException ife){
+            Class<?> targetType = ife.getTargetType();
+            String field = ife.getPath().stream()
+                    .findFirst().map(JsonMappingException.Reference::getFieldName)
+                    .orElse("desconocido");
+
+            if (targetType.isEnum()){
+                String valoresPermitidos = Arrays.stream(targetType.getEnumConstants())
+                        .map(Object::toString)
+                        .collect(Collectors.joining(", "));
+                message = String.format("Valor inválido para '%s'. Valores permitidos: %s",field,valoresPermitidos);
+            } else if (LocalDate.class.equals(targetType)) {
+                message = String.format("Fecha inválida para '%s'. Formato esperado: yyyy-MM-dd",field);
+            }else {
+                message = String.format("Valor inválido para '%s'",field);
+            }
+        }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ApiResponse<>(false,message, ErrorCode.INVALID_JSON, null));
     }

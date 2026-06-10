@@ -51,17 +51,17 @@ public class EdificioEntity extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @ColumnTransformer(write = "?::periodo_mora")
-    @Column(name = "periodo_mora", nullable = false)
+    @Column(name = "periodo_mora")
     private PeriodoMora periodoMora;
 
     @Column(name = "dia_generacion",nullable = false)
-    private int diaGeneracion;
+    private Integer diaGeneracion;
 
     @Column(name = "dia_vencimiento",nullable = false)
-    private int diaVencimiento;
+    private Integer diaVencimiento;
 
     @Column(name = "dia_gracia",nullable = false)
-    private int diaGracia;
+    private Integer diaGracia;
 
     @Column(name = "estado",nullable = false)
     private Boolean estado;
