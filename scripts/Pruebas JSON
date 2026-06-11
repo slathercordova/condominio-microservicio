@@ -320,3 +320,37 @@ CREAR UNIDADES
   "tipoUnidad": "DEPARTAMENTO",
   "tipoAlquiler": "AIRBNB"
 }
+
+----------------------------------------------------
+CREAR PERSONA UNIDAD
+----------------------------------------------------
+
+{
+  "idUnidad": "28c74a29-e076-4143-a6a5-490e64e93480",
+  "idPersona": "22222222-2222-2222-2222-222222222222",
+  "esResponsable": true,
+  "fechaInicio": "2026-01-01",
+  "fechaFin": null,
+  "tipoPropiedad": "PROPIETARIO",
+  "estado": true
+}
+
+{
+  "idUnidad": "28c74a29-e076-4143-a6a5-490e64e93480",
+  "idPersona": "6c7ddd70-5c09-4c46-abb4-1556691c37e6",
+  "esResponsable": false,
+  "fechaInicio": "2026-01-01",
+  "fechaFin": null,
+  "tipoPropiedad": "PROPIETARIO",
+  "estado": true
+}
+
+{
+  "idUnidad": "28c74a29-e076-4143-a6a5-490e64e93480",
+  "idPersona": "ea891ee4-c471-4510-b1b9-a87ed5538362",
+  "esResponsable": true,
+  "fechaInicio": "2026-01-01",
+  "fechaFin": null,
+  "tipoPropiedad": "PROPIETARIO",
+  "estado": true
+}

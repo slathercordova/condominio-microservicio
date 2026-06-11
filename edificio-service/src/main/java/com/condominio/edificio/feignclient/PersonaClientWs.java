@@ -4,6 +4,7 @@ import com.condominio.edificio.common.response.ApiResponse;
 import com.condominio.edificio.edificio.dto.response.PersonaDetailResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.UUID;
@@ -18,4 +19,7 @@ public interface PersonaClientWs {
     ApiResponse<PersonaDetailResponse> findPersonaPorDocumento(
             @RequestParam UUID tipoDocumento,
             @RequestParam String numeroDocumento);
+
+    @GetMapping("/api/v1/persona/{id}")
+    ApiResponse<PersonaDetailResponse> findPersonaById(@PathVariable UUID id);
 }
