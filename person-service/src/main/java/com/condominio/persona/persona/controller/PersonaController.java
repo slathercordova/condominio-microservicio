@@ -31,7 +31,7 @@ public class PersonaController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR','ADMINISTRACION')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR')")
     public ResponseEntity<ApiResponse<PersonaResponse>> deletePersona(@PathVariable UUID id){
         personaService.deletePersona(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT)

@@ -1,0 +1,322 @@
+----------------------------------------------------
+CREAR TIPOS DE DOCUMENTO
+----------------------------------------------------
+{
+  "nombre": "PASAPORTE",
+  "nombreCorto": "PASS",
+  "estado": true
+}
+
+{
+  "nombre": "PERMISO TEMPORAL DE PERMANENCIA",
+  "nombreCorto": "PTP",
+  "estado": true
+}
+
+{
+  "nombre": "REGISTRO ÚNICO DE CONTRIBUYENTE",
+  "nombreCorto": "RUC",
+  "estado": true
+}
+
+{
+  "nombre": "LIBRETA ELECTORAL",
+  "nombreCorto": "LE",
+  "estado": false
+}
+
+{
+  "nombre": "",
+  "nombreCorto": "PASAPORTE",
+  "estado": null
+}
+
+----------------------------------------------------
+CREAR PERSONAS
+----------------------------------------------------
+{
+  "tipoDocumento": "11111111-1111-1111-1111-111111111111",
+  "numeroDocumento": "72145678",
+  "nacimiento": "1995-08-15",
+  "celular": "987654321",
+  "celular2": "912345678",
+  "correo": "juan.perez@gmail.com",
+  "correo2": "juan.perez.trabajo@gmail.com",
+  "nombres": "JUAN CARLOS",
+  "apellidoPaterno": "PEREZ",
+  "apellidoMaterno": "GOMEZ",
+  "sexo": "MASCULINO",
+  "estado": true
+}
+
+{
+  "tipoDocumento": "22222222-2222-2222-2222-222222222222",
+  "numeroDocumento": "CE1234567",
+  "nacimiento": "1988-03-21",
+  "celular": "999888777",
+  "celular2": null,
+  "correo": "maria.rodriguez@example.com",
+  "correo2": null,
+  "nombres": "MARIA ELENA",
+  "apellidoPaterno": "RODRIGUEZ",
+  "apellidoMaterno": "MORALES",
+  "sexo": "FEMENINO",
+  "estado": true
+}
+
+{
+  "tipoDocumento": null,
+  "numeroDocumento": "",
+  "nacimiento": "2099-12-31",
+  "celular": "ABC123",
+  "celular2": "999-999-999-999-999-999-999",
+  "correo": "correo-invalido",
+  "correo2": "@gmail",
+  "nombres": "ESTE NOMBRE ES DEMASIADO LARGO PARA PASAR LA VALIDACION",
+  "apellidoPaterno": "ESTE APELLIDO PATERNO ES DEMASIADO LARGO",
+  "apellidoMaterno": "ESTE APELLIDO MATERNO ES DEMASIADO LARGO",
+  "sexo": null,
+  "estado": null
+}
+
+----------------------------------------------------
+CREAR USUARIO
+----------------------------------------------------
+Este consulta a reniec y crea persona y usuario
+{
+  "tipoDocumento": "11111111-1111-1111-1111-111111111111",
+  "numeroDocumento": "72145678",
+  "nacimiento": "1995-08-15",
+  "celular": "987654321",
+  "correo": "juan.perez@gmail.com",
+  "nombres": "JUAN CARLOS",
+  "apellidoPaterno": "PEREZ",
+  "apellidoMaterno": "GOMEZ",
+  "sexo": "MASCULINO",
+  "username": "jperez",
+  "password": "Admin123*"
+}
+
+{
+  "tipoDocumento": null,
+  "numeroDocumento": "",
+  "nacimiento": "2099-12-31",
+  "celular": "ABC123",
+  "correo": "correo-invalido",
+  "nombres": "ESTE NOMBRE ES DEMASIADO LARGO PARA PASAR LA VALIDACION DE TREINTA CARACTERES",
+  "apellidoPaterno": "ESTE APELLIDO PATERNO ES DEMASIADO LARGO PARA LA VALIDACION",
+  "apellidoMaterno": "ESTE APELLIDO MATERNO ES DEMASIADO LARGO PARA LA VALIDACION",
+  "sexo": null,
+  "username": "a",
+  "password": "123"
+}
+
+----------------------------------------------------
+CREAR EMPRESA
+----------------------------------------------------
+{
+  "ruc": "20601030013",
+  "telefono": "014567890",
+  "celular": "987654321",
+  "correo": "contacto@rextie.com",
+  "tipoDocumentoRepre": "11111111-1111-1111-1111-111111111111",
+  "numeroDocumentoRepre": "72188386",
+  "logoUrl": "https://empresa.com/logo.png"
+}
+
+----------------------------------------------------
+CREAR EDIFICIO
+----------------------------------------------------
+{
+  "idEmpresa": null,
+  "nombre": "Edificio Los Pinos",
+  "logoUrl": "https://midominio.com/logo.png",
+  "direccion": "Av. Javier Prado 123, San Isidro",
+  "ruc": "",
+  "contingencia": 5.50,
+  "tipoCobro": "PORCENTAJE",
+  "aplicaMora": false,
+  "montoMora": 50,
+  "periodoMora": null,
+  "diaGeneracion": 25,
+  "diaVencimiento": 5,
+  "diaGracia": 0
+}
+
+----------------------------------------------------
+CREAR ROLES
+----------------------------------------------------
+
+{
+  "nombre": "INQUILINO",
+  "estado": true
+}
+
+{
+  "nombre": "VIGILANCIA",
+  "estado": true
+}
+
+{
+  "nombre": "RECEPCION",
+  "estado": true
+}
+
+{
+  "nombre": "CONSERJE",
+  "estado": true
+}
+
+{
+  "nombre": "JUNTA DIRECTIVA",
+  "estado": true
+}
+
+{
+  "nombre": "TESORERO",
+  "estado": true
+}
+
+{
+  "nombre": "PRESIDENTE",
+  "estado": true
+}
+
+{
+  "nombre": "CONTADOR",
+  "estado": true
+}
+
+{
+  "nombre": "MANTENIMIENTO",
+  "estado": true
+}
+
+{
+  "nombre": "AUDITOR",
+  "estado": true
+}
+
+----------------------------------------------------
+CREAR UNIDADES
+----------------------------------------------------
+
+{
+  "idEdificio": "00000000-0000-0000-0000-000000000000",
+  "codigo": "D101",
+  "logoUrl": null,
+  "piso": 1,
+  "torre": "A",
+  "metraje": 85.500,
+  "porcentaje": 0,
+  "tipoUnidad": "DEPARTAMENTO",
+  "tipoAlquiler": null
+}
+
+{
+  "idEdificio": "00000000-0000-0000-0000-000000000000",
+  "codigo": "D102",
+  "logoUrl": null,
+  "piso": 1,
+  "torre": "A",
+  "metraje": 78.250,
+  "porcentaje": 0,
+  "tipoUnidad": "DEPARTAMENTO",
+  "tipoAlquiler": "ALQUILER"
+}
+
+{
+  "idEdificio": "00000000-0000-0000-0000-000000000000",
+  "codigo": "D201",
+  "logoUrl": "https://cdn.ejemplo.com/unidades/d201.png",
+  "piso": 2,
+  "torre": "A",
+  "metraje": 92.750,
+  "porcentaje": 0,
+  "tipoUnidad": "DEPARTAMENTO",
+  "tipoAlquiler": "AIRBNB"
+}
+
+{
+  "idEdificio": "00000000-0000-0000-0000-000000000000",
+  "codigo": "C001",
+  "logoUrl": null,
+  "piso": 0,
+  "torre": "A",
+  "metraje": 12.500,
+  "porcentaje": 0,
+  "tipoUnidad": "COCHERA",
+  "tipoAlquiler": null
+}
+
+{
+  "idEdificio": "00000000-0000-0000-0000-000000000000",
+  "codigo": "C002",
+  "logoUrl": null,
+  "piso": 0,
+  "torre": "B",
+  "metraje": 13.000,
+  "porcentaje": 0,
+  "tipoUnidad": "COCHERA",
+  "tipoAlquiler": "ALQUILER"
+}
+
+{
+  "idEdificio": "00000000-0000-0000-0000-000000000000",
+  "codigo": "DEP01",
+  "logoUrl": null,
+  "piso": -1,
+  "torre": "A",
+  "metraje": 6.250,
+  "porcentaje": 0,
+  "tipoUnidad": "DEPOSITO",
+  "tipoAlquiler": null
+}
+
+{
+  "idEdificio": "00000000-0000-0000-0000-000000000000",
+  "codigo": "DEP02",
+  "logoUrl": null,
+  "piso": -1,
+  "torre": "B",
+  "metraje": 8.750,
+  "porcentaje": 0,
+  "tipoUnidad": "DEPOSITO",
+  "tipoAlquiler": "ALQUILER"
+}
+
+{
+  "idEdificio": "00000000-0000-0000-0000-000000000000",
+  "codigo": "L001",
+  "logoUrl": "https://cdn.ejemplo.com/locales/l001.png",
+  "piso": 1,
+  "torre": "COM",
+  "metraje": 120.000,
+  "porcentaje": 0,
+  "tipoUnidad": "LOCAL",
+  "tipoAlquiler": null
+}
+
+{
+  "idEdificio": "00000000-0000-0000-0000-000000000000",
+  "codigo": "L002",
+  "logoUrl": null,
+  "piso": 1,
+  "torre": "COM",
+  "metraje": 95.500,
+  "porcentaje": 0,
+  "tipoUnidad": "LOCAL",
+  "tipoAlquiler": "ALQUILER"
+}
+
+{
+  "idEdificio": "00000000-0000-0000-0000-000000000000",
+  "codigo": "PH801",
+  "logoUrl": "https://cdn.ejemplo.com/unidades/ph801.png",
+  "piso": 8,
+  "torre": "A",
+  "metraje": 180.750,
+  "porcentaje": 0,
+  "tipoUnidad": "DEPARTAMENTO",
+  "tipoAlquiler": "AIRBNB"
+}

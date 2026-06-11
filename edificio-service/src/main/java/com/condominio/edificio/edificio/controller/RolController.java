@@ -41,7 +41,7 @@ public class RolController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR','ADMINISTRACION')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR')")
     public ResponseEntity<ApiResponse<Void>> eliminarRol(@PathVariable UUID id){
         rolService.deleteRol(id);
         return  ResponseEntity.status(HttpStatus.NO_CONTENT)

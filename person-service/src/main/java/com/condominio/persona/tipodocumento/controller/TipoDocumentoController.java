@@ -34,7 +34,7 @@ public class TipoDocumentoController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR','ADMINISTRACION')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR')")
     public ResponseEntity<ApiResponse<Void>> delete(@PathVariable UUID id){
         tipoDocumentoService.deleteTipoDocumento(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT)

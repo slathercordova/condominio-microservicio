@@ -16,34 +16,34 @@
   </component>
   <component name="DBNavigator.Project.DatabaseAssistantManager">
     <assistants>
-      <assistant-state connection-id="07a63abe-0db3-4543-93af-b47cf5e0f1c6" assistant-type="SELECT_AI" default-profile-name="" selected-chat-id="" availability="UNAVAILABLE" acknowledgement="NONE">
-        <tools />
-      </assistant-state>
       <assistant-state connection-id="07a63abe-0db3-4543-93af-b47cf5e0f1c6" assistant-type="PUBLIC" default-profile-name="" selected-chat-id="" availability="AVAILABLE" acknowledgement="NONE" selected="true">
         <tools />
       </assistant-state>
-      <assistant-state connection-id="4c5f8c30-d818-41ab-b56a-870b8cf0be9c" assistant-type="SELECT_AI" default-profile-name="" selected-chat-id="" availability="UNAVAILABLE" acknowledgement="NONE">
+      <assistant-state connection-id="07a63abe-0db3-4543-93af-b47cf5e0f1c6" assistant-type="SELECT_AI" default-profile-name="" selected-chat-id="" availability="UNAVAILABLE" acknowledgement="NONE">
         <tools />
       </assistant-state>
       <assistant-state connection-id="4c5f8c30-d818-41ab-b56a-870b8cf0be9c" assistant-type="PUBLIC" default-profile-name="" selected-chat-id="" availability="AVAILABLE" acknowledgement="NONE" selected="true">
         <tools />
       </assistant-state>
-      <assistant-state connection-id="a7569c84-cf71-4fa9-a083-c9d136c9cf0c" assistant-type="SELECT_AI" default-profile-name="" selected-chat-id="" availability="UNAVAILABLE" acknowledgement="NONE">
+      <assistant-state connection-id="4c5f8c30-d818-41ab-b56a-870b8cf0be9c" assistant-type="SELECT_AI" default-profile-name="" selected-chat-id="" availability="UNAVAILABLE" acknowledgement="NONE">
         <tools />
       </assistant-state>
       <assistant-state connection-id="a7569c84-cf71-4fa9-a083-c9d136c9cf0c" assistant-type="PUBLIC" default-profile-name="" selected-chat-id="" availability="AVAILABLE" acknowledgement="NONE" selected="true">
         <tools />
       </assistant-state>
-      <assistant-state connection-id="d5bc77d4-f5e5-4ca6-8761-faf4bc067a44" assistant-type="SELECT_AI" default-profile-name="" selected-chat-id="" availability="UNAVAILABLE" acknowledgement="NONE">
+      <assistant-state connection-id="a7569c84-cf71-4fa9-a083-c9d136c9cf0c" assistant-type="SELECT_AI" default-profile-name="" selected-chat-id="" availability="UNAVAILABLE" acknowledgement="NONE">
         <tools />
       </assistant-state>
       <assistant-state connection-id="d5bc77d4-f5e5-4ca6-8761-faf4bc067a44" assistant-type="PUBLIC" default-profile-name="" selected-chat-id="" availability="AVAILABLE" acknowledgement="NONE" selected="true">
         <tools />
       </assistant-state>
-      <assistant-state connection-id="0b0026d1-79fc-4e07-bb93-018ea57331f1" assistant-type="SELECT_AI" default-profile-name="" selected-chat-id="" availability="UNAVAILABLE" acknowledgement="NONE">
+      <assistant-state connection-id="d5bc77d4-f5e5-4ca6-8761-faf4bc067a44" assistant-type="SELECT_AI" default-profile-name="" selected-chat-id="" availability="UNAVAILABLE" acknowledgement="NONE">
         <tools />
       </assistant-state>
       <assistant-state connection-id="0b0026d1-79fc-4e07-bb93-018ea57331f1" assistant-type="PUBLIC" default-profile-name="" selected-chat-id="" availability="AVAILABLE" acknowledgement="NONE" selected="true">
+        <tools />
+      </assistant-state>
+      <assistant-state connection-id="0b0026d1-79fc-4e07-bb93-018ea57331f1" assistant-type="SELECT_AI" default-profile-name="" selected-chat-id="" availability="UNAVAILABLE" acknowledgement="NONE">
         <tools />
       </assistant-state>
     </assistants>
@@ -95,7 +95,7 @@ delete from persona a where a.id <> '00000000-0000-0000-0000-000000000000';]]></
   </component>
   <component name="DBNavigator.Project.FileConnectionMappingManager">
     <mapping file-url="file://$PROJECT_DIR$/scripts/Edificio 5434.sql" connection-id="0b0026d1-79fc-4e07-bb93-018ea57331f1" session-id="MAIN" current-schema="public" />
-    <mapping file-url="file://$PROJECT_DIR$/scripts/Persona 5432.sql" connection-id="0b0026d1-79fc-4e07-bb93-018ea57331f1" session-id="MAIN" current-schema="public" />
+    <mapping file-url="file://$PROJECT_DIR$/scripts/Persona 5432.sql" connection-id="07a63abe-0db3-4543-93af-b47cf5e0f1c6" session-id="MAIN" current-schema="public" />
     <mapping file-url="file://$PROJECT_DIR$/scripts/Auth 5433.sql" connection-id="4c5f8c30-d818-41ab-b56a-870b8cf0be9c" session-id="MAIN" current-schema="public" />
   </component>
   <component name="DBNavigator.Project.MethodExecutionManager">

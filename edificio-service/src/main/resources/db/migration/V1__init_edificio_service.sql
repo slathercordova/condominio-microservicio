@@ -173,7 +173,7 @@ CREATE TABLE unidad (
   id_edificio uuid NOT NULL,
   codigo varchar(10) NOT NULL,
   logo_url varchar(300),
-  piso numeric(3) NOT NULL,
+  piso int NOT NULL,
   torre varchar(10) NOT NULL,
   metraje numeric(10,3) NOT NULL,
   porcentaje numeric(6,3) NOT NULL,

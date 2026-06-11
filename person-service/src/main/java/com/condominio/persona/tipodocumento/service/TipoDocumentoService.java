@@ -46,6 +46,7 @@ public class TipoDocumentoService {
 
         TipoDocumentoEntity tipDocEnt = new TipoDocumentoEntity();
         modelMapper.map(tipoDocumentoRequest, tipDocEnt);
+        tipDocEnt.setEstado(true);
 
         TipoDocumentoEntity saved = tipoDocumentoRepository.save(tipDocEnt);
 
