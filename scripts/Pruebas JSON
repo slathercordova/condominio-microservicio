@@ -158,11 +158,6 @@ CREAR ROLES
 }
 
 {
-  "nombre": "RECEPCION",
-  "estado": true
-}
-
-{
   "nombre": "CONSERJE",
   "estado": true
 }
