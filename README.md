@@ -387,6 +387,8 @@ http://localhost:8080
 
 ---
 
+## Imagenes
+
 ![img.png](img.png)
 
 ---

@@ -158,8 +158,7 @@ git fetch
 
 
 //  Pendientes
-- Crear servicio de unidad
-- Crear servicio de persona_unidad
+- Hacer que el gateway valide el JWT y ya no los microservicios
 - Primera vez
 - Endpoint me
 - Invalidar password reset token después de usarlo (tabla aparte o reutilizar refresh_token)
