@@ -9,8 +9,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import java.util.UUID;
 
 @FeignClient(
-        name = "auth-client",
-        url = "${auth.url}",
+//        name = "auth-client",
+//        url = "${auth.url}",
+        name = "AUTH-SERVICE",
         configuration = FeignSecurityConfig.class)
 
 public interface AuthClientWs {

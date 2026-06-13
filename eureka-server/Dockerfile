@@ -9,7 +9,7 @@ WORKDIR /app
 COPY target/*.jar app.jar
 
 # 🌐 Exponemos el puerto en el que corre Spring Boot
-EXPOSE 8080
+EXPOSE 8761
 
 # 🚀 Comando que se ejecuta al iniciar el contenedor
 ENTRYPOINT ["java","-jar","app.jar"]

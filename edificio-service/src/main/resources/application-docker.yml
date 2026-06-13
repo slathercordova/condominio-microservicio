@@ -4,8 +4,8 @@ spring:
     username: ${SPRING_DATASOURCE_USERNAME}
     password: ${SPRING_DATASOURCE_PASSWORD}
 
-auth:
-  url: http://auth-service:8080
-
-person:
-  url: http://person-service:8080
+#auth:
+#  url: http://auth-service:8080
+#
+#person:
+#  url: http://person-service:8080

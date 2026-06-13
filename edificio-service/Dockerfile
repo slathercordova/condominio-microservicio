@@ -6,7 +6,7 @@ WORKDIR /app
 
 # 📥 Copiamos el .jar generado por Maven al contenedor
 # (Debe existir previamente con mvn clean package)
-COPY target/edificio-service-1.0-SNAPSHOT.jar app.jar
+COPY target/*.jar app.jar
 
 # 🌐 Exponemos el puerto en el que corre Spring Boot
 EXPOSE 8080

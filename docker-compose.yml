@@ -2,7 +2,7 @@ services:
   # 🐘 Base de datos PostgreSQL
   postgres-person:
     image: postgres:16
-    #container_name: postgres-person
+    container_name: condominio-postgres-person
     environment:
       POSTGRES_DB: condominio_personas
       POSTGRES_USER: postgres
@@ -21,7 +21,7 @@ services:
 
   postgres-auth:
     image: postgres:16
-    #container_name: postgres-auth
+    container_name: condominio-postgres-auth
     environment:
       POSTGRES_DB: condominio_auth
       POSTGRES_USER: postgres
@@ -40,7 +40,7 @@ services:
 
   postgres-edificio:
     image: postgres:16
-    #container_name: postgres-edificio
+    container_name: condominio-postgres-edificio
     environment:
       POSTGRES_DB: condominio_edificio
       POSTGRES_USER: postgres
@@ -60,12 +60,14 @@ services:
   # 🚀 microservicios
   person-service:
     build: ./person-service   # 📁 Ruta donde está el Dockerfile
-    container_name: person-service
+    container_name: condominio-person-service
     ports:
       - "8080:8080"           # 🌐 host:contenedor
     depends_on:
       postgres-person:
         condition: service_healthy  # ⛓️ Espera a que postgres arranque
+      eureka-server:
+        condition: service_started
     environment:
       SPRING_PROFILES_ACTIVE: docker  # Esto le dice que use el profile docker del yml
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-person:5432/condominio_personas
@@ -77,12 +79,14 @@ services:
 
   auth-service:
     build: ./auth-service   # 📁 Ruta donde está el Dockerfile
-    container_name: auth-service
+    container_name: condominio-auth-service
     ports:
       - "8081:8080"           # 🌐 host:contenedor
     depends_on:
       postgres-auth:
         condition: service_healthy  # ⛓️ Espera a que postgres arranque
+      eureka-server:
+        condition: service_started
     environment:
       SPRING_PROFILES_ACTIVE: docker  # Esto le dice que use el profile docker del yml
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-auth:5432/condominio_auth
@@ -93,17 +97,29 @@ services:
 
   edificio-service:
     build: ./edificio-service   # 📁 Ruta donde está el Dockerfile
-    container_name: edificio-service
+    container_name: condominio-edificio-service
     ports:
       - "8082:8080"           # 🌐 host:contenedor
     depends_on:
       postgres-edificio:
         condition: service_healthy  # ⛓️ Espera a que postgres arranque
+      eureka-server:
+        condition: service_started
     environment:
       SPRING_PROFILES_ACTIVE: docker  # Esto le dice que use el profile docker del yml
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-edificio:5432/condominio_edificio
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: admin
+    networks:
+      - ms-network
+
+  # Eureka-server
+  eureka-server:
+    build:
+      context: ./eureka-server
+    container_name: condominio-eureka-server
+    ports:
+      - "8761:8761"
     networks:
       - ms-network
 
@@ -117,3 +133,4 @@ volumes:
 networks:
   ms-network:
     driver: bridge
+

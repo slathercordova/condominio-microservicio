@@ -4,9 +4,9 @@ spring:
     username: ${SPRING_DATASOURCE_USERNAME}
     password: ${SPRING_DATASOURCE_PASSWORD}
 
-person:
-  url: http://person-service:8080
-
-#url de person-service para ws
-edificio:
-  url: http://edificio-service:8080
+#person:
+#  url: http://person-service:8080
+#
+##url de person-service para ws
+#edificio:
+#  url: http://edificio-service:8080

@@ -14,8 +14,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.UUID;
 
 @FeignClient(
-        name = "person-client",
-        url = "${person.url}",
+//        name = "person-client",
+//        url = "${person.url}",
+        name = "PERSON-SERVICE",
         configuration = FeignSecurityConfig.class)
 
 public interface PersonaClientWs {

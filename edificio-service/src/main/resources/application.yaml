@@ -53,7 +53,11 @@ sunat:
 api:
   token: sk_15447.JV3izpDQeYgVpb3Gg3eCn1d0DAzkg8TQ
 
-
+#eureka
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka/
 
 # con las 3 lineas de abajo le decimos que levante el proyecto sin la necesidad de la cfg de bd
 #  autoconfigure:

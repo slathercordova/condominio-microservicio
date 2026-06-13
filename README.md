@@ -12,14 +12,14 @@ El objetivo del sistema es administrar edificios, unidades, propietarios, usuari
 
 ## Microservicios
 
-| Servicio         | Responsabilidad                                          |
-| ---------------- | -------------------------------------------------------- |
-| auth-service     | Gestión de autenticación, autorización, usuarios y roles |
-| persona-service  | Gestión de personas y tipos de documento                 |
-| edificio-service | Gestión de empresas, edificios, unidades y propietarios  |
-| api-gateway      | Punto único de entrada para los clientes                 |
-| eureka-server    | Descubrimiento y registro de servicios                   |
-| config-server    | Centralización de configuraciones                        |
+| Servicio         | Responsabilidad                                         |
+| ---------------- |---------------------------------------------------------|
+| auth-service     | Gestión de autenticación, autorización, usuarios        |
+| persona-service  | Gestión de personas y tipos de documento                |
+| edificio-service | Gestión de empresas, edificios, unidades y propietarios |
+| api-gateway      | Punto único de entrada para los clientes                |
+| eureka-server    | Descubrimiento y registro de servicios                  |
+| config-server    | Centralización de configuraciones                       |
 
 ---
 
@@ -81,7 +81,7 @@ Gestión de Personas y Tipos de documento.
 
 * CRUD de tipos de documento
 * CRUD de personas
-* Consulta al servicio de decoleta para traer los nombres del dni ingresado
+* Consulta al servicio RENIEC para obtener los datos de una persona a partir de su DNI
 
 ### Base de Datos
 
@@ -165,7 +165,7 @@ Las operaciones inmobiliarias requieren consistencia transaccional y relaciones 
 | Servicio Destino | Tipo                      |
 |-----------------| ------------------------- |
 | person-service  | Sincrónica (Feign Client) |
-| auth-service    | Sincrónica (JWT)          |
+| auth-service    | Sincrónica (Feign Client) |
 | Sunat-client    | Sincrónica (Feign Client) |
 
 ---
@@ -290,13 +290,14 @@ Person service
 
 ```text
 Edificio service
-├── Edificio
 ├── Empresa
-├── PersonaUnidad
-├── Rol
-├── Unidad
-├── UsuarioEdificio
-└── UsuarioEdificioRol
+|    └── Edificio
+|       └── Unidad
+|            └── PersonaUnidad
+|
+└── UsuarioEdificio
+    └── UsuarioEdificioRol
+         └── Rol
 ```
 
 ---
@@ -355,7 +356,7 @@ Centralización de configuraciones externas.
 ## Requisitos
 
 * Docker Desktop
-* Java 21
+* Java 17
 * Maven
 
 ## Levantar el ecosistema
@@ -386,6 +387,9 @@ http://localhost:8080
 
 ---
 
+![img.png](img.png)
+
+---
 # 10. Autores
 
 Proyecto académico desarrollado por Slather Córdova Amez, para el curso de bootcamp de desarrollo web full stack con java.

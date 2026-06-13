@@ -11,8 +11,9 @@ import java.util.List;
 import java.util.UUID;
 
 @FeignClient(
-        name = "edificio-client",
-        url = "${edificio.url}",
+//        name = "edificio-client",
+//        url = "${edificio.url}",
+        name = "EDIFICIO-SERVICE",
         configuration = FeignSecurityConfig.class)
 
 public interface EdificioClientWs {
