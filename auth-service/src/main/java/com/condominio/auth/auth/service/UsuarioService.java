@@ -385,6 +385,7 @@ public class UsuarioService {
 
         //  Verificar la relación de usuario con edificio
         if(!edificioClientWs.existsUsuarioEdificio(idEdificio).getBody().getData()){
+            log.error("El usuario no pertenece a este edificio");
             throw new BusinessException("El usuario no pertenece a este edificio");
         }
 
@@ -402,9 +403,6 @@ public class UsuarioService {
 
         UsuarioEntity usuarioEntity = usuarioRepository.findById(idUsuario)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
-
-        int registros = refreshTokenRepository.revokeAllByUsuarioId(usuarioEntity.getId(), securityUtils.getCurrentUserId());
-        log.info("Sesiones cerradas por login con edificio {}, total = {}", usuarioEntity.getId(), registros);
 
         List<String> listaRolesStr = listaRoles.getData().stream().map(rolResponse -> rolResponse.getNombre()).toList();
 
@@ -428,6 +426,7 @@ public class UsuarioService {
         if (rteSaved.getId() == null) {
             throw new BusinessException("No se pudo registrar el refresh token");
         }
+        log.info("Login exitoso");
         return new LoginResponse(accessToken, refreshToken, usuarioEntity.getId(), usuarioEntity.isPrimeraVez(),true);
     }
 }

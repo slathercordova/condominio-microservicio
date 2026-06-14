@@ -41,6 +41,7 @@ public class TipoDocumentoService {
         formatearDatos(tipoDocumentoRequest);
 
         if(tipoDocumentoRepository.existsByNombre(tipoDocumentoRequest.getNombre())){
+            log.error("Ya existe un tipo de documento con ese nombre");
             throw new ResourceAlreadyExistsException("Ya existe un tipo de documento con ese nombre");
         }
 
@@ -55,10 +56,12 @@ public class TipoDocumentoService {
 
     @Transactional
     public void deleteTipoDocumento(UUID id) {
-        log.info("Eliminando Tipo Documento");
+        log.info("Entrando a eliminar Tipo Documento");
 
-        TipoDocumentoEntity tipDocEnt = tipoDocumentoRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Id no encontrado"));
+        TipoDocumentoEntity tipDocEnt = tipoDocumentoRepository.findById(id)
+                .orElseThrow(()-> new ResourceNotFoundException("Id no encontrado"));
         tipoDocumentoRepository.delete(tipDocEnt);
+        log.info("Tipo Documento eliminado");
     }
 
     @Transactional

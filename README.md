@@ -409,7 +409,13 @@ http://localhost:9090
 
 ## Imagenes
 
-![img_3.png](img_3.png)
+![img_6.png](img_6.png)
+
+![img_7.png](img_7.png)
+
+![img_8.png](img_8.png)
+
+c
 
 ![img_2.png](img_2.png)
 
