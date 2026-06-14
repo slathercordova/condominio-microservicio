@@ -371,7 +371,7 @@ Centralización de configuraciones externas.
 
 # 8. Tecnologías Utilizadas
 
-* Java 21
+* Java 17
 * Spring Boot 3
 * Spring Security
 * Spring Cloud Gateway
