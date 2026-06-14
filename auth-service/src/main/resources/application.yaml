@@ -47,7 +47,28 @@ eureka:
     service-url:
       defaultZone: http://eureka-server:8761/eureka/
 
+#circuit breaker
+resilience4j:
+  circuitbreaker:
+    instances:
+      edificioService:
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+        slidingWindowSize: 10
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+  retry:
+    instances:
+      edificioService:
+        maxAttempts: 3
+        waitDuration: 2s
 
+#actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,circuitbreakers
 
 # con las 3 lineas de abajo le decimos que levante el proyecto sin la necesidad de la cfg de bd
 #  autoconfigure:
