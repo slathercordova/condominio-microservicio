@@ -23,6 +23,8 @@
         <module>auth-service</module>
         <module>edificio-service</module>
         <module>eureka-server</module>
+        <module>api-gateway</module>
+        <module>config-server</module>
     </modules>
 
     <properties>

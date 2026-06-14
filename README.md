@@ -231,6 +231,26 @@ API Gateway
 ### Diagrama de Dependencias
 
 ```text
+                ┌──────────────┐
+                │ config-repo  │
+                └──────┬───────┘
+                       │
+                       ▼
+              ┌──────────────────┐
+              │ config-server    │ (8888)
+              └──────────────────┘
+                       ▲
+                       │
+    ┌──────────────────┼────────────────────┐
+    │                  │                    │
+auth-service   person-service     edificio-service
+    │                  │                    │
+    └──────────── Eureka (8761) ────────────┘
+                       │
+                   api-gateway (9090)
+```
+
+```text
                     API Gateway
                           │
       ┌───────────────────┼───────────────────┐
@@ -383,13 +403,19 @@ http://localhost:8761
 
 Gateway:
 
-http://localhost:8080
+http://localhost:9090
 
 ---
 
 ## Imagenes
 
-![img.png](img.png)
+![img_3.png](img_3.png)
+
+![img_2.png](img_2.png)
+
+![img_4.png](img_4.png)
+
+![img_1.png](img_1.png)
 
 ---
 # 10. Autores

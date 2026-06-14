@@ -1,0 +1,57 @@
+server:
+  port: 9090
+
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      routes:
+        # AUTH
+        - id: auth-service
+          uri: lb://AUTH-SERVICE
+          predicates:
+            - Path=/api/v1/auth/**
+
+        # PERSON
+        - id: person-service-persona
+          uri: lb://PERSON-SERVICE
+          predicates:
+            - Path=/api/v1/persona/**
+
+        - id: person-service-tipo-documento
+          uri: lb://PERSON-SERVICE
+          predicates:
+            - Path=/api/v1/tipo-documento/**
+
+        # EDIFICIO
+        - id: edificio-service-edificio
+          uri: lb://EDIFICIO-SERVICE
+          predicates:
+            - Path=/api/v1/edificio/**
+
+        - id: edificio-service-empresa
+          uri: lb://EDIFICIO-SERVICE
+          predicates:
+            - Path=/api/v1/empresa/**
+
+        - id: edificio-service-rol
+          uri: lb://EDIFICIO-SERVICE
+          predicates:
+            - Path=/api/v1/rol/**
+
+        - id: edificio-service-usuedirol
+          uri: lb://EDIFICIO-SERVICE
+          predicates:
+            - Path=/api/v1/usuedirol/**
+
+        - id: edificio-service-unidad
+          uri: lb://EDIFICIO-SERVICE
+          predicates:
+            - Path=/api/v1/unidad/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka/

@@ -61,8 +61,8 @@ services:
   person-service:
     build: ./person-service   # 📁 Ruta donde está el Dockerfile
     container_name: condominio-person-service
-    ports:
-      - "8080:8080"           # 🌐 host:contenedor
+#    ports:
+#      - "8080:8080"           # 🌐 host:contenedor
     depends_on:
       postgres-person:
         condition: service_healthy  # ⛓️ Espera a que postgres arranque
@@ -80,13 +80,13 @@ services:
   auth-service:
     build: ./auth-service   # 📁 Ruta donde está el Dockerfile
     container_name: condominio-auth-service
-    ports:
-      - "8081:8080"           # 🌐 host:contenedor
+#    ports:
+#      - "8081:8080"           # 🌐 host:contenedor
     depends_on:
       postgres-auth:
         condition: service_healthy  # ⛓️ Espera a que postgres arranque
       eureka-server:
-        condition: service_started
+        condition: service_healthy
     environment:
       SPRING_PROFILES_ACTIVE: docker  # Esto le dice que use el profile docker del yml
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-auth:5432/condominio_auth
@@ -98,13 +98,13 @@ services:
   edificio-service:
     build: ./edificio-service   # 📁 Ruta donde está el Dockerfile
     container_name: condominio-edificio-service
-    ports:
-      - "8082:8080"           # 🌐 host:contenedor
+#    ports:
+#      - "8082:8080"           # 🌐 host:contenedor
     depends_on:
       postgres-edificio:
         condition: service_healthy  # ⛓️ Espera a que postgres arranque
       eureka-server:
-        condition: service_started
+        condition: service_healthy
     environment:
       SPRING_PROFILES_ACTIVE: docker  # Esto le dice que use el profile docker del yml
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-edificio:5432/condominio_edificio
@@ -120,6 +120,35 @@ services:
     container_name: condominio-eureka-server
     ports:
       - "8761:8761"
+    networks:
+      - ms-network
+    healthcheck:
+      test: [ "CMD", "wget", "--spider", "-q", "http://localhost:8761" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  # Api Gateway
+  api-gateway:
+    build: ./api-gateway
+    container_name: condominio-api-gateway
+    ports:
+      - "9090:9090"
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+    networks:
+      - ms-network
+
+  # Config Server
+  config-server:
+    build: ./config-server
+    container_name: condominio-config-server
+    ports:
+      - "8888:8888"
+    depends_on:
+      eureka-server:
+        condition: service_healthy
     networks:
       - ms-network
 
