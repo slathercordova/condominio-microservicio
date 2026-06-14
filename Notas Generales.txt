@@ -155,6 +155,43 @@ git push -u origin master
 - Traer cambios sin fusionar
 git fetch
 
+COMANDOS POWERSHELL
+
+abrir power shell y posicionarse en la ruta del proyecto
+
+- Cantidad de objetos
+Get-ChildItem -Recurse -Filter *.java | Measure-Object
+
+- Cantidad de líneas
+Get-ChildItem -Recurse -Filter *.java |
+Get-Content |
+Measure-Object -Line
+
+- Cantidad de clases
+Get-ChildItem -Recurse -Filter *.java |
+Select-String "class " |
+Measure-Object
+
+- Cantidad de interfaces
+Get-ChildItem -Recurse -Filter *.java |
+Select-String "interface " |
+Measure-Object
+
+- Cantidad de records
+Get-ChildItem -Recurse -Filter *.java |
+Select-String "record " |
+Measure-Object
+
+- Cantidad de enums
+Get-ChildItem -Recurse -Filter *.java |
+Select-String "enum " |
+Measure-Object
+
+- Cantidad de commits git
+git rev-list --count HEAD
+
+- Cantidad de trabajo en git
+git diff --shortstat $(git hash-object -t tree /dev/null) HEAD
 
 
 //  Pendientes
