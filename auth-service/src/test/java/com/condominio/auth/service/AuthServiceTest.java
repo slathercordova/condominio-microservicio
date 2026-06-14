@@ -6,22 +6,20 @@ import com.condominio.auth.auth.entity.RefreshTokenEntity;
 import com.condominio.auth.auth.entity.UsuarioEntity;
 import com.condominio.auth.auth.repository.RefreshTokenRepository;
 import com.condominio.auth.auth.repository.UsuarioRepository;
+import com.condominio.auth.auth.service.EdificioFacade;
 import com.condominio.auth.auth.service.UsuarioService;
 import com.condominio.auth.common.exception.BusinessException;
 import com.condominio.auth.common.exception.ExternalServiceException;
 import com.condominio.auth.common.response.ApiResponse;
 import com.condominio.auth.common.util.RequestUtils;
 import com.condominio.auth.common.util.SecurityUtils;
-import com.condominio.auth.feignclient.EdificioClientWs;
 import com.condominio.auth.security.JwtService;
-import feign.FeignException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.ResponseEntity;
 
 import java.util.Date;
 import java.util.List;
@@ -35,9 +33,6 @@ class AuthServiceTest {
 
     @InjectMocks
     private UsuarioService usuarioService;
-
-    @Mock
-    private EdificioClientWs edificioClientWs;
 
     @Mock
     private UsuarioRepository usuarioRepository;
@@ -54,6 +49,9 @@ class AuthServiceTest {
     @Mock
     private RequestUtils requestUtils;
 
+    @Mock
+    private EdificioFacade edificioFacade;
+
     @Test
     void loginUsuEdiRol_happyPath() {
 
@@ -64,9 +62,9 @@ class AuthServiceTest {
 
         when(securityUtils.getCurrentUserId()).thenReturn(idUsuario);
 
-        ApiResponse<Boolean> existsResponse = new ApiResponse<>(true,"exito",null,true);
-        when(edificioClientWs.existsUsuarioEdificio(idEdificio))
-                .thenReturn(ResponseEntity.ok(existsResponse));
+        //ApiResponse<Boolean> existsResponse = new ApiResponse<>(true,"exito",null,true);
+        when(edificioFacade.validarUsuarioEdificio(idEdificio))
+                .thenReturn(true);
 
         RolResponse rol = new RolResponse();
         rol.setNombre("ADMIN");
@@ -74,7 +72,7 @@ class AuthServiceTest {
         ApiResponse<List<RolResponse>> rolesResponse =
                 new ApiResponse<>(true, "Lista de roles",null, List.of(rol));
 
-        when(edificioClientWs.findRolesByUsuarioAndEdificio(idUsuario, idEdificio))
+        when(edificioFacade.obtenerRoles(idUsuario, idEdificio))
                 .thenReturn(rolesResponse);
 
         UsuarioEntity user = new UsuarioEntity();
@@ -127,8 +125,8 @@ class AuthServiceTest {
         ApiResponse<Boolean> existsResponse =
                 new ApiResponse<>(true, "ok", null, false);
 
-        when(edificioClientWs.existsUsuarioEdificio(idEdificio))
-                .thenReturn(ResponseEntity.ok(existsResponse));
+        when(edificioFacade.validarUsuarioEdificio(idEdificio))
+                .thenReturn(false);
 
         BusinessException ex = assertThrows(
                 BusinessException.class,
@@ -150,17 +148,17 @@ class AuthServiceTest {
         ApiResponse<Boolean> existsResponse =
                 new ApiResponse<>(true, "ok", null, true);
 
-        when(edificioClientWs.existsUsuarioEdificio(any()))
-                .thenReturn(ResponseEntity.ok(existsResponse));
+        when(edificioFacade.validarUsuarioEdificio(any()))
+                .thenThrow(new ExternalServiceException("Servicio de edificio temporalmente no disponible"));
 
-        when(edificioClientWs.findRolesByUsuarioAndEdificio(any(), any()))
-                .thenThrow(FeignException.class);
+        /*when(edificioFacade.obtenerRoles(any(), any()))
+                .thenThrow(FeignException.class);*/
 
         ExternalServiceException ex = assertThrows(
                 ExternalServiceException.class,
                 () -> usuarioService.loginUsuEdiRol(idEdificio, request)
         );
 
-        assertTrue(ex.getMessage().contains("Error consumiendo edificio-service"));
+        assertTrue(ex.getMessage().contains("Servicio de edificio temporalmente no disponible"));
     }
 }

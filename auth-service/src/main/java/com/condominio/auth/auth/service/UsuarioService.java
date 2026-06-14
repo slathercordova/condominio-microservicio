@@ -15,17 +15,12 @@ import com.condominio.auth.common.exception.ResourceNotFoundException;
 import com.condominio.auth.common.response.ApiResponse;
 import com.condominio.auth.common.util.*;
 import com.condominio.auth.email.EmailService;
-import com.condominio.auth.feignclient.EdificioClientWs;
 import com.condominio.auth.feignclient.PersonaClientWs;
 import com.condominio.auth.security.JwtService;
 import feign.FeignException;
-import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
-import io.github.resilience4j.retry.annotation.Retry;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,28 +36,27 @@ public class UsuarioService {
     private final ModelMapper modelMapper;
     private final SecurityUtils securityUtils;
     private final PersonaClientWs personaClientWs;
-    private final EdificioClientWs edificioClientWs;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final RequestUtils requestUtils;
     private final RefreshTokenRepository refreshTokenRepository;
     private final EmailService emailService;
+    private final EdificioFacade edificioFacade;
     private static final int MAX_INTENTOS = 5;
-    @Autowired
-    private ApplicationContext applicationContext;
 
-    public UsuarioService(UsuarioRepository usuarioRepository, ModelMapper modelMapper, SecurityUtils securityUtils, PersonaClientWs personaClientWs, EdificioClientWs edificioClientWs, PasswordEncoder passwordEncoder, JwtService jwtService, RequestUtils requestUtils, RefreshTokenRepository refreshTokenRepository, EmailService emailService) {
+    public UsuarioService(UsuarioRepository usuarioRepository, ModelMapper modelMapper, SecurityUtils securityUtils, PersonaClientWs personaClientWs, PasswordEncoder passwordEncoder, JwtService jwtService, RequestUtils requestUtils, RefreshTokenRepository refreshTokenRepository, EmailService emailService, EdificioFacade edificioFacade) {
         this.usuarioRepository = usuarioRepository;
         this.modelMapper = modelMapper;
         this.securityUtils = securityUtils;
         this.personaClientWs = personaClientWs;
-        this.edificioClientWs = edificioClientWs;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.requestUtils = requestUtils;
         this.refreshTokenRepository = refreshTokenRepository;
         this.emailService = emailService;
+        this.edificioFacade = edificioFacade;
     }
+
 
     @Transactional
     public RegisterResponse registerUser(RegisterRequest registerRequest) {
@@ -221,7 +215,7 @@ public class UsuarioService {
             log.info("Consultando roles x edif ws usuario={} edificio={}",usuarioEntity.getId(),idEdificio);
             try {
                 //todo validar que exista edificio por ws en todo este servicio
-                List<RolResponse> listaRoles = edificioClientWs.findRolesByUsuarioAndEdificio(usuarioEntity.getId(),idEdificio).getData();
+                List<RolResponse> listaRoles = edificioFacade.obtenerRoles(usuarioEntity.getId(),idEdificio).getData();
                 log.info("Roles encontrados={}", listaRoles.size());
 
                 List<String> rolesStr = listaRoles.stream().map(RolResponse::getNombre).toList();
@@ -390,10 +384,7 @@ public class UsuarioService {
         UUID idUsuario = securityUtils.getCurrentUserId();
 
         //  Verificar la relación de usuario con edificio
-        //if(!edificioClientWs.existsUsuarioEdificio(idEdificio).getBody().getData()){
-        //if(!validarUsuarioEdificio(idEdificio)){
-        UsuarioService proxy = applicationContext.getBean(UsuarioService.class);
-        if(!proxy.validarUsuarioEdificio(idEdificio)){
+        if(!edificioFacade.validarUsuarioEdificio(idEdificio)){
             log.error("El usuario no pertenece a este edificio");
             throw new BusinessException("El usuario no pertenece a este edificio");
         }
@@ -401,8 +392,7 @@ public class UsuarioService {
 
         ApiResponse<List<RolResponse>> listaRoles;
         try {
-            //listaRoles = edificioClientWs.findRolesByUsuarioAndEdificio(idUsuario,idEdificio);
-            listaRoles = obtenerRoles(idUsuario,idEdificio);
+            listaRoles = edificioFacade.obtenerRoles(idUsuario,idEdificio);
         }catch (FeignException.NotFound e) {
             log.error("No se encontraron roles para este usuario en el edificio seleccionado");
             throw new ResourceNotFoundException("No se encontraron roles para este usuario en el edificio seleccionado");
@@ -440,33 +430,7 @@ public class UsuarioService {
         return new LoginResponse(accessToken, refreshToken, usuarioEntity.getId(), usuarioEntity.isPrimeraVez(),true);
     }
 
-    //  fallbacks
-    @Retry(name = "edificioService")
-    @CircuitBreaker(
-            name = "edificioService",
-            fallbackMethod = "fallbackRoles")
-    public ApiResponse<List<RolResponse>> obtenerRoles(UUID idUsuario,UUID idEdificio) {
-        return edificioClientWs.findRolesByUsuarioAndEdificio(idUsuario,idEdificio);
-    }
 
-    public ApiResponse<List<RolResponse>> fallbackRoles(UUID idUsuario,UUID idEdificio,Throwable ex) {
-        log.error("fallbackRoles activado: {}", ex.getMessage());
-        return new ApiResponse<>(false,"Servicio de edificio temporalmente no disponible",null,List.of());
-    }
 
-    @Retry(name = "edificioService")
-    @CircuitBreaker(
-            name = "edificioService",
-            fallbackMethod = "fallbackExistsUsuarioEdificio")
-    public boolean validarUsuarioEdificio(UUID idEdificio) {
-        log.info("Entró a validarUsuarioEdificio");
-        return edificioClientWs.existsUsuarioEdificio(idEdificio).getBody().getData();
-    }
 
-    public boolean fallbackExistsUsuarioEdificio(UUID idEdificio,Throwable ex) {
-        log.error("fallbackExistsUsuarioEdificio activado: {}", ex.getMessage());
-        throw new ExternalServiceException(
-                "Servicio de edificio temporalmente no disponible"
-        );
-    }
 }
