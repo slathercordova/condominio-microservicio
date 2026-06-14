@@ -120,7 +120,22 @@ Administración de Condominios.
 
 * Edificios
   * Creación de edificio (ADMINISTRADOR, ADMINISTRACION)
-  * Calculo de porcentaje de participación (ADMINISTRADOR, ADMINISTRACION)
+    * Calculo de porcentaje de participación (ADMINISTRADOR, ADMINISTRACION)
+      * Regla de cálculo de porcentaje de participación
+
+        PorcentajeParticipacion = (areaUnidad / sumaAreasEdificio) * 100
+        
+        Ejemplo:
+        
+        Unidad A = 50m²
+        
+        Unidad B = 50m²
+        
+        Total = 100m²
+        
+        Participación A = 50%
+            
+        Participación B = 50%
 
 
 * Empresas
@@ -395,6 +410,15 @@ Servicios:
 * Edificio Service
 * API Gateway
 
+## Orden recomendado de inicio
+
+1. Config Server
+2. Eureka Server
+3. Person Service
+4. Edificio Service
+5. Auth Service
+6. API Gateway
+
 ## Verificación
 
 Eureka:
@@ -405,20 +429,28 @@ Gateway:
 
 http://localhost:9090
 
+Circuit breaker
+
+http://localhost:9090/actuator/circuitbreakers
+
 ---
 
-## Imagenes
+## Imagenes de prueba
 
+### Build test
 ![img_6.png](images/img_6.png)
 
 ![img_7.png](images/img_7.png)
 
+### Build completo
 ![img_8.png](images/img_8.png)
 
+### Docker up
 ![img_2.png](images/img_2.png)
 
 ![img_4.png](images/img_4.png)
 
+### Eureka
 ![img_1.png](images/img_1.png)
 
 ---

@@ -51,6 +51,12 @@ spring:
           predicates:
             - Path=/api/v1/unidad/**
 
+        # ACTUATOR
+        - id: auth-service-actuator
+          uri: lb://AUTH-SERVICE
+          predicates:
+            - Path=/actuator/**
+
 eureka:
   client:
     service-url:

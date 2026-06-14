@@ -68,7 +68,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info,circuitbreakers
+        include: "*"
 
 # con las 3 lineas de abajo le decimos que levante el proyecto sin la necesidad de la cfg de bd
 #  autoconfigure:
