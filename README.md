@@ -433,6 +433,11 @@ Circuit breaker
 
 http://localhost:9090/actuator/circuitbreakers
 
+## Comandos para levantar el proyecto
+
+mvn clean install
+docker-compose up --build
+
 ---
 
 ## Imagenes de prueba
