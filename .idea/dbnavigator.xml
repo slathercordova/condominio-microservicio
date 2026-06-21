@@ -88,6 +88,7 @@ delete from usuario a where a.id <> '11111111-1111-1111-1111-111111111111';]]></
     <connection id="d5bc77d4-f5e5-4ca6-8761-faf4bc067a44" />
   </component>
   <component name="DBNavigator.Project.DatasetFilterManager">
+    <filter-actions connection-id="4c5f8c30-d818-41ab-b56a-870b8cf0be9c" dataset="public.usuario" active-filter-id="" />
     <filter-actions connection-id="0b0026d1-79fc-4e07-bb93-018ea57331f1" dataset="public.flyway_schema_history" active-filter-id="" />
   </component>
   <component name="DBNavigator.Project.ExecutionManager">

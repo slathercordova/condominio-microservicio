@@ -34,7 +34,7 @@ public class RefreshTokenEntity extends BaseEntity {
     @Column(name = "revocado", nullable = false)
     private Boolean revocado;
 
-    @Column(name = "dispositivo", length = 100)
+    @Column(name = "dispositivo", length = 300)
     private String dispositivo;
 
     @Column(name = "ip", length = 15)

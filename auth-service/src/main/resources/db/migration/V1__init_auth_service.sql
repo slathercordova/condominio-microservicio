@@ -48,7 +48,7 @@ CREATE TABLE refresh_token(
     expiracion_at timestamptz NOT NULL,
     usado boolean NOT NULL DEFAULT FALSE,
     revocado boolean NOT NULL DEFAULT FALSE,
-    dispositivo varchar(100),
+    dispositivo varchar(300),
     ip varchar(15),
     created_by uuid NOT NULL,
     updated_by uuid,
