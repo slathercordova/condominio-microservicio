@@ -5,6 +5,7 @@ import com.condominio.edificio.edificio.dto.request.PersonaUnidadRequest;
 import com.condominio.edificio.edificio.dto.request.UnidadRequest;
 import com.condominio.edificio.edificio.dto.response.MisUnidadesResponse;
 import com.condominio.edificio.edificio.dto.response.PersonaUnidadResponse;
+import com.condominio.edificio.edificio.dto.response.UnidadDetailResponse;
 import com.condominio.edificio.edificio.dto.response.UnidadResponse;
 import com.condominio.edificio.edificio.service.PersonaUnidadService;
 import com.condominio.edificio.edificio.service.UnidadService;
@@ -50,5 +51,13 @@ public class UnidadController {
         List<MisUnidadesResponse> respuesta = personaUnidadService.misUnidades(idPersona);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ApiResponse<>(true, "Lista de unidades", null, respuesta));
+    }
+
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','ADMINISTRACION','PROPIETARIO')")
+    public ResponseEntity<ApiResponse<UnidadDetailResponse>> unidadDetail(@PathVariable UUID id){
+        UnidadDetailResponse respuesta = unidadService.detailUnidad(id);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new ApiResponse<>(true, "Detalle de unidad", null, respuesta));
     }
 }

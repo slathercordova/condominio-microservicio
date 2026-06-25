@@ -3,6 +3,7 @@ package com.condominio.edificio.edificio.service;
 import com.condominio.edificio.common.exception.BusinessException;
 import com.condominio.edificio.common.exception.ResourceNotFoundException;
 import com.condominio.edificio.edificio.dto.request.UnidadRequest;
+import com.condominio.edificio.edificio.dto.response.UnidadDetailResponse;
 import com.condominio.edificio.edificio.dto.response.UnidadResponse;
 import com.condominio.edificio.edificio.entity.UnidadEntity;
 import com.condominio.edificio.edificio.repository.EdificioRepository;
@@ -81,5 +82,15 @@ public class UnidadService {
         }
         unidadRepository.saveAll(listaUnidades);
         return listaUnidades.size();
+    }
+
+    public UnidadDetailResponse detailUnidad(UUID id){
+        if (id==null){
+            throw new BusinessException("No ingresó el ID de la unidad");
+        }
+
+        UnidadEntity unidad = unidadRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Unidad no encontrada"));
+
+        return modelMapper.map(unidad, UnidadDetailResponse.class);
     }
 }
