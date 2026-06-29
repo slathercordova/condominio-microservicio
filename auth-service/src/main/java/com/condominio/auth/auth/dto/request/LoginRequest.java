@@ -1,13 +1,12 @@
 package com.condominio.auth.auth.dto.request;
 
-import com.condominio.auth.common.validation.ValidPassword;
-import com.condominio.auth.common.validation.ValidUsername;
+import jakarta.validation.constraints.NotBlank;
 
 public record LoginRequest(
-        @ValidUsername
+        @NotBlank(message = "Usuario es obligatorio")
         String username,
 
-        @ValidPassword
+        @NotBlank(message = "Password es obligatorio")
         String password
 ) {
 }
