@@ -1,5 +1,6 @@
 package com.condominio.auth.auth.service;
 
+import com.condominio.auth.auth.dto.response.EdificioDetailResponse;
 import com.condominio.auth.auth.dto.response.RolResponse;
 import com.condominio.auth.common.exception.ExternalServiceException;
 import com.condominio.auth.common.response.ApiResponse;
@@ -7,6 +8,7 @@ import com.condominio.auth.feignclient.EdificioClientWs;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,8 +23,11 @@ public class EdificioFacade {
         this.edificioClientWs = edificioClientWs;
     }
 
-    //  fallbacks
+    public ResponseEntity<ApiResponse<EdificioDetailResponse>> getDetailEdificio(UUID idEdificio){
+        return edificioClientWs.getDetailEdificio(idEdificio);
+    }
 
+    //  fallbacks
     @Retry(name = "edificioService")
     @CircuitBreaker(
             name = "edificioService",

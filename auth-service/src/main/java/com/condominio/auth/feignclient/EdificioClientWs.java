@@ -1,5 +1,6 @@
 package com.condominio.auth.feignclient;
 
+import com.condominio.auth.auth.dto.response.EdificioDetailResponse;
 import com.condominio.auth.auth.dto.response.RolResponse;
 import com.condominio.auth.common.response.ApiResponse;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -22,4 +23,7 @@ public interface EdificioClientWs {
 
     @GetMapping("/api/v1/edificio/usuario-edificio/{idEdificio}/existe")
     ResponseEntity<ApiResponse<Boolean>> existsUsuarioEdificio(@PathVariable UUID idEdificio);
+
+    @GetMapping("/api/v1/edificio/{id}")
+    ResponseEntity<ApiResponse<EdificioDetailResponse>> getDetailEdificio(@PathVariable UUID id);
 }

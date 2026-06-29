@@ -21,6 +21,7 @@ import feign.FeignException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -163,7 +164,7 @@ public class UsuarioService {
             throw new BusinessException("No se pudo registrar el refresh token");
         }
 
-        return new LoginResponse(accessToken, refreshToken, usuarioEntity.getId(), usuarioEntity.isPrimeraVez(),false);
+        return new LoginResponse(accessToken, refreshToken, usuarioEntity.getId(), usuarioEntity.isPrimeraVez(), false);
     }
 
     @Transactional
@@ -212,25 +213,24 @@ public class UsuarioService {
         String newAccessToken;
         String newRefreshToken;
         if (idEdificio != null) {
-            log.info("Consultando roles x edif ws usuario={} edificio={}",usuarioEntity.getId(),idEdificio);
+            log.info("Consultando roles x edif ws usuario={} edificio={}", usuarioEntity.getId(), idEdificio);
             try {
                 //todo validar que exista edificio por ws en todo este servicio
-                List<RolResponse> listaRoles = edificioFacade.obtenerRoles(usuarioEntity.getId(),idEdificio).getData();
+                List<RolResponse> listaRoles = edificioFacade.obtenerRoles(usuarioEntity.getId(), idEdificio).getData();
                 log.info("Roles encontrados={}", listaRoles.size());
 
                 List<String> rolesStr = listaRoles.stream().map(RolResponse::getNombre).toList();
 
-                newAccessToken = jwtService.generateToken(usuarioEntity,idEdificio,rolesStr);
-                newRefreshToken = jwtService.generateRefreshToken(usuarioEntity,idEdificio);
+                newAccessToken = jwtService.generateToken(usuarioEntity, idEdificio, rolesStr);
+                newRefreshToken = jwtService.generateRefreshToken(usuarioEntity, idEdificio);
             } catch (Exception e) {
                 log.error("ERROR FEIGN", e);
                 throw e;
             }
-        }else {
+        } else {
             newAccessToken = jwtService.generateToken(usuarioEntity);
             newRefreshToken = jwtService.generateRefreshToken(usuarioEntity);
         }
-
 
 
         RefreshTokenEntity newRTE = new RefreshTokenEntity();
@@ -302,12 +302,12 @@ public class UsuarioService {
     }
 
     @Transactional
-    public void forgotPassword(ForgotPasswordRequest fpRequest){
+    public void forgotPassword(ForgotPasswordRequest fpRequest) {
         UsuarioEntity ue = usuarioRepository.findByCorreo(fpRequest.correo())
                 .orElse(null);
 
-        if(ue == null){
-            log.info("Forgot password solicitado para correo inexistente {}",fpRequest.correo());
+        if (ue == null) {
+            log.info("Forgot password solicitado para correo inexistente {}", fpRequest.correo());
             return;
         }
 
@@ -321,9 +321,9 @@ public class UsuarioService {
 
         String tmpAccessToken = jwtService.generatePasswordResetToken(ue);
 
-        emailService.sendRecoveryCode(ue.getCorreo(),tmpAccessToken);
+        emailService.sendRecoveryCode(ue.getCorreo(), tmpAccessToken);
 
-        logoutAllUserId(ue.getId(),DatosConstant.PASSWORD_RECOVERY_JOB);
+        logoutAllUserId(ue.getId(), DatosConstant.PASSWORD_RECOVERY_JOB);
     }
 
     @Transactional
@@ -335,7 +335,7 @@ public class UsuarioService {
     @Transactional
     public void resetPassword(ResetPasswordRequest rpRequest) {
 
-        if (jwtService.isTokenExpired(rpRequest.token())){
+        if (jwtService.isTokenExpired(rpRequest.token())) {
             throw new BusinessException("Token de recuperación expirado");
         }
 
@@ -345,7 +345,7 @@ public class UsuarioService {
         }
 
         UUID userId = jwtService.extractUserId(rpRequest.token());
-        if (userId == null){
+        if (userId == null) {
             throw new BusinessException("User ID token inválido para reset");
         }
 
@@ -363,7 +363,7 @@ public class UsuarioService {
         ue.setEstado(EstadoUsuario.ACTIVO);
 
         usuarioRepository.save(ue);
-        logoutAllUserId(ue.getId(),DatosConstant.PASSWORD_RECOVERY_JOB);
+        logoutAllUserId(ue.getId(), DatosConstant.PASSWORD_RECOVERY_JOB);
     }
 
     @Transactional(readOnly = true)
@@ -380,11 +380,22 @@ public class UsuarioService {
 
     //todo revisar si es necesario que el login te envíe el anterior refresh token para invalidar
     @Transactional
-    public LoginResponse loginUsuEdiRol(UUID idEdificio, HttpServletRequest httpRequest) {
+    public LoginEdificioResponse loginUsuEdiRol(UUID idEdificio, HttpServletRequest httpRequest) {
         UUID idUsuario = securityUtils.getCurrentUserId();
 
+        //  Traer los datos del edificio
+        ResponseEntity<ApiResponse<EdificioDetailResponse>> edificioDetail = null;
+        try {
+            edificioDetail = edificioFacade.getDetailEdificio(idEdificio);
+        } catch (FeignException.NotFound e) {
+            log.info("Edificio no encontrado?????");
+        } catch (FeignException e) {
+            log.error("Error consumiendo edificio-service: status={} body={}", e.status(), e.contentUTF8());
+            throw new ExternalServiceException("Error consumiendo el servicio de edificio " + e.getMessage());
+        }
+
         //  Verificar la relación de usuario con edificio
-        if(!edificioFacade.validarUsuarioEdificio(idEdificio)){
+        if (!edificioFacade.validarUsuarioEdificio(idEdificio)) {
             log.error("El usuario no pertenece a este edificio");
             throw new BusinessException("El usuario no pertenece a este edificio");
         }
@@ -392,26 +403,40 @@ public class UsuarioService {
 
         ApiResponse<List<RolResponse>> listaRoles;
         try {
-            listaRoles = edificioFacade.obtenerRoles(idUsuario,idEdificio);
-        }catch (FeignException.NotFound e) {
+            listaRoles = edificioFacade.obtenerRoles(idUsuario, idEdificio);
+        } catch (FeignException.NotFound e) {
             log.error("No se encontraron roles para este usuario en el edificio seleccionado");
             throw new ResourceNotFoundException("No se encontraron roles para este usuario en el edificio seleccionado");
         } catch (FeignException e) {
             log.error("Error consumiendo edificio-service: status={} body={}", e.status(), e.contentUTF8());
-            throw new ExternalServiceException("Error consumiendo edificio-service"+e);
+            throw new ExternalServiceException("Error consumiendo edificio-service" + e);
         }
 
         UsuarioEntity usuarioEntity = usuarioRepository.findById(idUsuario)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
 
-        List<String> listaRolesStr = listaRoles.getData().stream().map(rolResponse -> rolResponse.getNombre()).toList();
-
         if (listaRoles == null || listaRoles.getData() == null || listaRoles.getData().isEmpty()) {
             throw new BusinessException("El usuario no tiene roles en este edificio");
         }
 
-        String accessToken = jwtService.generateToken(usuarioEntity,idEdificio,listaRolesStr);
-        String refreshToken = jwtService.generateRefreshToken(usuarioEntity,idEdificio);
+        List<String> listaRolesStr = listaRoles.getData().stream().map(rolResponse -> rolResponse.getNombre()).toList();
+
+        //  Traer datos de persona para devolver en el servicio
+        ApiResponse<PersonaDetailResponse> personaDetailResponse = null;
+        String nombreCompleto = null;
+        try {
+            personaDetailResponse = personaClientWs.findPersonaId(usuarioEntity.getIdPersona());
+            nombreCompleto = personaDetailResponse.getData().getNombres() + " " + personaDetailResponse.getData().getApellidoPaterno() + " " + personaDetailResponse.getData().getApellidoMaterno();
+            log.debug("Respuesta ws persona : {}", personaDetailResponse);
+        } catch (FeignException.NotFound e) {
+            log.info("Persona no encontrada?????");
+        } catch (FeignException e) {
+            log.error("Error consumiendo person-service: status={} body={}", e.status(), e.contentUTF8());
+            throw new ExternalServiceException("Error consumiendo el servicio de personas " + e.getMessage());
+        }
+
+        String accessToken = jwtService.generateToken(usuarioEntity, idEdificio, listaRolesStr);
+        String refreshToken = jwtService.generateRefreshToken(usuarioEntity, idEdificio);
 
         RefreshTokenEntity rte = new RefreshTokenEntity();
         rte.setUsuarioId(usuarioEntity.getId());
@@ -426,11 +451,25 @@ public class UsuarioService {
         if (rteSaved.getId() == null) {
             throw new BusinessException("No se pudo registrar el refresh token");
         }
+
         log.info("Login exitoso");
-        return new LoginResponse(accessToken, refreshToken, usuarioEntity.getId(), usuarioEntity.isPrimeraVez(),true);
+
+
+        return new LoginEdificioResponse(
+                accessToken,
+                refreshToken,
+                usuarioEntity.getId(),
+                usuarioEntity.isPrimeraVez(),
+                true,
+                usuarioEntity.getIdPersona(),
+                personaDetailResponse.getData().getNombres(),
+                personaDetailResponse.getData().getApellidoPaterno(),
+                personaDetailResponse.getData().getApellidoMaterno(),
+                nombreCompleto,
+                personaDetailResponse.getData().getSexo(),
+                listaRoles.getData(),
+                edificioDetail.getBody().getData().getId(),
+                edificioDetail.getBody().getData().getNombre()
+        );
     }
-
-
-
-
 }

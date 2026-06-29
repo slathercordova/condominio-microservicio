@@ -6,10 +6,7 @@ import com.condominio.auth.auth.dto.response.PersonaResponse;
 import com.condominio.auth.common.response.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
@@ -27,4 +24,8 @@ public interface PersonaClientWs {
 
     @PostMapping("/api/v1/persona")
     ApiResponse<PersonaResponse> createPersona(@Valid @RequestBody PersonaRequest personaRequest);
+
+    @GetMapping("/api/v1/persona/{id}")
+    ApiResponse<PersonaDetailResponse> findPersonaId(
+            @PathVariable UUID id);
 }

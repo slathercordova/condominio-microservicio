@@ -1,18 +1,19 @@
 package com.condominio.auth.service;
 
-import com.condominio.auth.auth.dto.response.LoginResponse;
-import com.condominio.auth.auth.dto.response.RolResponse;
+import com.condominio.auth.auth.dto.response.*;
 import com.condominio.auth.auth.entity.RefreshTokenEntity;
 import com.condominio.auth.auth.entity.UsuarioEntity;
 import com.condominio.auth.auth.repository.RefreshTokenRepository;
 import com.condominio.auth.auth.repository.UsuarioRepository;
 import com.condominio.auth.auth.service.EdificioFacade;
 import com.condominio.auth.auth.service.UsuarioService;
+import com.condominio.auth.common.enums.TipoSexo;
 import com.condominio.auth.common.exception.BusinessException;
 import com.condominio.auth.common.exception.ExternalServiceException;
 import com.condominio.auth.common.response.ApiResponse;
 import com.condominio.auth.common.util.RequestUtils;
 import com.condominio.auth.common.util.SecurityUtils;
+import com.condominio.auth.feignclient.PersonaClientWs;
 import com.condominio.auth.security.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Test;
@@ -20,9 +21,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.ResponseEntity;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -52,35 +55,95 @@ class AuthServiceTest {
     @Mock
     private EdificioFacade edificioFacade;
 
+    @Mock
+    private PersonaClientWs personaClientWs;
+
     @Test
     void loginUsuEdiRol_happyPath() {
 
         UUID idEdificio = UUID.randomUUID();
         UUID idUsuario = UUID.randomUUID();
+        UUID idPersona = UUID.randomUUID();
 
         HttpServletRequest request = mock(HttpServletRequest.class);
 
         when(securityUtils.getCurrentUserId()).thenReturn(idUsuario);
 
-        //ApiResponse<Boolean> existsResponse = new ApiResponse<>(true,"exito",null,true);
+        // ============================
+        // Edificio
+        // ============================
+
+        EdificioDetailResponse edificio = new EdificioDetailResponse();
+        edificio.setId(idEdificio);
+        edificio.setNombre("Edificio Central");
+
+        ApiResponse<EdificioDetailResponse> edificioApiResponse =
+                new ApiResponse<>(true, "OK", null, edificio);
+
+        when(edificioFacade.getDetailEdificio(idEdificio))
+                .thenReturn(ResponseEntity.ok(edificioApiResponse));
+
         when(edificioFacade.validarUsuarioEdificio(idEdificio))
                 .thenReturn(true);
+
+
+        // ============================
+        // Roles
+        // ============================
 
         RolResponse rol = new RolResponse();
         rol.setNombre("ADMIN");
 
         ApiResponse<List<RolResponse>> rolesResponse =
-                new ApiResponse<>(true, "Lista de roles",null, List.of(rol));
+                new ApiResponse<>(
+                        true,
+                        "Lista de roles",
+                        null,
+                        List.of(rol)
+                );
 
         when(edificioFacade.obtenerRoles(idUsuario, idEdificio))
                 .thenReturn(rolesResponse);
 
+
+        // ============================
+        // Usuario
+        // ============================
+
         UsuarioEntity user = new UsuarioEntity();
         user.setId(idUsuario);
+        user.setIdPersona(idPersona);
         user.setPrimeraVez(false);
 
         when(usuarioRepository.findById(idUsuario))
-                .thenReturn(java.util.Optional.of(user));
+                .thenReturn(Optional.of(user));
+
+
+        // ============================
+        // Persona
+        // ============================
+
+        PersonaDetailResponse persona = new PersonaDetailResponse();
+        persona.setNombres("Juan");
+        persona.setApellidoPaterno("Perez");
+        persona.setApellidoMaterno("Lopez");
+        persona.setSexo(TipoSexo.MASCULINO);
+
+        ApiResponse<PersonaDetailResponse> personaResponse =
+                new ApiResponse<>(
+                        true,
+                        "OK",
+                        null,
+                        persona
+                );
+
+        when(personaClientWs.findPersonaId(idPersona))
+                .thenReturn(personaResponse);
+
+
+        // ============================
+        // JWT
+        // ============================
 
         when(jwtService.generateToken(any(), any(), anyList()))
                 .thenReturn("access-token");
@@ -91,6 +154,21 @@ class AuthServiceTest {
         when(jwtService.extractExpiration(any()))
                 .thenReturn(new Date().toInstant());
 
+        // ============================
+        // Request
+        // ============================
+
+        when(requestUtils.getUserAgent(any()))
+                .thenReturn("Chrome");
+
+        when(requestUtils.getClientIp(any()))
+                .thenReturn("127.0.0.1");
+
+
+        // ============================
+        // Refresh Token
+        // ============================
+
         when(refreshTokenRepository.save(any()))
                 .thenAnswer(invocation -> {
                     RefreshTokenEntity entity = invocation.getArgument(0);
@@ -98,18 +176,22 @@ class AuthServiceTest {
                     return entity;
                 });
 
-        when(requestUtils.getUserAgent(any()))
-                .thenReturn("chrome");
 
-        when(requestUtils.getClientIp(any()))
-                .thenReturn("127.0.0.1");
+        // ============================
+        // Metodo
+        // ============================
 
-        LoginResponse response = usuarioService.loginUsuEdiRol(idEdificio, request);
+        LoginEdificioResponse response = usuarioService.loginUsuEdiRol(idEdificio, request);
+
+        // ============================
+        // Assert
+        // ============================
 
         assertNotNull(response);
         assertEquals("access-token", response.accessToken());
         assertEquals("refresh-token", response.refreshToken());
-        assertEquals(idUsuario, response.id());
+        assertEquals(idUsuario, response.idUsuario());
+        assertEquals(idPersona, response.idPersona());
     }
 
     @Test

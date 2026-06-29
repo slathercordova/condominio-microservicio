@@ -3,6 +3,7 @@ package com.condominio.edificio.edificio.service;
 import com.condominio.edificio.common.exception.BusinessException;
 import com.condominio.edificio.common.exception.ResourceNotFoundException;
 import com.condominio.edificio.edificio.dto.request.EdificioRequest;
+import com.condominio.edificio.edificio.dto.response.EdificioDetailResponse;
 import com.condominio.edificio.edificio.dto.response.EdificioResponse;
 import com.condominio.edificio.edificio.entity.EdificioEntity;
 import com.condominio.edificio.edificio.repository.EdificioRepository;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -56,5 +58,12 @@ public class EdificioService {
         EdificioEntity edificioSaved = edificioRepository.save(edificioEntity);
 
         return modelMapper.map(edificioSaved, EdificioResponse.class);
+    }
+
+    @Transactional(readOnly = true)
+    public EdificioDetailResponse findById(UUID id){
+        EdificioEntity edificioEntity = edificioRepository.findById(id)
+                .orElseThrow(()-> new ResourceNotFoundException("Edificio no encontrado"));
+        return modelMapper.map(edificioEntity, EdificioDetailResponse.class);
     }
 }

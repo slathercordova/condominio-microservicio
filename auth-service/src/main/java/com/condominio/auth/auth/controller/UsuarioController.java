@@ -1,6 +1,7 @@
 package com.condominio.auth.auth.controller;
 
 import com.condominio.auth.auth.dto.request.*;
+import com.condominio.auth.auth.dto.response.LoginEdificioResponse;
 import com.condominio.auth.auth.dto.response.LoginResponse;
 import com.condominio.auth.auth.dto.response.RefreshResponse;
 import com.condominio.auth.auth.dto.response.RegisterResponse;
@@ -94,8 +95,8 @@ public class UsuarioController {
     }
 
     @PostMapping("/login/edificio/{idEdificio}")
-    public ResponseEntity<ApiResponse<LoginResponse>> loginEdificio(@PathVariable UUID idEdificio, HttpServletRequest httpRequest){
-        LoginResponse respuesta = usuarioService.loginUsuEdiRol(idEdificio,httpRequest);
+    public ResponseEntity<ApiResponse<LoginEdificioResponse>> loginEdificio(@PathVariable UUID idEdificio, HttpServletRequest httpRequest){
+        LoginEdificioResponse respuesta = usuarioService.loginUsuEdiRol(idEdificio,httpRequest);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ApiResponse<>(true,"Login edificio", null, respuesta));
     }

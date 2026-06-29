@@ -2,7 +2,9 @@ package com.condominio.edificio.edificio.controller;
 
 import com.condominio.edificio.common.response.ApiResponse;
 import com.condominio.edificio.edificio.dto.request.EdificioRequest;
+import com.condominio.edificio.edificio.dto.response.EdificioDetailResponse;
 import com.condominio.edificio.edificio.dto.response.EdificioResponse;
+import com.condominio.edificio.edificio.dto.response.RegisterResponse;
 import com.condominio.edificio.edificio.service.EdificioService;
 import com.condominio.edificio.edificio.service.UnidadService;
 import jakarta.validation.Valid;
@@ -37,5 +39,12 @@ public class EdificioController {
         Integer modificados = unidadService.calcularPorcentajes(idEdificio);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ApiResponse<>(true,"Se recalcularon "+modificados+" unidades",null,modificados));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<EdificioDetailResponse>> findById(@PathVariable UUID id){
+        EdificioDetailResponse respuesta = edificioService.findById(id);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new ApiResponse<>(true,"Edificio encontrado", null, respuesta));
     }
 }
