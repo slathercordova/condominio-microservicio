@@ -81,10 +81,17 @@ Solo config (yaml/env)	    docker-compose up --build
 Nada (solo levantar)	    docker-compose up
 Recompilar 1 módulo         mvn clean package -DskipTests + docker-compose up -d --build edificio-service
 
+mvn -pl person-service,auth-service -am package
+docker compose up --build person-service auth-service
+
+Donde: Así no recompilas todo el proyecto.
+-pl = project list (el módulo que quieres construir).
+-am = also make (construye también los módulos de los que depende)
+
 Con este comando se borra todo porque dio error anteriormente
 docker compose down -v
 
-si dicker falla por colgaduras
+si docker falla por colgaduras
 docker builder prune -a
 
 Con este comando solo levantas BD
