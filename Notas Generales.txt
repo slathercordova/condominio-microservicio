@@ -145,6 +145,10 @@ git log --oneline --graph --decorate --all
 
 - Ver diferencias antes del commit
 git diff
+git diff --name-only HEAD origin/master
+
+- ver solo los commits nuevos
+git log HEAD..origin/master --oneline
 
 - Listar ramas locales y remotas
 git branch -a
