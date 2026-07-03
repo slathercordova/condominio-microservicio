@@ -1,16 +1,20 @@
 package com.condominio.persona.persona.controller;
 
+import com.condominio.persona.common.pagination.PaginatedResponse;
 import com.condominio.persona.common.response.ApiResponse;
+import com.condominio.persona.persona.dto.filter.PersonaFilter;
 import com.condominio.persona.persona.dto.request.PersonaRequest;
 import com.condominio.persona.persona.dto.response.PersonaDetailResponse;
 import com.condominio.persona.persona.dto.response.PersonaResponse;
 import com.condominio.persona.persona.service.PersonaService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -24,7 +28,7 @@ public class PersonaController {
 
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMINISTRADOR','ADMINISTRACION')")
-    public ResponseEntity<ApiResponse<PersonaResponse>> addPersona(@Valid @RequestBody PersonaRequest personaRequest){
+    public ResponseEntity<ApiResponse<PersonaResponse>> addPersona(@Valid @RequestBody PersonaRequest personaRequest) {
         PersonaResponse res = personaService.createPersona(personaRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ApiResponse<>(true, "persona creada", null, res));
@@ -32,7 +36,7 @@ public class PersonaController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMINISTRADOR')")
-    public ResponseEntity<ApiResponse<PersonaResponse>> deletePersona(@PathVariable UUID id){
+    public ResponseEntity<ApiResponse<PersonaResponse>> deletePersona(@PathVariable UUID id) {
         personaService.deletePersona(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
                 .body(new ApiResponse<>(true, "persona eliminada", null, null));
@@ -42,14 +46,14 @@ public class PersonaController {
     @PreAuthorize("hasAnyRole('ADMINISTRADOR','ADMINISTRACION')")
     public ResponseEntity<ApiResponse<PersonaDetailResponse>> updatePersona(
             @PathVariable UUID id,
-            @Valid @RequestBody PersonaRequest personaRequest){
-        PersonaDetailResponse personaDetailResponse =  personaService.updatePersona(id, personaRequest);
+            @Valid @RequestBody PersonaRequest personaRequest) {
+        PersonaDetailResponse personaDetailResponse = personaService.updatePersona(id, personaRequest);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ApiResponse<>(true, "persona actualizada", null, personaDetailResponse));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<PersonaDetailResponse>> findById(@PathVariable UUID id){
+    public ResponseEntity<ApiResponse<PersonaDetailResponse>> findById(@PathVariable UUID id) {
         PersonaDetailResponse personaDetailResponse = personaService.findPersona(id);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ApiResponse<>(true, "persona encontrada", null, personaDetailResponse));
@@ -58,18 +62,37 @@ public class PersonaController {
     @GetMapping("/exists")
     public ResponseEntity<ApiResponse<Boolean>> existsPersonaPorDocumento(
             @RequestParam() UUID tipoDocumento,
-            @RequestParam() String numeroDocumento){
+            @RequestParam() String numeroDocumento) {
         boolean existe = personaService.existsPersonaPorDocumento(tipoDocumento, numeroDocumento);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new ApiResponse<>(true,"Consulta exitosa",null,existe));
+                .body(new ApiResponse<>(true, "Consulta exitosa", null, existe));
     }
 
     @GetMapping("/documento")
     public ResponseEntity<ApiResponse<PersonaDetailResponse>> findPersonaPorDocumento(
             @RequestParam() UUID tipoDocumento,
-            @RequestParam() String numeroDocumento){
+            @RequestParam() String numeroDocumento) {
         PersonaDetailResponse personaDetailResponse = personaService.findPersonaPorDocumento(tipoDocumento, numeroDocumento);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new ApiResponse<>(true,"Consulta exitosa",null,personaDetailResponse));
+                .body(new ApiResponse<>(true, "Consulta exitosa", null, personaDetailResponse));
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<ApiResponse<List<PersonaDetailResponse>>> findAll() {
+        List<PersonaDetailResponse> lista = personaService.findAllPersona();
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new ApiResponse<>(true, "Lista", null, lista));
+    }
+
+    @GetMapping
+    public ResponseEntity<ApiResponse<PaginatedResponse<PersonaDetailResponse>>> findFilters(
+            PersonaFilter filter,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") @Max(100) int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction
+    ) {
+        PaginatedResponse<PersonaDetailResponse> result = personaService.findByFilters(filter, page, size, sortBy, direction);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Lista", null, result));
     }
 }
