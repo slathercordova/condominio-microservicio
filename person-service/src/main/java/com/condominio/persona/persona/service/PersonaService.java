@@ -75,6 +75,9 @@ public class PersonaService {
             log.debug("Llamando a ws reniec");
             try {
                 reniecResponseDto = reniecClient.getReniec(personaRequest.getNumeroDocumento(), apiToken);
+                personaRequest.setNombres(reniecResponseDto.getFirstname());
+                personaRequest.setApellidoPaterno(reniecResponseDto.getFirstLastName());
+                personaRequest.setApellidoMaterno(reniecResponseDto.getSecondLastName());
             } catch (Exception e) {
                 throw new ExternalServiceException(e.getMessage());
             }
