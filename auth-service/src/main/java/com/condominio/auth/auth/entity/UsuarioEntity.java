@@ -1,12 +1,13 @@
 package com.condominio.auth.auth.entity;
 
-import com.condominio.auth.common.audit.BaseEntity;
 import com.condominio.auth.auth.enums.EstadoUsuario;
 import com.condominio.auth.auth.enums.TipoBloqueo;
+import com.condominio.auth.common.audit.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.ColumnTransformer;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -45,15 +46,17 @@ public class UsuarioEntity extends BaseEntity {
     private Instant bloqueoAt;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "tipo_bloqueo", nullable = false)
-    @ColumnTransformer(write = "?::tipo_bloqueo")
+    @Column(name = "tipo_bloqueo", nullable = false, columnDefinition = "tipo_bloqueo")
+//    @ColumnTransformer(write = "?::tipo_bloqueo")
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     private TipoBloqueo tipoBloqueo;
 
     @Column(name = "primera_vez", nullable = false)
     private boolean primeraVez;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "estado", nullable = false)
-    @ColumnTransformer(write = "?::estado_usuario")
+    @Column(name = "estado", nullable = false, columnDefinition = "estado")
+//    @ColumnTransformer(write = "?::estado_usuario")
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     private EstadoUsuario estado;
 }

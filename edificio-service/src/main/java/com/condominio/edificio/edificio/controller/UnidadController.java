@@ -1,12 +1,15 @@
 package com.condominio.edificio.edificio.controller;
 
+import com.condominio.edificio.common.pagination.PaginatedResponse;
 import com.condominio.edificio.common.response.ApiResponse;
+import com.condominio.edificio.edificio.dto.filter.UnidadFilter;
 import com.condominio.edificio.edificio.dto.request.PersonaUnidadRequest;
 import com.condominio.edificio.edificio.dto.request.UnidadRequest;
 import com.condominio.edificio.edificio.dto.response.*;
 import com.condominio.edificio.edificio.service.PersonaUnidadService;
 import com.condominio.edificio.edificio.service.UnidadService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -74,5 +77,17 @@ public class UnidadController {
         UnidadDetailResponse unidadDetailResponse = unidadService.updateUnidad(id, unidadRequest);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ApiResponse<>(true, "Unidad actualizada", null, unidadDetailResponse));
+    }
+
+    @GetMapping
+    public ResponseEntity<ApiResponse<PaginatedResponse<UnidadDetailResponse>>> findFilters(
+            UnidadFilter filter,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") @Max(100) int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction
+    ) {
+        PaginatedResponse<UnidadDetailResponse> result = unidadService.findByFilters(filter, page, size, sortBy, direction);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Lista", null, result));
     }
 }

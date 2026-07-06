@@ -2,14 +2,23 @@ package com.condominio.edificio.edificio.service;
 
 import com.condominio.edificio.common.exception.BusinessException;
 import com.condominio.edificio.common.exception.ResourceNotFoundException;
+import com.condominio.edificio.common.pagination.PaginatedResponse;
+import com.condominio.edificio.common.pagination.Pagination;
+import com.condominio.edificio.edificio.dto.filter.UnidadFilter;
 import com.condominio.edificio.edificio.dto.request.UnidadRequest;
 import com.condominio.edificio.edificio.dto.response.UnidadDetailResponse;
 import com.condominio.edificio.edificio.dto.response.UnidadResponse;
 import com.condominio.edificio.edificio.entity.UnidadEntity;
+import com.condominio.edificio.edificio.especification.UnidadSpecification;
 import com.condominio.edificio.edificio.repository.EdificioRepository;
 import com.condominio.edificio.edificio.repository.UnidadRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -112,5 +121,35 @@ public class UnidadService {
         modelMapper.map(unidadRequest, unidadEntity);
         UnidadEntity saved = unidadRepository.save(unidadEntity);
         return modelMapper.map(saved, UnidadDetailResponse.class);
+    }
+
+    @Transactional(readOnly = true)
+    public PaginatedResponse<UnidadDetailResponse> findByFilters(
+            UnidadFilter filter,
+            int page,
+            int size,
+            String sortBy,
+            String direction
+    ) {
+        Sort sort = direction.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Specification<UnidadEntity> specification = UnidadSpecification.byFilters(filter);
+        Page<UnidadDetailResponse> result = unidadRepository.findAll(specification, pageable).map(this::toResponse);
+
+        Pagination pagination = new Pagination(
+                result.getNumber(),
+                result.getSize(),
+                result.getTotalElements(),
+                result.getTotalPages(),
+                result.isFirst(),
+                result.isLast(),
+                result.hasNext(),
+                result.hasPrevious()
+        );
+        return new PaginatedResponse<>(result.getContent(),pagination);
+    }
+
+    private UnidadDetailResponse toResponse(UnidadEntity entity) {
+        return modelMapper.map(entity, UnidadDetailResponse.class);
     }
 }

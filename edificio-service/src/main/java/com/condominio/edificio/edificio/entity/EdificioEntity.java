@@ -5,8 +5,9 @@ import com.condominio.edificio.edificio.enums.PeriodoMora;
 import com.condominio.edificio.edificio.enums.TipoCobro;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.ColumnTransformer;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -39,8 +40,9 @@ public class EdificioEntity extends BaseEntity {
     private BigDecimal contingencia;
 
     @Enumerated(EnumType.STRING)
-    @ColumnTransformer(write = "?::tipo_cobro")
-    @Column(name = "tipo_cobro", nullable = false)
+//    @ColumnTransformer(write = "?::tipo_cobro")
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+    @Column(name = "tipo_cobro", nullable = false, columnDefinition = "tipo_cobro")
     private TipoCobro tipoCobro;
 
     @Column(name = "aplica_mora",nullable = false)
@@ -50,8 +52,9 @@ public class EdificioEntity extends BaseEntity {
     private BigDecimal montoMora;
 
     @Enumerated(EnumType.STRING)
-    @ColumnTransformer(write = "?::periodo_mora")
-    @Column(name = "periodo_mora")
+//    @ColumnTransformer(write = "?::periodo_mora")
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+    @Column(name = "periodo_mora", columnDefinition = "periodo_mora")
     private PeriodoMora periodoMora;
 
     @Column(name = "dia_generacion",nullable = false)

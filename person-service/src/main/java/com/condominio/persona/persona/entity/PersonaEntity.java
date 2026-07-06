@@ -1,12 +1,13 @@
 package com.condominio.persona.persona.entity;
 
-import com.condominio.persona.common.enums.TipoSexo;
 import com.condominio.persona.common.audit.BaseEntity;
+import com.condominio.persona.common.enums.TipoSexo;
 import com.condominio.persona.tipodocumento.entity.TipoDocumentoEntity;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.ColumnTransformer;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDate;
 
@@ -52,8 +53,9 @@ public class PersonaEntity extends BaseEntity {
     private String apellidoMaterno;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "sexo", nullable = false)
-    @ColumnTransformer(write = "?::tipo_sexo")
+    @Column(name = "sexo", nullable = false, columnDefinition = "sexo")
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+//    @ColumnTransformer(write = "?::tipo_sexo")
     private TipoSexo sexo;
 
     @Column(name = "estado", nullable = false)

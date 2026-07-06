@@ -4,8 +4,9 @@ import com.condominio.edificio.common.audit.BaseEntity;
 import com.condominio.edificio.edificio.enums.TipoPropiedad;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.ColumnTransformer;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -36,8 +37,9 @@ public class PersonaUnidadEntity extends BaseEntity {
     private LocalDate fechaFin;
 
     @Enumerated(EnumType.STRING)
-    @ColumnTransformer(write = "?::tipo_propiedad")
-    @Column(name = "tipo_propiedad", nullable = false)
+//    @ColumnTransformer(write = "?::tipo_propiedad")
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+    @Column(name = "tipo_propiedad", nullable = false, columnDefinition = "tipo_propiedad")
     private TipoPropiedad tipoPropiedad;
 
     @Column(name = "estado", nullable = false)

@@ -5,8 +5,9 @@ import com.condominio.edificio.edificio.enums.TipoAlquiler;
 import com.condominio.edificio.edificio.enums.TipoUnidad;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.ColumnTransformer;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -43,13 +44,15 @@ public class UnidadEntity extends BaseEntity {
     private BigDecimal porcentaje;
 
     @Enumerated(EnumType.STRING)
-    @ColumnTransformer(write = "?::tipo_unidad")
-    @Column(name = "tipo_unidad", nullable = false)
+//    @ColumnTransformer(write = "?::tipo_unidad")
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+    @Column(name = "tipo_unidad", nullable = false, columnDefinition = "tipo_unidad")
     private TipoUnidad tipoUnidad;
 
     @Enumerated(EnumType.STRING)
-    @ColumnTransformer(write = "?::tipo_alquiler")
-    @Column(name = "tipo_alquiler")
+//    @ColumnTransformer(write = "?::tipo_alquiler")
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+    @Column(name = "tipo_alquiler", columnDefinition = "tipo_alquiler")
     private TipoAlquiler tipoAlquiler;
 
     @Column(name = "estado", nullable = false)
