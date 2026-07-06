@@ -84,6 +84,7 @@ public class UnidadService {
         return listaUnidades.size();
     }
 
+    @Transactional(readOnly = true)
     public UnidadDetailResponse detailUnidad(UUID id){
         if (id==null){
             throw new BusinessException("No ingresó el ID de la unidad");
@@ -92,5 +93,24 @@ public class UnidadService {
         UnidadEntity unidad = unidadRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Unidad no encontrada"));
 
         return modelMapper.map(unidad, UnidadDetailResponse.class);
+    }
+
+    @Transactional
+    public void deleteUnidad(UUID id) {
+        UnidadEntity unidadEntity = unidadRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Unidad a eliminar no encontrada"));
+        unidadRepository.delete(unidadEntity);
+    }
+
+    @Transactional
+    public UnidadDetailResponse updateUnidad(UUID id, UnidadRequest unidadRequest) {
+
+        UnidadEntity unidadEntity = unidadRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Unidad no encontrada"));
+
+//        todo controlar reglas de negocio de unidad, repetir código
+
+        modelMapper.map(unidadRequest, unidadEntity);
+        UnidadEntity saved = unidadRepository.save(unidadEntity);
+        return modelMapper.map(saved, UnidadDetailResponse.class);
     }
 }

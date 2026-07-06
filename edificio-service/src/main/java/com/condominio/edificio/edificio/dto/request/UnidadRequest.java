@@ -45,4 +45,7 @@ public class UnidadRequest {
     private TipoUnidad tipoUnidad;
 
     private TipoAlquiler tipoAlquiler;
+
+    @NotNull(message = "Debe ingresar un estado")
+    private Boolean estado;
 }
