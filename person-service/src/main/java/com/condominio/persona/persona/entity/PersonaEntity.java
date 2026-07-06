@@ -53,7 +53,7 @@ public class PersonaEntity extends BaseEntity {
     private String apellidoMaterno;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "sexo", nullable = false, columnDefinition = "sexo")
+    @Column(name = "sexo", nullable = false, columnDefinition = "tipo_sexo")
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
 //    @ColumnTransformer(write = "?::tipo_sexo")
     private TipoSexo sexo;

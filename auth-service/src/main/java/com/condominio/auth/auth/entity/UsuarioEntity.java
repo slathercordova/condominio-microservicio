@@ -55,7 +55,7 @@ public class UsuarioEntity extends BaseEntity {
     private boolean primeraVez;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "estado", nullable = false, columnDefinition = "estado")
+    @Column(name = "estado", nullable = false, columnDefinition = "estado_usuario")
 //    @ColumnTransformer(write = "?::estado_usuario")
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     private EstadoUsuario estado;
