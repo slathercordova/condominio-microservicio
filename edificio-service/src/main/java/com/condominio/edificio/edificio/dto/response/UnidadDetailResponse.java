@@ -14,6 +14,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class UnidadDetailResponse {
     private UUID idEdificio;
+    private UUID id;
     private String codigo;
     private String logoUrl;
     private Integer piso;
