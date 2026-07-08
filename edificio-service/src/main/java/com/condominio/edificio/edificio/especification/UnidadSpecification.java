@@ -27,7 +27,7 @@ public class UnidadSpecification {
         }
 
         if (filter.getCodigo() != null) {
-            predicates.add(cb.equal(root.get("codigo"), filter.getCodigo()));
+            predicates.add(cb.like(cb.upper(root.get("codigo")), "%" + filter.getCodigo().toUpperCase().trim() + "%"));
         }
 
         if (filter.getPiso() != null) {

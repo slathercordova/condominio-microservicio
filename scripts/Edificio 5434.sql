@@ -19,3 +19,5 @@ join unidad u on pu.id_unidad = u."id"
 join edificio e on u.id_edificio = e."id"
 --where pu.id_persona = :idPersona
 ;
+
+update edificio set tipo_cobro = 'PORCENTAJE' where id = '00000000-0000-0000-0000-000000000000';

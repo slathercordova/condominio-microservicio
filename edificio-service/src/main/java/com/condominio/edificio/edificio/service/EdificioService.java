@@ -2,14 +2,23 @@ package com.condominio.edificio.edificio.service;
 
 import com.condominio.edificio.common.exception.BusinessException;
 import com.condominio.edificio.common.exception.ResourceNotFoundException;
+import com.condominio.edificio.common.pagination.PaginatedResponse;
+import com.condominio.edificio.common.pagination.Pagination;
+import com.condominio.edificio.edificio.dto.filter.EdificioFilter;
 import com.condominio.edificio.edificio.dto.request.EdificioRequest;
 import com.condominio.edificio.edificio.dto.response.EdificioDetailResponse;
 import com.condominio.edificio.edificio.dto.response.EdificioResponse;
 import com.condominio.edificio.edificio.entity.EdificioEntity;
+import com.condominio.edificio.edificio.especification.EdificioSpecification;
 import com.condominio.edificio.edificio.repository.EdificioRepository;
 import com.condominio.edificio.edificio.repository.EmpresaRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,9 +70,56 @@ public class EdificioService {
     }
 
     @Transactional(readOnly = true)
-    public EdificioDetailResponse findById(UUID id){
+    public EdificioDetailResponse findById(UUID id) {
         EdificioEntity edificioEntity = edificioRepository.findById(id)
-                .orElseThrow(()-> new ResourceNotFoundException("Edificio no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Edificio no encontrado"));
         return modelMapper.map(edificioEntity, EdificioDetailResponse.class);
+    }
+
+    @Transactional
+    public void deleteEdificio(UUID id) {
+        EdificioEntity edificioEntity = edificioRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Edificio a eliminar no encontrado"));
+        edificioRepository.delete(edificioEntity);
+    }
+
+    @Transactional
+    public EdificioDetailResponse updateEdificio(UUID id, EdificioRequest edificioRequest) {
+        EdificioEntity edificioEntity = edificioRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Edificio no encontrado"));
+
+        modelMapper.map(edificioRequest, edificioEntity);
+        EdificioEntity saved = edificioRepository.save(edificioEntity);
+        return modelMapper.map(saved, EdificioDetailResponse.class);
+    }
+
+    @Transactional(readOnly = true)
+    public PaginatedResponse<EdificioDetailResponse> findByFilters(
+            EdificioFilter filter,
+            int page,
+            int size,
+            String sortBy,
+            String direction
+    ) {
+        Sort sort = direction.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Specification<EdificioEntity> specification = EdificioSpecification.byFilters(filter);
+        Page<EdificioDetailResponse> result = edificioRepository.findAll(specification, pageable).map(this::toResponse);
+
+        Pagination pagination = new Pagination(
+                result.getNumber(),
+                result.getSize(),
+                result.getTotalElements(),
+                result.getTotalPages(),
+                result.isFirst(),
+                result.isLast(),
+                result.hasNext(),
+                result.hasPrevious()
+        );
+        return new PaginatedResponse<>(result.getContent(), pagination);
+    }
+
+    private EdificioDetailResponse toResponse(EdificioEntity entity) {
+        return modelMapper.map(entity, EdificioDetailResponse.class);
     }
 }
