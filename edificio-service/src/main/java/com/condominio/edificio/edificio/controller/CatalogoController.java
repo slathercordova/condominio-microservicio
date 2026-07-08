@@ -42,4 +42,16 @@ public class CatalogoController {
                 )
         );
     }
+
+    @GetMapping("/tipos-propiedad")
+    public ResponseEntity<ApiResponse<List<CatalogoResponse>>> tiposPropiedad() {
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        true,
+                        "Lista de tipos de propiedad",
+                        null,
+                        catalogoService.listarTiposPropiedad()
+                )
+        );
+    }
 }

@@ -1,8 +1,10 @@
 package com.condominio.edificio.edificio.enums;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
+@AllArgsConstructor
 public enum TipoPropiedad {
     PROPIETARIO("PROPIETARIO"),
     COPROPIETARIO("COPROPIETARIO"),
@@ -10,8 +12,4 @@ public enum TipoPropiedad {
     INQUILINO("INQUILINO");
 
     private final String descripcion;
-
-    TipoPropiedad(String descripcion) {
-        this.descripcion = descripcion;
-    }
 }

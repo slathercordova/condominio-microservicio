@@ -2,6 +2,7 @@ package com.condominio.edificio.edificio.service;
 
 import com.condominio.edificio.edificio.dto.response.CatalogoResponse;
 import com.condominio.edificio.edificio.enums.TipoAlquiler;
+import com.condominio.edificio.edificio.enums.TipoPropiedad;
 import com.condominio.edificio.edificio.enums.TipoUnidad;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,15 @@ public class CatalogoService {
     public List<CatalogoResponse> listarTiposAlquiler() {
 
         return Arrays.stream(TipoAlquiler.values())
+                .map(e -> new CatalogoResponse(
+                        e.name(),
+                        e.getDescripcion()))
+                .toList();
+    }
+
+    public List<CatalogoResponse> listarTiposPropiedad() {
+
+        return Arrays.stream(TipoPropiedad.values())
                 .map(e -> new CatalogoResponse(
                         e.name(),
                         e.getDescripcion()))
