@@ -31,7 +31,7 @@ public class EdificioSpecification {
             }
 
             if (filter.getNombre() != null) {
-                predicates.add(cb.like(cb.upper(root.get("nombre")), "%" + filter.getRuc().toUpperCase().trim() + "%"));
+                predicates.add(cb.like(cb.upper(root.get("nombre")), "%" + filter.getNombre().toUpperCase().trim() + "%"));
             }
 
             if (filter.getEstado() != null) {
