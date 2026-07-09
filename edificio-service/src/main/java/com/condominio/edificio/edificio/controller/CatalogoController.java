@@ -54,4 +54,28 @@ public class CatalogoController {
                 )
         );
     }
+
+    @GetMapping("/tipos-cobro")
+    public ResponseEntity<ApiResponse<List<CatalogoResponse>>> tiposCobro() {
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        true,
+                        "Lista de tipos de cobro",
+                        null,
+                        catalogoService.listarTiposCobro()
+                )
+        );
+    }
+
+    @GetMapping("/periodo-mora")
+    public ResponseEntity<ApiResponse<List<CatalogoResponse>>> periodoMora() {
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        true,
+                        "Lista de periodos mora",
+                        null,
+                        catalogoService.listarPeriodoMora()
+                )
+        );
+    }
 }
