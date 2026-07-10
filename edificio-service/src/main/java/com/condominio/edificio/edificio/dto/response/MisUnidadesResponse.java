@@ -15,7 +15,7 @@ public class MisUnidadesResponse {
     private UUID idPersonaUnidad;
     private UUID idPersona;
     private String personaNombre;
-    private String esFavorito;
+    private Boolean esFavorito;
 
     private UUID idUnidad;
     private String codigo;
