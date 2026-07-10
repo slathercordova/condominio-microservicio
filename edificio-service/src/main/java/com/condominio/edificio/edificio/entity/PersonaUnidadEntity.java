@@ -42,6 +42,9 @@ public class PersonaUnidadEntity extends BaseEntity {
     @Column(name = "tipo_propiedad", nullable = false, columnDefinition = "tipo_propiedad")
     private TipoPropiedad tipoPropiedad;
 
+    @Column(name = "es_favorito")
+    private Boolean esFavorito;
+
     @Column(name = "estado", nullable = false)
     private Boolean estado;
 }

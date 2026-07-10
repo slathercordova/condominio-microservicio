@@ -69,6 +69,7 @@ public class PersonaUnidadService {
         }
 
         PersonaUnidadEntity personaUnidadEntity = modelMapper.map(personaUnidadRequest, PersonaUnidadEntity.class);
+        personaUnidadEntity.setEsFavorito(false);
         personaUnidadEntity.setEstado(true);
 
         PersonaUnidadEntity saved = personaUnidadRepository.save(personaUnidadEntity);
@@ -103,5 +104,13 @@ public class PersonaUnidadService {
             lista.add(misUnidadesResponse);
         }
         return lista;
+    }
+
+    @Transactional
+    public void setFavorito(UUID id, boolean esFavorito) {
+        PersonaUnidadEntity personaUnidad = personaUnidadRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Id no encontrado"));
+        personaUnidad.setEsFavorito(esFavorito);
+        personaUnidadRepository.save(personaUnidad);
     }
 }

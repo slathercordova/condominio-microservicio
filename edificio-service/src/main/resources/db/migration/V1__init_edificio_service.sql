@@ -194,6 +194,7 @@ CREATE TABLE persona_unidad (
   fecha_inicio date NOT NULL,
   fecha_fin date,
   tipo_propiedad tipo_propiedad NOT NULL,
+  es_favorito boolean,
   estado boolean NOT NULL,
   created_by uuid NOT NULL,
   updated_by uuid,
