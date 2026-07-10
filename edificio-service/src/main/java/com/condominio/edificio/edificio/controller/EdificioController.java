@@ -80,4 +80,12 @@ public class EdificioController {
         PaginatedResponse<EdificioDetailResponse> result = edificioService.findByFilters(filter, page, size, sortBy, direction);
         return ResponseEntity.ok(new ApiResponse<>(true, "Lista", null, result));
     }
+
+    @PostMapping("/{idEdificio}/generar-recibos")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','ADMINISTRACION')")
+    public ResponseEntity<ApiResponse<Integer>> generarRecibos(@PathVariable UUID idEdificio) {
+        Integer modificados = edificioService.generarDeuda(idEdificio);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new ApiResponse<>(true, "Se generaron " + modificados + " recibos", null, modificados));
+    }
 }

@@ -66,6 +66,9 @@ public class EdificioEntity extends BaseEntity {
     @Column(name = "dia_gracia",nullable = false)
     private Integer diaGracia;
 
+    @Column(name = "gasto_total", precision = 10, scale = 2) //10,2
+    private BigDecimal gastoTotal;
+
     @Column(name = "estado",nullable = false)
     private Boolean estado;
 }

@@ -5,7 +5,10 @@ import com.condominio.edificio.common.response.ApiResponse;
 import com.condominio.edificio.edificio.dto.filter.UnidadFilter;
 import com.condominio.edificio.edificio.dto.request.PersonaUnidadRequest;
 import com.condominio.edificio.edificio.dto.request.UnidadRequest;
-import com.condominio.edificio.edificio.dto.response.*;
+import com.condominio.edificio.edificio.dto.response.MisUnidadesResponse;
+import com.condominio.edificio.edificio.dto.response.PersonaUnidadResponse;
+import com.condominio.edificio.edificio.dto.response.UnidadDetailResponse;
+import com.condominio.edificio.edificio.dto.response.UnidadResponse;
 import com.condominio.edificio.edificio.service.PersonaUnidadService;
 import com.condominio.edificio.edificio.service.UnidadService;
 import jakarta.validation.Valid;
@@ -45,14 +48,6 @@ public class UnidadController {
                 .body(new ApiResponse<>(true, "Se asigno a la unidad el propietario exitosamente", null, respuesta));
     }
 
-    @GetMapping("/mis-unidades/{idPersona}")
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR','ADMINISTRACION','PROPIETARIO')")
-    public ResponseEntity<ApiResponse<List<MisUnidadesResponse>>> misUnidades(@PathVariable UUID idPersona){
-        List<MisUnidadesResponse> respuesta = personaUnidadService.misUnidades(idPersona);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(new ApiResponse<>(true, "Lista de unidades", null, respuesta));
-    }
-
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMINISTRADOR','ADMINISTRACION','PROPIETARIO')")
     public ResponseEntity<ApiResponse<UnidadDetailResponse>> unidadDetail(@PathVariable UUID id){
@@ -89,5 +84,31 @@ public class UnidadController {
     ) {
         PaginatedResponse<UnidadDetailResponse> result = unidadService.findByFilters(filter, page, size, sortBy, direction);
         return ResponseEntity.ok(new ApiResponse<>(true, "Lista", null, result));
+    }
+
+    @PutMapping("/{id}/toggle-favorite/{esFavorito}")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','ADMINISTRACION','PROPIETARIO')")
+    public ResponseEntity<ApiResponse<Void>> unidadToggleFavorito(
+            @PathVariable UUID id,
+            @PathVariable boolean esFavorito) {
+        personaUnidadService.setFavorito(id, esFavorito);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new ApiResponse<>(true, "Persona unidad actualizada", null, null));
+    }
+
+    @GetMapping("/mis-unidades/{idPersona}")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','ADMINISTRACION','PROPIETARIO')")
+    public ResponseEntity<ApiResponse<List<MisUnidadesResponse>>> misUnidades(@PathVariable UUID idPersona){
+        List<MisUnidadesResponse> respuesta = personaUnidadService.misUnidades(idPersona);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new ApiResponse<>(true, "Lista de unidades", null, respuesta));
+    }
+
+    @GetMapping("/mis-unidades/{idPersona}/favoritos")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','ADMINISTRACION','PROPIETARIO')")
+    public ResponseEntity<ApiResponse<List<MisUnidadesResponse>>> misUnidadesFavoritas(@PathVariable UUID idPersona){
+        List<MisUnidadesResponse> respuesta = personaUnidadService.misUnidadesFavoritas(idPersona);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new ApiResponse<>(true, "Lista de unidades en favoritos", null, respuesta));
     }
 }

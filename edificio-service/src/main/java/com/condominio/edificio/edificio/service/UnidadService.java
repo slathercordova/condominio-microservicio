@@ -51,6 +51,7 @@ public class UnidadService {
 
         //  guardamos la unidad
         UnidadEntity unidadEntity = modelMapper.map(unidadRequest, UnidadEntity.class);
+        unidadEntity.setDeudaTmp(BigDecimal.ZERO);
         unidadEntity.setEstado(true);
 
         UnidadEntity unidadSaved = unidadRepository.save(unidadEntity);

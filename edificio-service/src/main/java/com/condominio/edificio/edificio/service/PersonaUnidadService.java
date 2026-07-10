@@ -113,4 +113,34 @@ public class PersonaUnidadService {
         personaUnidad.setEsFavorito(esFavorito);
         personaUnidadRepository.save(personaUnidad);
     }
+
+    @Transactional(readOnly = true)
+    public List<MisUnidadesResponse> misUnidadesFavoritas(UUID idPersona) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UUID idPropietario = (UUID) auth.getPrincipal();
+        boolean esPropietario = auth.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_PROPIETARIO"));
+
+        List<MisUnidadesProjection> misUnidadesPro;
+        if (esPropietario) {
+            misUnidadesPro = personaUnidadRepository.listarMisUnidadesFavorito(idPropietario, true);
+        } else {
+            if (idPersona == null) {
+                throw new BusinessException("Debe ingresar un idPersona");
+            }
+            misUnidadesPro = personaUnidadRepository.listarMisUnidadesFavorito(idPersona, true);
+        }
+
+        List<MisUnidadesResponse> lista = new ArrayList<>();
+        for (MisUnidadesProjection unidad : misUnidadesPro) {
+            PersonaDetailResponse persona = personaClientWs.findPersonaById(unidad.getIdPersona()).getData();
+            String nombreCompleto = Stream.of(persona.getNombres(), persona.getApellidoPaterno(), persona.getApellidoMaterno())
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.joining(" "));
+            MisUnidadesResponse misUnidadesResponse = modelMapper.map(unidad, MisUnidadesResponse.class);
+            misUnidadesResponse.setPersonaNombre(nombreCompleto);
+            lista.add(misUnidadesResponse);
+        }
+        return lista;
+    }
 }

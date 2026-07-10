@@ -24,4 +24,5 @@ public class UnidadDetailResponse {
     private TipoUnidad tipoUnidad;
     private TipoAlquiler tipoAlquiler;
     private Boolean estado;
+    private BigDecimal deudaTmp;
 }

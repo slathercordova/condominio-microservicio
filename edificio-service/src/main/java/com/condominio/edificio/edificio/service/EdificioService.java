@@ -9,9 +9,11 @@ import com.condominio.edificio.edificio.dto.request.EdificioRequest;
 import com.condominio.edificio.edificio.dto.response.EdificioDetailResponse;
 import com.condominio.edificio.edificio.dto.response.EdificioResponse;
 import com.condominio.edificio.edificio.entity.EdificioEntity;
+import com.condominio.edificio.edificio.entity.UnidadEntity;
 import com.condominio.edificio.edificio.especification.EdificioSpecification;
 import com.condominio.edificio.edificio.repository.EdificioRepository;
 import com.condominio.edificio.edificio.repository.EmpresaRepository;
+import com.condominio.edificio.edificio.repository.UnidadRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -23,6 +25,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -31,11 +35,13 @@ public class EdificioService {
     private final EmpresaRepository empresaRepository;
     private final EdificioRepository edificioRepository;
     private final ModelMapper modelMapper;
+    private final UnidadRepository unidadRepository;
 
-    public EdificioService(EmpresaRepository empresaRepository, EdificioRepository edificioRepository, ModelMapper modelMapper) {
+    public EdificioService(EmpresaRepository empresaRepository, EdificioRepository edificioRepository, ModelMapper modelMapper, UnidadRepository unidadRepository) {
         this.empresaRepository = empresaRepository;
         this.edificioRepository = edificioRepository;
         this.modelMapper = modelMapper;
+        this.unidadRepository = unidadRepository;
     }
 
     @Transactional
@@ -121,5 +127,29 @@ public class EdificioService {
 
     private EdificioDetailResponse toResponse(EdificioEntity entity) {
         return modelMapper.map(entity, EdificioDetailResponse.class);
+    }
+
+    @Transactional
+    public Integer generarDeuda(UUID id) {
+        EdificioEntity edificioEntity = edificioRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Edificio no encontrado"));
+
+        BigDecimal gastoTotal = edificioEntity.getGastoTotal();
+
+        List<UnidadEntity> listaUnidades = unidadRepository.findByIdEdificioAndEstadoTrue(id);
+        if (listaUnidades.isEmpty()) {
+            throw new BusinessException("No hay unidades en el edificio para generar deuda");
+        }
+
+        BigDecimal CIEN = BigDecimal.valueOf(100);
+
+        for (UnidadEntity item : listaUnidades) {
+            BigDecimal deudaTmp = gastoTotal.multiply(item.getPorcentaje()).setScale(2, RoundingMode.HALF_UP);
+            deudaTmp = deudaTmp.divide(CIEN, 2, RoundingMode.HALF_UP);
+            item.setDeudaTmp(deudaTmp);
+        }
+
+        unidadRepository.saveAll(listaUnidades);
+        return listaUnidades.size();
     }
 }

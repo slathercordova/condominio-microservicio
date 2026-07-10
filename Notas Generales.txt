@@ -91,7 +91,7 @@ Donde: Así no recompilas todo el proyecto.
 Con este comando se borra todo porque dio error anteriormente
 docker compose down -v
 
-si docker falla por colgaduras
+si docker falla por colgaduras o borrar builds pasados
 docker builder prune -a
 
 Con este comando solo levantas BD

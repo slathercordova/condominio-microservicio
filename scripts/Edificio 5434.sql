@@ -5,7 +5,8 @@ select * from usuario_edificio;
 select * from usuario_edificio_rol;
 select * from unidad;
 select * from persona_unidad;
-select sum(a.metraje), sum(a.porcentaje) from unidad a where a.id_edificio = '00000000-0000-0000-0000-000000000000';
+select * from unidad where id_edificio = '00000000-0000-0000-0000-000000000000';
+select sum(a.deuda_tmp), sum(a.metraje), sum(a.porcentaje) from unidad a where a.id_edificio = '00000000-0000-0000-0000-000000000000';
 select sum(a.metraje), sum(a.porcentaje) from unidad a group by a.id_edificio;
 select r.nombre ,u.* from usuario_edificio_rol u inner join rol r on u.id_rol = r.id;
 
@@ -21,3 +22,7 @@ join edificio e on u.id_edificio = e."id"
 ;
 
 update edificio set tipo_cobro = 'PORCENTAJE' where id = '00000000-0000-0000-0000-000000000000';
+
+update edificio set gasto_total = 12345.67 where id = '00000000-0000-0000-0000-000000000000';
+
+update edificio set tipo_cobro = 'FLAT' where id = '00000000-0000-0000-0000-000000000000';

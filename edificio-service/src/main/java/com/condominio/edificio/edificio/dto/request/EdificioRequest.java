@@ -64,4 +64,7 @@ public class EdificioRequest {
     @NotNull(message = "Debe de ingresar cantidad de día de gracia")
     @Min(value = 0, message = "Dia de gracia no puede ser negativo")
     private Integer diaGracia;
+
+    @PositiveOrZero(message = "El gasto total debe ser igual o mayor a 0")
+    private BigDecimal gastoTotal;
 }

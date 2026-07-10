@@ -27,5 +27,6 @@ public class EdificioDetailResponse {
     private Integer diaGeneracion;
     private Integer diaVencimiento;
     private Integer diaGracia;
+    private BigDecimal gastoTotal ;
     private Boolean estado;
 }

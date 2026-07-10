@@ -57,4 +57,7 @@ public class UnidadEntity extends BaseEntity {
 
     @Column(name = "estado", nullable = false)
     private Boolean estado;
+
+    @Column(name = "deuda_tmp", precision = 10, scale = 2)
+    private BigDecimal deudaTmp;
 }
