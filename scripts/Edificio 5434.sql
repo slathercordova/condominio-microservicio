@@ -26,3 +26,11 @@ update edificio set tipo_cobro = 'PORCENTAJE' where id = '00000000-0000-0000-000
 update edificio set gasto_total = 12345.67 where id = '00000000-0000-0000-0000-000000000000';
 
 update edificio set tipo_cobro = 'FLAT' where id = '00000000-0000-0000-0000-000000000000';
+
+select pu."id" as idPersonaUnidad, pu.id_persona as idPersona, pu.es_favorito as esFavorito,
+u."id" as idUnidad, u.codigo, u.metraje, u.porcentaje, u.tipo_unidad as tipoUnidad, u.deuda_tmp as deudaTmp,
+e."id" as idEdificio, e.nombre as edificioNombre, e.direccion as edificioDireccion
+from persona_unidad pu
+join unidad u on pu.id_unidad = u."id"
+join edificio e on u.id_edificio = e."id"
+where pu.id_persona = '22222222-2222-2222-2222-222222222222'

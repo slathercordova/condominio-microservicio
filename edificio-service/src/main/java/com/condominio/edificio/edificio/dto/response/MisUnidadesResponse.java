@@ -15,12 +15,14 @@ public class MisUnidadesResponse {
     private UUID idPersonaUnidad;
     private UUID idPersona;
     private String personaNombre;
+    private String esFavorito;
 
     private UUID idUnidad;
     private String codigo;
     private BigDecimal metraje;
     private BigDecimal porcentaje;
     private TipoUnidad tipoUnidad;
+    private BigDecimal deudaTmp;
 
     private UUID idEdificio;
     private String edificioNombre;

@@ -15,8 +15,8 @@ public interface PersonaUnidadRepository extends JpaRepository<PersonaUnidadEnti
     boolean existsByIdUnidadAndEsResponsableTrueAndEstadoTrueAndIdNot(UUID idUnidad, UUID id);
 
     @Query(value = """
-            select pu."id" as idPersonaUnidad, pu.id_persona as idPersona,
-            u."id" as idUnidad, u.codigo, u.metraje, u.porcentaje, u.tipo_unidad as tipoUnidad,
+            select pu."id" as idPersonaUnidad, pu.id_persona as idPersona, pu.es_favorito as esFavorito,
+            u."id" as idUnidad, u.codigo, u.metraje, u.porcentaje, u.tipo_unidad as tipoUnidad, u.deuda_tmp as deudaTmp,
             e."id" as idEdificio, e.nombre as edificioNombre, e.direccion as edificioDireccion
             from persona_unidad pu
             join unidad u on pu.id_unidad = u."id"
@@ -26,8 +26,8 @@ public interface PersonaUnidadRepository extends JpaRepository<PersonaUnidadEnti
     List<MisUnidadesProjection> listarMisUnidades(@Param("idPersona") UUID idPersona);
 
     @Query(value = """
-            select pu."id" as idPersonaUnidad, pu.id_persona as idPersona,
-            u."id" as idUnidad, u.codigo, u.metraje, u.porcentaje, u.tipo_unidad as tipoUnidad,
+            select pu."id" as idPersonaUnidad, pu.id_persona as idPersona, pu.es_favorito as esFavorito,
+            u."id" as idUnidad, u.codigo, u.metraje, u.porcentaje, u.tipo_unidad as tipoUnidad, u.deuda_tmp as deudaTmp,
             e."id" as idEdificio, e.nombre as edificioNombre, e.direccion as edificioDireccion
             from persona_unidad pu
             join unidad u on pu.id_unidad = u."id"
