@@ -1,5 +1,6 @@
 package com.condominio.edificio.edificio.dto.response;
 
+import com.condominio.edificio.edificio.enums.EstadoRecibo;
 import com.condominio.edificio.edificio.enums.TipoUnidad;
 import lombok.*;
 
@@ -23,6 +24,7 @@ public class MisUnidadesResponse {
     private BigDecimal porcentaje;
     private TipoUnidad tipoUnidad;
     private BigDecimal deudaTmp;
+    private EstadoRecibo estadoRecibo;
 
     private UUID idEdificio;
     private String edificioNombre;

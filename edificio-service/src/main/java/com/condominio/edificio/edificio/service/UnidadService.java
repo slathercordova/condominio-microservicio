@@ -168,4 +168,12 @@ public class UnidadService {
     private UnidadDetailResponse toResponse(UnidadEntity entity) {
         return modelMapper.map(entity, UnidadDetailResponse.class);
     }
+
+    @Transactional
+    public void pagarReciboUnidad(UUID id) {
+        UnidadEntity unidadEntity = unidadRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Id de unidad no encontrado"));
+        unidadEntity.setDeudaTmp(BigDecimal.ZERO);
+        unidadRepository.save(unidadEntity);
+    }
 }

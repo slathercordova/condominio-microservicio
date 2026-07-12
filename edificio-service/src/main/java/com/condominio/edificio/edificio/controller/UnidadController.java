@@ -111,4 +111,13 @@ public class UnidadController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ApiResponse<>(true, "Lista de unidades en favoritos", null, respuesta));
     }
+
+    @PatchMapping("/{id}/pagar-recibo")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','ADMINISTRACION','PROPIETARIO')")
+    public ResponseEntity<ApiResponse<Void>> unidadPagarRecibo(
+            @PathVariable UUID id) {
+        unidadService.pagarReciboUnidad(id);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new ApiResponse<>(true, "Recibo pagado correctamente", null, null));
+    }
 }
