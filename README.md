@@ -119,8 +119,8 @@ Administración de Condominios.
 ### Requerimientos Funcionales
 
 * Edificios
-  * Creación de edificio (ADMINISTRADOR, ADMINISTRACION)
-    * Calculo de porcentaje de participación (ADMINISTRADOR, ADMINISTRACION)
+  * CRUD de edificio (ADMINISTRADOR, ADMINISTRACION)
+    * Cálculo de porcentaje de participación (ADMINISTRADOR, ADMINISTRACION)
       * Regla de cálculo de porcentaje de participación
 
         PorcentajeParticipacion = (areaUnidad / sumaAreasEdificio) * 100
@@ -136,6 +136,8 @@ Administración de Condominios.
         Participación A = 50%
             
         Participación B = 50%
+    
+    * Cálculo de monto de recibos
 
 
 * Empresas
@@ -154,6 +156,7 @@ Administración de Condominios.
   * Create (ADMINISTRADOR, ADMINISTRACION)
   * Asignar persona-unidad (ADMINISTRADOR, ADMINISTRACION)
   * Listar mis unidades (ADMINISTRADOR, ADMINISTRACION, PROPIETARIO)
+  * Realizar pago de recibo
 
 
 * UsuarioEdificio
@@ -461,4 +464,4 @@ docker-compose up --build
 ---
 # 10. Autores
 
-Proyecto académico desarrollado por Slather Córdova Amez, para el curso de bootcamp de desarrollo web full stack con java.
+Proyecto integrador desarrollado por Slather Córdova Amez, para el curso de bootcamp de desarrollo web full stack con java.
