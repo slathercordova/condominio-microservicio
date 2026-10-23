@@ -1,14 +1,14 @@
 package com.condominio.auth.auth.controller;
 
+import com.condominio.auth.auth.dto.filter.UsuarioFilter;
 import com.condominio.auth.auth.dto.request.*;
-import com.condominio.auth.auth.dto.response.LoginEdificioResponse;
-import com.condominio.auth.auth.dto.response.LoginResponse;
-import com.condominio.auth.auth.dto.response.RefreshResponse;
-import com.condominio.auth.auth.dto.response.RegisterResponse;
+import com.condominio.auth.auth.dto.response.*;
 import com.condominio.auth.auth.service.UsuarioService;
+import com.condominio.auth.common.pagination.PaginatedResponse;
 import com.condominio.auth.common.response.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -99,5 +99,17 @@ public class UsuarioController {
         LoginEdificioResponse respuesta = usuarioService.loginUsuEdiRol(idEdificio,httpRequest);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ApiResponse<>(true,"Login edificio", null, respuesta));
+    }
+
+    @GetMapping
+    public ResponseEntity<ApiResponse<PaginatedResponse<UsuarioDetailResponse>>> findFilters(
+            UsuarioFilter filter,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") @Max(100) int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction
+    ) {
+        PaginatedResponse<UsuarioDetailResponse> result = usuarioService.findByFilters(filter, page, size, sortBy, direction);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Lista", null, result));
     }
 }

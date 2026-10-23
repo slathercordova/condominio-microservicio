@@ -1,5 +1,6 @@
 package com.condominio.auth.auth.service;
 
+import com.condominio.auth.auth.dto.filter.UsuarioFilter;
 import com.condominio.auth.auth.dto.request.*;
 import com.condominio.auth.auth.dto.response.*;
 import com.condominio.auth.auth.entity.RefreshTokenEntity;
@@ -8,10 +9,13 @@ import com.condominio.auth.auth.enums.EstadoUsuario;
 import com.condominio.auth.auth.enums.TipoBloqueo;
 import com.condominio.auth.auth.repository.RefreshTokenRepository;
 import com.condominio.auth.auth.repository.UsuarioRepository;
+import com.condominio.auth.auth.specification.UsuarioSpecification;
 import com.condominio.auth.common.exception.BusinessException;
 import com.condominio.auth.common.exception.ExternalServiceException;
 import com.condominio.auth.common.exception.ResourceAlreadyExistsException;
 import com.condominio.auth.common.exception.ResourceNotFoundException;
+import com.condominio.auth.common.pagination.PaginatedResponse;
+import com.condominio.auth.common.pagination.Pagination;
 import com.condominio.auth.common.response.ApiResponse;
 import com.condominio.auth.common.util.*;
 import com.condominio.auth.email.EmailService;
@@ -21,6 +25,11 @@ import feign.FeignException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -471,5 +480,35 @@ public class UsuarioService {
                 edificioDetail.getBody().getData().getId(),
                 edificioDetail.getBody().getData().getNombre()
         );
+    }
+
+    @Transactional(readOnly = true)
+    public PaginatedResponse<UsuarioDetailResponse> findByFilters(
+            UsuarioFilter filter,
+            int page,
+            int size,
+            String sortBy,
+            String direction
+    ) {
+        Sort sort = direction.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Specification<UsuarioEntity> specification = UsuarioSpecification.byFilters(filter);
+        Page<UsuarioDetailResponse> result = usuarioRepository.findAll(specification, pageable).map(this::toResponse);
+
+        Pagination pagination = new Pagination(
+                result.getNumber(),
+                result.getSize(),
+                result.getTotalElements(),
+                result.getTotalPages(),
+                result.isFirst(),
+                result.isLast(),
+                result.hasNext(),
+                result.hasPrevious()
+        );
+        return new PaginatedResponse<>(result.getContent(),pagination);
+    }
+
+    private UsuarioDetailResponse toResponse(UsuarioEntity entity) {
+        return modelMapper.map(entity, UsuarioDetailResponse.class);
     }
 }
