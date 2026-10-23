@@ -16,7 +16,6 @@ public class UsuarioDetailResponse {
     private UUID id;
     private UUID idPersona;
     private String username;
-    private String password;
     private String correo;
     private String correo2;
     private Instant ultimoLogin;
